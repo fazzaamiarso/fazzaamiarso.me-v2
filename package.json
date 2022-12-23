@@ -1,0 +1,29 @@
+{
+  "name": "fazzaamiarso",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "run-s format lint 'astro build'",
+    "format": "prettier --write --plugin-search-dir=. .",
+    "lint": "eslint --fix ./src",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^1.7.2"
+  },
+  "devDependencies": {
+    "@typescript-eslint/parser": "^5.47.0",
+    "eslint": "^8.30.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-astro": "^0.21.1",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.8.1",
+    "prettier-plugin-astro": "^0.7.0",
+    "typescript": "^4.9.4"
+  }
+}
