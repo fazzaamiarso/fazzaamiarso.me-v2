@@ -1,7 +1,76 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import globe from "../assets/globe3d-clean.png";
+import logo from "../assets/logo.png";
 ---
 
-<Layout title="Fazza Razaq Amiarso">
-  <div></div>
+<Layout title='Fazza Razaq Amiarso'>
+  <header class='border-b-2 border-slate-100'>
+    <div class='layout flex items-center py-6'>
+      <img src={logo} alt='' width='50px' class='' />
+      <nav class='ml-auto'>
+        <ul class='flex items-center gap-8'>
+          <li><a href='/' class='font-bold'>Blog</a></li>
+          <li><a href='/' class='font-bold'>Projects</a></li>
+          <li><a href='/' class='font-bold'>Snippets</a></li>
+          <li><a href='/' class='font-bold'>About</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <main class=''>
+    <div class='layout flex items-center justify-between py-20'>
+      <div class='space-y-12'>
+        <h1 class='text-4xl font-bold leading-relaxed'>
+          Hello! I'm Fazza. I build software to create a better world. I love to share and teach
+          while at it.
+        </h1>
+        <div class='space-x-4'>
+          <a href='/' class='rounded-sm bg-black p-4 text-sm text-white ring-1 ring-black'
+            >Read the blog</a
+          >
+          <a href='/' class='rounded-sm p-4 text-sm ring-1 ring-black'>See projects</a>
+        </div>
+      </div>
+      <img src={globe} alt='' width='400px' class='animate-updown' />
+    </div>
+    <div class='bg-slate-100'>
+      <div class='layout py-12'>
+        <h2 class='text-2xl font-bold'>Featured Posts</h2>
+      </div>
+    </div>
+    <div class=''>
+      <div class='layout py-12'>
+        <h2 class='text-2xl font-bold mb-4'>Featured Projects</h2>
+        <ul class="flex items-start gap-8">
+          <li class='space-y-2 p-6 -ml-6 hover:bg-gray-100'>
+            <div class="aspect-square w-10 bg-black rounded-full ring-1 ring-black ring-offset-4" />
+            <h3 class="text-lg font-semibold">Invoys</h3>
+            <p class="">
+              About Open source and self-hostable invoice management app built with Next.js. Made to
+              be free of cost.
+            </p>
+          </li>
+          <li class='space-y-2 p-6 -ml-6 hover:bg-gray-100'>
+            <div class="aspect-square w-10 bg-black rounded-full ring-1 ring-black ring-offset-4" />
+            <h3 class="text-lg font-semibold">Invoys</h3>
+            <p class="">
+              About Open source and self-hostable invoice management app built with Next.js. Made to
+              be free of cost.
+            </p>
+          </li>
+          <li class='space-y-2 p-6 -ml-6 hover:bg-gray-100'>
+            <div class="aspect-square w-10 bg-black rounded-full ring-1 ring-black ring-offset-4" />
+            <h3 class="text-lg font-semibold">Invoys</h3>
+            <p class="">
+              About Open source and self-hostable invoice management app built with Next.js. Made to
+              be free of cost.
+            </p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </main>
 </Layout>
+
+<script></script>
