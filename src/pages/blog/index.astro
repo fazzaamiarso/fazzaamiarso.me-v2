@@ -1,0 +1,37 @@
+---
+import Layout from "layouts/Layout.astro";
+
+const posts = await Astro.glob("./*.mdx");
+---
+
+<Layout title='Blog | Fazza Razaq Amiarso'>
+  <main class='layout py-12 space-y-6'>
+    <div>
+        <h1 class='text-4xl font-bold'>Blog</h1>
+        <p class='max-w-[60ch] text-lg'>
+          A place where I share my knowldege and learning mostly on Frontend (React), A11Y, and
+          sometimes full-stack. Sharing struggles at time.
+        </p>
+    </div>
+    <ul>
+      {
+        posts.map((p) => {
+          return (
+            <li class='-ml-4 flex items-start gap-8 rounded-md p-4 hover:bg-gray-100'>
+              <p class='basis-16'>
+                {Intl.DateTimeFormat("en-US", { day: "numeric", month: "short" }).format(
+                  new Date(p.frontmatter.publishedAt)
+                )}
+              </p>
+              <div class='basis-full'>
+                <h2 class='font-bold'><a href={`/blog/${p.frontmatter.slug}`}>{p.frontmatter.title}</a></h2>
+                <p class="text-sm">{p.frontmatter.description}</p>
+              </div>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </main>
+</Layout>
+

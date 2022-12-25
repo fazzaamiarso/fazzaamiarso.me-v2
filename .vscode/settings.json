@@ -10,5 +10,8 @@
     "astro", // Enable .astro
     "typescript", // Enable .ts
     "typescriptreact" // Enable .tsx
-  ]
+  ],
+  "files.associations": {
+    "*.mdx": "mdx"
+  }
 }

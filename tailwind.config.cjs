@@ -7,13 +7,9 @@ module.exports = {
     extend: {
       fontFamily: {
         inter: ["InterVariable", "Inter", ...defaultTheme.fontFamily.sans],
-        manrope: [
-          "ManropeVariable",
-          "Manrope",
-          ...defaultTheme.fontFamily.sans,
-        ],
+        manrope: ["ManropeVariable", "Manrope", ...defaultTheme.fontFamily.sans],
       },
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/typography")],
 };

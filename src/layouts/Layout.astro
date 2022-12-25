@@ -1,10 +1,18 @@
 ---
 import "@fontsource/inter";
 import "@fontsource/manrope";
+import logo from "../assets/logo.png";
 
 export interface Props {
   title: string;
 }
+
+const navigations = [
+  { name: "Blog", href: "/blog" },
+  { name: "Projects", href: "/projects" },
+  { name: "Snippets", href: "/" },
+  { name: "About", href: "/about" },
+];
 
 const { title } = Astro.props;
 ---
@@ -18,12 +26,52 @@ const { title } = Astro.props;
     <title>{title}</title>
   </head>
   <body class='font-inter'>
+    <header class='border-b-2 border-slate-100'>
+      <div class='layout flex items-center py-6'>
+        <a href='/'><img src={logo} alt='' width='50px' class='' /></a>
+        <nav class='ml-auto'>
+          <ul class='flex items-center gap-8'>
+            {
+              navigations.map((nav) => {
+                return (
+                  <li>
+                    <a href={nav.href} class='font-bold'>
+                      {nav.name}
+                    </a>
+                  </li>
+                );
+              })
+            }
+          </ul>
+        </nav>
+      </div>
+    </header>
     <slot />
+    <footer class='border-t-2 border-gray-100'>
+      <div class='layout flex items-center py-8'>
+        <nav class=''>
+          <ul class='flex items-center gap-8'>
+             {
+              navigations.map((nav) => {
+                return (
+                  <li>
+                    <a href={nav.href} class='text-sm font-bold'>
+                      {nav.name}
+                    </a>
+                  </li>
+                );
+              })
+            }
+          </ul>
+        </nav>
+        <p class='ml-auto text-sm'>© 2022 Fazza Razaq Amiarso. All rights reserved.</p>
+      </div>
+    </footer>
   </body>
 </html>
 <style is:global>
   .layout {
-    @apply mx-auto w-11/12 max-w-5xl;
+    @apply mx-auto w-11/12 max-w-4xl;
   }
 
   .animate-updown {

@@ -1,0 +1,382 @@
+---
+layout: "../../layouts/Blog.astro"
+title: "Learn A11y with FrontendMentor: Card Details"
+series: "Learn A11y with FrontendMentor"
+description: "Build accessible card details form and handle the errors"
+slug: "a11y-fem-card-details"
+publishedAt: "2022-12-20"
+featured: true
+---
+
+## Introduction
+
+In this article, we're going to implement and improve a credit/debit card detail form's accessibility. We're also going to use the browser's built-in validation API that's been around for a long time.
+
+Sounds interesting? Let's start.
+
+## What we are building?
+
+🔗 [Github Repository](https://github.com/fazzaamiarso/Frontendmentor-challenges/tree/main/apps/card-details)
+
+🔗 [Live Demo](https://frontendmentor-challenges-card-details.vercel.app/)
+
+## Working with decorator element
+
+In the design below, the cards are responsible to reflect the form's input data.
+
+<img src='https://i.imgur.com/bq4WH4E.png' alt='cards container' width='500' />
+
+When dealing with decorative interface, we should ask ourselves, do assistive technology users gain any value or more context with the interface?
+
+In our case, the data are already available in the form itself. If we let assistive technologies detect the interface, isn't it redundant and repetitive?
+
+We call this type of interface a [Decorative Element](https://www.w3.org/WAI/tutorials/images/decorative/). Decorative elements don't add value to our content.
+
+So, we can add a `presentation` or `none` role to the container element. By adding a `presentation` role to the container, assistive technologies will also ignore its child.
+
+```html
+<div role="presentation">// Childrens</div>
+```
+
+## Should We Uppercase in CSS or HTML?
+
+We can see that there are many uppercased texts in the design.
+
+<figure>
+  <img src='https://i.imgur.com/pN0EkCf.png' alt='uppercased text' />
+  <figcaption style='text-align:center;'>Uppercased texts in orange container</figcaption>
+</figure>
+
+Some of us might think to type those uppercased texts in HTML. This isn't wrong per se, but it has its use case.
+
+So, what's the problem? When we uppercase texts in HTML, screen readers will spell out each letter in a text. That isn't what we want, the text should be read normally.
+
+[**The solution**](https://medium.com/@mandy.michael/why-you-shouldnt-write-your-content-in-uppercase-instead-use-css-b03ac2c65b99) is to uppercase texts in CSS. Yep, CSS has a `text-transform` property that can transform text to various formats (e.g. uppercase, capitalize, and lowercase).
+
+Here's how to uppercase in CSS.
+
+```css
+text-transform: uppercase;
+```
+
+> For more details, [https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform)
+
+## Building an Accessible Form
+
+In the [previous article](https://fazzaamiarso.me/blog/a11y-fem-interactive-rating/), we covered how to handle a form submission. However, it was a simple form with 1 input field. Now, we will deal with a significantly more complex form.
+
+### Number Input Field
+
+Most of us (should) think that to create a number input field, we use `<input type="number">`. Which does make sense.
+
+Weirdly, that's not the best solution for every use case. Some of the reasons are:
+
+- It's intended for incrementable integers. Credit card numbers and social security numbers are not incrementable integers.
+- It has an annoying number stepper/arrow. Users can accidentally click on the stepper and increment/decrement unknowingly.
+- It has no feedback for assistive technologies on the type it's accepting.
+
+In our case, we ask users for credit card numbers and CVC. So, we will use the well-known method. Which is input with `type="text"` and extra HTML attributes.
+
+Here is the markup.
+
+```html
+<input type="text" inputmode="numeric" pattern="[0-9]*" />
+```
+
+Let's break it down.
+
+- `inputmode="numeric"` to prompt the user on a mobile device with a numeric keyboard.
+- `pattern="[0-9]*"` to make sure the input only accepts digits.
+
+Although we define a pattern, users still can type anything. However, the browser will validate the form on submission. If you want, you can add javascript logic to prevent users from typing the wrong type. But, we won't do it.
+
+> For more details about input type numbers, check out the official UK government take on this matter [https://technology.blog.gov.uk/2020/02/24/why-the-gov-uk-design-system-team-changed-the-input-type-for-numbers/](https://technology.blog.gov.uk/2020/02/24/why-the-gov-uk-design-system-team-changed-the-input-type-for-numbers/)
+
+### Should We Provide an `Autocomplete` Attribute?
+
+Based on [Web Content Accessibility Guideline](https://www.w3.org/WAI/WCAG21/Understanding/identify-input-purpose.html), there are benefits when using autocomplete on an input field. Especially, for people with cognitive disabilities and motor impairments.
+
+In our case, it's appropriate to provide an autocomplete for input fields. Furthermore, there are [various types](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) of autocomplete that are available.
+
+In the design, almost all fields have a suitable pre-defined autocomplete. Here are what we can use.
+
+- `cc-name` for the cardholder field.
+- `cc-number` for the card number field.
+- `cc-exp-month` for card expiry date field.
+- `cc-exp-year` for card expiry year field.
+
+Lastly, the CVC field doesn't have an autocomplete because we shouldn't save a security number in the browser. Imagine that your friend browsing with your browser and then proceeding to use your auto-filled/saved card information.
+
+We can safely turn off auto-completion by setting `autocomplete="off"` to the input.
+
+### Grouping Fields
+
+Let's investigate this form section.
+
+![expiry date group](https://i.imgur.com/7etOWxL.png)
+
+We can see that it has 2 input fields with 1 label. That's bad. A label can only connect to a single input field.
+
+Fortunately, there's a way around labeling those inputs. If we think closely, it's just a group of 2 inputs, right?
+
+There's an HTML element that can group input fields. It's none other than `<fieldset>`. So, the label becomes a `<legend>` element and those 2 inputs become independent.
+
+```html
+<fieldset>
+  <legend>Exp. Date (MM/YY)</legend>
+
+  <label for="expiry-month">Expiry month</label>
+  <input id="expiry-month" placeholder="MM" />
+
+  <label for="expiry-year">Expiry year</label>
+  <input id="expiry-year" placeholder="YY" />
+</fieldset>
+```
+
+However, the input label is not visible in the design. In the [previous article](https://fazzaamiarso.me/blog/a11y-fem-interactive-rating/), we already handled visually hiding an element that's still accessible by assistive technology.
+
+The trick is to add a couple lines of CSS to the element. Here, we create a utility class like tailwind.
+
+```css
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+```
+
+### Hinting an Input Format with a Placeholder
+
+Continuing from the section before, we can see that the expiry dates field has a format hint beside the `legend`'s text (i.e. MM/YY).
+
+If it were a single input field, the format hinting would be correct. In our case, we have 2 separate input fields, so we should give them separate hints.
+
+Firstly, remove the hint from the `legend` to avoid redundancy. After that, wrap the hint in a span and set `aria-hidden="true"` to hide it from assistive technologies.
+
+```html
+<legend>Exp. Date <span aria-hidden="true">(MM/YY)</span></legend>
+```
+
+Secondly, create the input with format hinting. Following the design, we'll use the input's placeholder as a format hint. Similarly, giving hints directly on the label is also possible.
+
+> Why not both? because that will be redundant. Screen readers will announce something like this "Expiry month, MM, MM".
+
+```html
+<fieldset>
+    // legend from before
+    <div>
+        <div>
+            <label for="expiry-month" class="sr-only">
+            Expiry Month</label>
+            <input type="text" pattern="[0-9]*"
+                inputmode="numeric"
+                autocomplete="cc-exp-month"
+                id="expiry-month"
+                name="expiry-month"
+                placeholder="MM"
+            />
+        </div>
+        <div>
+            <label for="expiry-month" class="sr-only">
+            Expiry Year</label>
+            <input type="text" pattern="[0-9]*"
+                inputmode="numeric"
+                autocomplete="cc-exp-year"
+                id="expiry-year"
+                name="expiry-year"
+                placeholder="YY"
+            />
+        </div>
+    </div>
+</fieldset
+```
+
+### Handling Validation Error
+
+We inevitably have to validate input and handle errors when dealing with forms. So, we're going to implement an accessible error message.
+
+#### Invalid Form
+
+When dealing with input errors, the most important thing is setting the input's `aria-invalid` to `true` using javascript. This way, assistive technologies can detect invalid input.
+
+Let's implement it to one of the inputs.
+
+```ts
+const ccName = document.querySelector("input#cc-number");
+
+if (!ccName.validity.valid) {
+  el.setAttribute("aria-invalid", "true");
+}
+```
+
+Then, set it back to `false` when the input is valid. Here, the input is valid when there's an 'input' event.
+
+```ts
+form.addEventListener("input", (e) => {
+  const targetEl = e.target;
+  targetEl.setAttribute("aria-invalid", "false");
+});
+```
+
+We can style invalid fields with CSS `:invalid` pseudo-class. Similarly, we can use the `[aria-invalid]` attribute selector when we control the attribute with Javascript.
+
+```css
+p:invalid {
+  color: red;
+}
+/* OR */
+[aria-invalid="true"] {
+  color: red;
+}
+```
+
+#### Announcing the Error Message
+
+Currently, when an error occurred, there isn't any indication of the error nor are the input fields aware of their error.
+
+Based on the design. We will create the error message by:
+
+1. Insert the error message below the input field
+2. Set the error message's `aria-live` to `assertive`.
+3. Connect the error message with the input using [`aria-describedby`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-describedby) to the input.
+
+Here is an example.
+
+```html
+/* Notice that their id is the same */
+<input id="expiry-month" aria-describedby="expiry-month-err" />
+<p aria-live="assertive" id="expiry-month-err"></p>
+```
+
+Since `aria-live` will announce something when there's an addition to the element, we'll dynamically insert the error with Javascript.
+
+Using the previous input validation example.
+
+```ts
+if(!ccName.validity.valid) {
+    // get the error message element
+    const errEl = document.querySelector("#cc-number-err");
+    el.setAttribute("aria-invalid", "true");
+
+    // required field error
+    if (ccName.validity.valueMissing) {
+        errEl.innerText = "Can't be blank!";
+    }
+```
+
+Now, screen readers will be alerted when an error occurred. But, it's only going to work once, since there are no changes to the error text on the next validation.
+
+To trigger the alert again, simply remove the error text when we set the `aria-invalid` to false.
+
+#### Improving the Design's Error Message
+
+In the challenge specification, some messages should be given for certain errors.
+
+- **Empty field** -> "Can't be blank".
+- **Length is too short** -> "Should be \<number\> characters long".
+- **Wrong Pattern** -> "Wrong format, numbers only".
+
+Technically, the errors are fine. So, what can be improved? According to [WCAG specification](https://www.w3.org/WAI/WCAG21/Understanding/error-identification.html), an error message should contain the field that owns the error. In other words, the error is too general.
+
+Therefore, we can improve the errors into:
+
+- **Empty Field** -> "Card number can't be blank".
+- **Length is too short** -> "Card number must contain 16 digits".
+- **Wrong Pattern** -> "Card number is in a wrong format, numbers only".
+
+#### Managing Focus
+
+When we submit a form, what do you think will happen to the focus? There is a lot that can happen.
+
+However, when an error occurred, we want to guide users to the easiest way to fix the error.
+
+We already implemented the error messages. But, the user experience isn't great since we don't know where the focus is located. Imagine a screen reader user that has to find where the invalid input's located with keyboard navigation.
+
+Don't worry, we can fix that problem by focusing on the top-most field that is invalid. So, users can easily navigate back down to the submit button while going through the error.
+
+Let's implement it in our `submit` listener.
+
+```ts
+// check form validity with Constraint Validation API
+if (!form.checkValidity()) {
+  // find the first and top-most invalid input inside the form
+  const invalidInput = form.querySelector("input[aria-invalid='true']");
+
+  // focus on the input
+  invalidInput?.focus();
+}
+```
+
+Here is the result.
+
+![focus management demo](https://i.imgur.com/YZL3n2c.gif)
+
+> More information on focus. [https://web.dev/focus/](https://web.dev/focus/)
+
+## Validate Input with Constraint Validation API
+
+We're going to use a browser's built-in validation API to validate input values, it's called [Constraint Validation API](https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation). Although it's not well-known, it's simple and powerful.
+
+It's powerful because it combines native HTML attributes such as `required`, `pattern`, and `minLength` to set the constraint and built-in javascript API. We just set the constraint in HTML and it'll be reflected in its `validityState` in Javascript.
+
+Let's implement it on the credit card number input.
+
+```html
+<input id="cc-number" pattern="[0-9*]" minlength="16" maxlength="16" required />
+```
+
+```ts
+// Get the element we want to validate
+const ccNumber = document.querySelector("#cc-number");
+
+// check if the element is valid
+if (!ccNumber.validity.valid) {
+  let errorMessage = "";
+
+  // check for empty field or `required`.
+  if (ccNumber.validity.valueMissing) errorMessage = `Card number can't be blank`;
+
+  // check for mismatched patterns defined in `pattern`
+  if (ccNumber.validity.patternMismatch)
+    errorMessage = `Card number is in a wrong format, numbers only`;
+
+  // check if the length is less than the `maxLength`
+  if (ccNumber.validity.tooShort) errorMessage = `Card number must have 16 digits`;
+}
+```
+
+Here's a breakdown of the above example.
+
+- `pattern` -> `validity.patternMismatch`. Input must contain numbers only.
+- `maxLength` -> `validity.tooLong`. Input must be less than or equal to 16 characters.
+- `minLength` -> `validity.tooShort`. Input must be at least 16 characters.
+- `required` -> `validity.valueMissing`. Input Must have a value.
+
+We can also trigger a validation by ourselves with `checkValidity`.
+
+```ts
+const formElement = document.querySelector("form");
+
+if (formElement.checkValidity()) {
+  // Do something when all form values are valid.
+}
+
+const inputEl = document.querySelector("input");
+if (inputEl.checkValidity()) {
+  // Do something when the input value is valid
+}
+```
+
+Here's an old but gold article by Google on Constraint Validation API [https://web.dev/constraintvalidation/](https://web.dev/constraintvalidation/). Interesting, right?
+
+## Recap
+
+We've learned plenty about implementing accessibility, especially about forms. We also learned to implement validation with Constraint validation API.
+
+I hope now you can solve similar accessibility problems or implement them by yourself.

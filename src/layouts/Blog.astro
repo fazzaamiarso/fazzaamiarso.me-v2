@@ -1,0 +1,54 @@
+---
+import Layout from "./Layout.astro";
+
+const { frontmatter } = Astro.props;
+---
+
+<Layout title={frontmatter.title}>
+  <main class='space-y-12'>
+    <div class='bg-gray-200 py-12 pt-24'>
+      <div class='layout'>
+        <h1 class='mb-2 text-4xl font-bold'>{frontmatter.title}</h1>
+        <p class='text-lg'>{frontmatter.description}</p>
+        <div class='flex items-center gap-2'>
+          <p class='text-sm'>{frontmatter.publishedAt}</p>
+          -
+          <p class='text-sm'>1000 views</p>
+          -
+          <p class='text-sm'>230 likes</p>
+        </div>
+      </div>
+    </div>
+    <article class='layout blog prose md:prose-lg prose-headings:scroll-mt-20'>
+      <slot />
+    </article>
+  </main>
+</Layout>
+
+<style is:global>
+  .heading-group {
+    position: relative;
+  }
+  .heading-group::before {
+    position: absolute;
+    content: "#";
+    height: 100%;
+    width: 50px;
+    transform: scale(1.5);
+    left: -2rem;
+    opacity: 0;
+    transition: all 100ms ease-in-out;
+  }
+  .heading-group:hover::before {
+    opacity: 1;
+  }
+  .heading-group a {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+
+  .blog img {
+    @apply mx-auto rounded-md;
+  }
+</style>

@@ -1,32 +1,23 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import globe from "../assets/globe3d-clean.png";
-import logo from "../assets/logo.png";
+
+const posts = await Astro.glob("./blog/*.mdx");
+const featuredPosts = posts.filter((p) => p.frontmatter.featured);
 ---
 
 <Layout title='Fazza Razaq Amiarso'>
-  <header class='border-b-2 border-slate-100'>
-    <div class='layout flex items-center py-6'>
-      <img src={logo} alt='' width='50px' class='' />
-      <nav class='ml-auto'>
-        <ul class='flex items-center gap-8'>
-          <li><a href='/' class='font-bold'>Blog</a></li>
-          <li><a href='/' class='font-bold'>Projects</a></li>
-          <li><a href='/' class='font-bold'>Snippets</a></li>
-          <li><a href='/' class='font-bold'>About</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
   <main class=''>
     <div class='layout flex items-center justify-between py-20'>
       <div class='space-y-12'>
         <h1 class='text-4xl font-bold leading-relaxed'>
-          Hello! I'm Fazza. I build software to create a better world. I love to share and teach
-          while at it.
+          <span
+            class='bg-gradient-to-tr from-pink-500 via-red-500 to-yellow-500 bg-clip-text text-transparent'
+            >Hello! I'm Fazza</span
+          >. I build software to create a better world. I love to share and teach while I'm at it.
         </h1>
         <div class='space-x-4'>
-          <a href='/' class='rounded-sm bg-black p-4 text-sm text-white ring-1 ring-black'
+          <a href='/blog' class='rounded-sm bg-black p-4 text-sm text-white ring-1 ring-black'
             >Read the blog</a
           >
           <a href='/' class='rounded-sm p-4 text-sm ring-1 ring-black'>See projects</a>
@@ -35,34 +26,52 @@ import logo from "../assets/logo.png";
       <img src={globe} alt='' width='400px' class='animate-updown' />
     </div>
     <div class='bg-slate-100'>
-      <div class='layout py-12'>
+      <div class='layout py-12 space-y-6'>
         <h2 class='text-2xl font-bold'>Featured Posts</h2>
+        <ul class='flex gap-8'>
+          {
+            featuredPosts.map((p) => {
+              return (
+                <li class='basis-1/3 bg-gradient-to-tr from-pink-300 via-purple-300 to-indigo-400 p-1 rounded-md'>
+                    <div class="rounded-md bg-gray-200 p-6 h-full">
+                      <h3 class="font-semibold text-lg mb-2">{p.frontmatter.title}</h3>
+                      <p >{p.frontmatter.description}</p>
+                    </div>
+                </li>
+              );
+            })
+          }
+        </ul>
+        <a href="/blog" class="inline-block first-line:font-semibold py-2">Read all post</a>
       </div>
     </div>
     <div class=''>
       <div class='layout py-12'>
-        <h2 class='text-2xl font-bold mb-4'>Featured Projects</h2>
-        <ul class="flex items-start gap-8">
-          <li class='space-y-2 p-6 -ml-6 hover:bg-gray-100'>
-            <div class="aspect-square w-10 bg-black rounded-full ring-1 ring-black ring-offset-4" />
-            <h3 class="text-lg font-semibold">Invoys</h3>
-            <p class="">
+        <h2 class='mb-4 text-2xl font-bold'>Featured Projects</h2>
+        <ul class='-translate-x-6 flex items-start gap-8'>
+          <li class='space-y-2 rounded-lg p-6 hover:bg-gray-100'>
+            <div class='aspect-square w-10 rounded-full bg-black ring-1 ring-black ring-offset-4'>
+            </div>
+            <h3 class='text-lg font-semibold'>Invoys</h3>
+            <p class=''>
               About Open source and self-hostable invoice management app built with Next.js. Made to
               be free of cost.
             </p>
           </li>
-          <li class='space-y-2 p-6 -ml-6 hover:bg-gray-100'>
-            <div class="aspect-square w-10 bg-black rounded-full ring-1 ring-black ring-offset-4" />
-            <h3 class="text-lg font-semibold">Invoys</h3>
-            <p class="">
+          <li class='space-y-2 rounded-lg p-6 hover:bg-gray-100'>
+            <div class='aspect-square w-10 rounded-full bg-black ring-1 ring-black ring-offset-4'>
+            </div>
+            <h3 class='text-lg font-semibold'>Invoys</h3>
+            <p class=''>
               About Open source and self-hostable invoice management app built with Next.js. Made to
               be free of cost.
             </p>
           </li>
-          <li class='space-y-2 p-6 -ml-6 hover:bg-gray-100'>
-            <div class="aspect-square w-10 bg-black rounded-full ring-1 ring-black ring-offset-4" />
-            <h3 class="text-lg font-semibold">Invoys</h3>
-            <p class="">
+          <li class='space-y-2 rounded-lg p-6 hover:bg-gray-100'>
+            <div class='aspect-square w-10 rounded-full bg-black ring-1 ring-black ring-offset-4'>
+            </div>
+            <h3 class='text-lg font-semibold'>Invoys</h3>
+            <p class=''>
               About Open source and self-hostable invoice management app built with Next.js. Made to
               be free of cost.
             </p>

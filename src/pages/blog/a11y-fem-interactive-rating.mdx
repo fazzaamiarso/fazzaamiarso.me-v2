@@ -1,0 +1,245 @@
+---
+layout: "../../layouts/Blog.astro"
+title: "Learn A11y with FrontendMentor: Interactive Rating"
+series: "Learn A11y with FrontendMentor"
+description: "Build an accessible rating selection form and properly announce the selection"
+slug: "a11y-fem-interactive-rating"
+publishedAt: "2022-12-13"
+featured: true
+
+---
+
+## Series Introduction
+	 
+I'd been using [frontendmentor.io](https://frontendmentor.io) as a platform to practice building projects in my early learning phase. Although all of my solutions were painful to look at 😅, they gave me an excellent stepping stone to learning many things.
+  
+As I gained experience, I started to give feedback to other developers. I noticed many solutions work fine but often miss relatively simple fixes or fundamentals, especially on accessibility. It's understandable since they use Frontendmentor for learning purposes.
+  
+So I came up with an idea to make a blog series that solve Frontendmentor challenges with fundamental web technologies (e.g., HTML, CSS, and JS). On top of that, I will solve them in a fully accessible way that others can study and reference. 
+  
+I'm not an accessibility expert, but I will learn them by building and writing these articles.
+  
+## What will we build?
+  
+  
+🔗 [Github Repository](https://github.com/fazzaamiarso/Frontendmentor-challenges/tree/main/apps/interactive-rating)
+  
+🔗 [Live Demo](https://frontendmentor-challenges-interactive-rating.vercel.app/)
+  
+
+>  I will not go in-depth on styling and markup. I will only focus on things related to accessibility implementation. **Please refer to the GitHub repo for the details**.
+  
+## Tools We Use
+  
+We will use **HTML**, **CSS**, and **Vanilla Typescript**. Don't worry if you aren't familiar with Typescript, you can just ignore the Typescript part as the logic is still the same.
+  
+## Building the Submission Page
+  
+The most important thing on this page is the rating selection. A lot of times, developers instinctively reach out to Javascript when dealing when making this custom selection with either button or div. Both of them work, but it will be weird for screen readers as there needs to be more context when selecting them.
+  
+```html
+// ❌ Common non-accessible solution
+<div>
+  <button value="1">1</button>
+  <button value="2">2</button>
+  <button value="3">3</button>
+  <button value="4">4</button>
+  <button value="5">5</button>
+</div>
+```
+  
+Fret not. HTML has a native solution to deal with this kind of solution. Combined with CSS, it's straightforward.
+  
+### Building an Accessible Rating Selection
+  
+Firstly, we need a `<form>` element as a submission handler. Now, what element fits for rating selection? `<input type="radio">`. It might be wrong since it doesn't come close to the reference, but semantic HTML + CSS can do wonders.
+  
+We want the radio to be in a `<fieldset>` to group them in a context. We also need a `<legend>` to title the `<fieldset>` group. It may seem awkward to have the `<legend>`, right? In the design, there is none, but on the other hand, it's crucial for assistive technologies.
+  
+Removing the styles from `<fieldset>` is simple. The problem is the `<legend>`. Fortunately, there is a workaround to hide the legend visually but still make it accessible to a screen reader. We can do that using CSS.
+  
+Inspired by Tailwind, we can create a class called `sr-only` or `visually-hidden` or anything you like.
+  
+```css
+.sr-only {
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  height: 1px;
+  width: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+}
+```
+  
+Here is the markup.
+  
+```html
+<form>
+  <fieldset>
+  <legend class="sr-only">Select Rating</legend>
+  </fieldset>
+</form>
+```
+  
+Now, when screen readers enter the fieldset, it will announce the purpose (e.g., "select rating, group").
+  
+We can start building the radio itself. Always give a `value` and couple the input with `<label>`.
+  
+To style it, I will hide the input and style the label only. Also, the input is still keyboard-focusable. Yes, this is why using semantics can help us tremendously. We can check/select an input by clicking its label as long as the id is correct. Here is the markup.
+  
+```html
+<form>
+  <fieldset>
+  <legend class="sr-only">Select Rating</legend>
+  <div class="rating-container">
+  <div>
+  <input type="radio" name="rating" id="rating-1" value="1" />
+  <label for="rating-1">1</label>
+  </div>
+  <div>
+  <input type="radio" name="rating" id="rating-2" value="2" />
+  <label for="rating-2">2</label>
+  </div>
+  <div>
+  <input type="radio" name="rating" id="rating-3" value="3" />
+  <label for="rating-3">3</label>
+  </div>
+  <div>
+  <input type="radio" name="rating" id="rating-4" value="4" />
+  <label for="rating-4">4</label>
+  </div>
+  <div>
+  <input type="radio" name="rating" id="rating-5" value="5" />
+  <label for="rating-5">5</label>
+  </div>
+  </div>
+  </fieldset>
+  <button>Submit</button>
+</form>
+```
+  
+We will use `input:checked` and CSS sibling selector to style the label next to it. Here is an example.
+  
+```css
+form fieldset input:checked + label {
+  background-color: var(--primary-orange);
+}
+```
+  
+It's all good, but we still need something. When we navigate using a keyboard, there is no visual indication of what radio we are at.
+  
+This is where the focus ring comes into play.
+  
+![focus ring](https://i.imgur.com/u9bQVlB.gif)
+  
+We can add this line of CSS.
+  
+```css
+form fieldset input:focus-visible + label {
+  outline: 2px solid white;
+  outline-offset: 4px;
+}
+```
+  
+Notice that I use `:focus-visible`. I use it because I only need it to be visible when we use a keyboard to navigate.
+  
+### Handle Submission with Javascript.
+  
+When using `form` and semantic HTML, we can use a robust API that many newer developers don't know. It's the `FormData` API.
+  
+We can listen to the submit event on the form and get the form data with `FormData`. Here is how.
+  
+```ts
+const form = document.querySelector("form") as HTMLFormElement;
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  // Make sure it's a form element
+  if (!(e.currentTarget instanceof HTMLFormElement)) return;
+
+  // Create a new formData entries containing submitted data
+  const formData = new FormData(e.currentTarget);
+});
+```
+  
+We can get the selected input `value` from a specific field using its `name` attribute, in our radio case, its `rating`. Therefore, we can set our selected rating to the thank you page.
+  
+```js
+// will return a string of our selected input value
+const selectedRating = formData.get("rating");
+```
+  
+## Building the Thank You Page
+  
+Now that the submission is taken care of, we can directly show the thank you page with our result, right? Nope, it's true for a sighted user but not for screen reader users.
+  
+What will happen, then? Let's see a demo.
+  
+![focus thrown demo](https://i.imgur.com/aVitLjL.gif)
+  
+As you can see, the focus is thrown to the top of the page after we submit. At the same time, VoiceOver still thinks we're in the submit button, but the button is gone.
+  
+It's a confusing behavior for screen reader users. It feels like we are being carried somewhere when we sleep and wake up wondering how we got there.
+  
+A good rule of thumb is to focus on an `h1` as screen reader users primarily navigate with headings.
+  
+Let's add this line of code to the `form` listener from before
+  
+```ts
+const mainPage = document.getElementById("rate") as HTMLElement;
+const thankPage = document.getElementById("thank") as HTMLElement;
+
+mainPage.classList.remove("active");
+thankPage.classList.add("active");
+
+// Select h1 from the thank you page and focus on it
+thankPage.querySelector("h1")?.focus();
+```
+  
+It's finished but needs a thing. There is no immediate confirmation to screen reader users if their selection is good. To announce something to a screen reader, we can use a [live region](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Live_Regions).
+  
+Simply put, a live region is used to announce something updated dynamically without page reloading. The updated thing may be obvious for most users but not assistive technology.
+  
+In the design, there is an element that displays what the user has selected: 'You selected \<SELECTED_RATING\> out of 5`. We want to announce it when the thank you page appears. To do that, we can add a visually hidden live region and insert the text when there is a submission.
+  
+Let's add a live region with `role="status"` and `aria-live="polite"`. It's recommended to add `role="status"` for compatibility reasons, although `aria-live` alone is enough.
+  
+By setting `aria-live="polite"`, we want the screen reader to announce the text but not disrupt an ongoing announcement.
+  
+```html
+<div id="rating-status" role="status" aria-live="polite" class="sr-only"></div>
+```
+  
+In Javascript, we can dynamically insert the text provided to the selected rating text.
+  
+```ts
+// In the form submit listener
+const ratingStatus = document.getElementById("rating-status") as HTMLElement;
+ratingStatus.innerText = `You selected ${selectedRating} out of 5`;
+```
+  
+Now, when we submit the rating, screen readers will announce the selected rating text.
+  
+### VoiceOver Paused When There is a Span Inside an Element
+  
+We use a span to insert a rating dynamically in the selected rating element. However, VoiceOver will treat the text as segments and pause between them like this.
+  
+![voice over paused announcement](https://i.imgur.com/sYVNfg0.gif)
+  
+That is unwanted behavior and bad for a screen reader user's experience. [On the internet](https://www.boia.org/blog/should-your-site-use-the-text-role-for-accessibility), the recommendation is to add `role="text"` to the span that will treat the span as a text. Unfortunately, that doesn't work here.
+  
+Thankfully, I found that using `role="presentation"` works. I think it's the same as `role="text" as they override semantics, but I don't know if it's the right way. Still, better than nothing.
+  
+## Recap
+  
+Wow! Amazingly, you have come this far. Thank you so much, and I hope you can get something out of this article.
+  
+To sum up, here is what we cover:
+  
+- Build a rating selection with custom radio semantically.
+- Use Live region to announce important changes.
+- Hide an element visually but still accessible to screen readers.
+- Handling form submissions with `FormData` API.
