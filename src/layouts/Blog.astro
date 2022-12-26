@@ -1,10 +1,11 @@
 ---
+import {  LikeWrapper } from "components/mdx/LikeButton";
 import TOC from "components/mdx/TOC.astro";
 import { prisma } from "lib/prisma";
 import Layout from "./Layout.astro";
 
 const { frontmatter, headings } = Astro.props;
-// const ip = Astro.clientAddress;
+const ip= Astro.clientAddress;
 
 const postMeta = await prisma.post.upsert({
   where: { slug: frontmatter.slug },
@@ -45,7 +46,7 @@ const postMeta = await prisma.post.upsert({
           <TOC pageHeadings={headings} />
           <div class='my-4 h-px w-full bg-black'></div>
           <div class='flex justify-between'>
-            <button type='button'>❤️ 200</button>
+            <LikeWrapper client:load slug={frontmatter.slug} ip={ip} />
             <button id='scroll-top' type='button' class='text-sm'>⬆️ Back to top</button>
           </div>
         </div>

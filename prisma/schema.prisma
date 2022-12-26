@@ -20,8 +20,8 @@ model Post {
 model Like {
   id       String  @id @default(uuid())
   userIp   String
-  Post     Post?   @relation(fields: [postSlug], references: [slug])
-  postSlug String?
+  Post     Post   @relation(fields: [postSlug], references: [slug])
+  postSlug String
 
   @@index([postSlug])
 }
