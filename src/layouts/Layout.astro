@@ -1,13 +1,12 @@
 ---
 import "@fontsource/inter";
 import "@fontsource/manrope";
-import logo from "../assets/logo.png";
+import Navbar from "components/Navbar.astro";
 
 export interface Props {
   title: string;
-  desc? : string;
+  desc?: string;
 }
-
 const navigations = [
   { name: "Blog", href: "/blog" },
   { name: "Projects", href: "/projects" },
@@ -15,7 +14,7 @@ const navigations = [
   { name: "About", href: "/about" },
 ];
 
-const { title ,desc} = Astro.props;
+const { title, desc } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -26,64 +25,40 @@ const { title ,desc} = Astro.props;
     <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
     <title>{title}</title>
     <meta
-			name="description"
-			content={desc ||
-			"Personal website of Fazza Razaq Amiarso. Blog, Projects, and more."}
-		/>
+      name='description'
+      content={desc || "Personal website of Fazza Razaq Amiarso. Blog, Projects, and more."}
+    />
     <!-- Open Graph -->
-    <meta name="generator" content={Astro.generator} />
-		<meta property="og:title" content={title} />
-		<meta property="og:url" content="https://fazzaamiarso.me" />
-		<meta
-			property="og:description"
-			content={desc ||
-			"Personal website of Fazza Razaq Amiarso. Blog, Projects, and more."}
-		/>
-		<meta property="og:type" content={"website"} />
-		<meta
-			property="og:image"
-			content="https://res.cloudinary.com/dkiqn0gqg/image/upload/v1660581454/og-fazzaamiarso.me_vgpgs2.jpg"
-		/>
-		<meta property="og:image:type" content="image/jpeg" />
-		<meta property="og:image:width" content="1200" />
-		<meta property="og:image:height" content="630" />
-		<meta
-			property="og:image:alt"
-			content="Fazza Razaq Amiarso personal site banner"
-		/>
-		<!--  -->
-		<!-- Twitter card -->
-		<meta name="twitter:card" content="summary" />
-		<meta name="twitter:creator" content="@faz_razq" />
-		<!--  -->
+    <meta name='generator' content={Astro.generator} />
+    <meta property='og:title' content={title} />
+    <meta property='og:url' content='https://fazzaamiarso.me' />
+    <meta
+      property='og:description'
+      content={desc || "Personal website of Fazza Razaq Amiarso. Blog, Projects, and more."}
+    />
+    <meta property='og:type' content={"website"} />
+    <meta
+      property='og:image'
+      content='https://res.cloudinary.com/dkiqn0gqg/image/upload/v1660581454/og-fazzaamiarso.me_vgpgs2.jpg'
+    />
+    <meta property='og:image:type' content='image/jpeg' />
+    <meta property='og:image:width' content='1200' />
+    <meta property='og:image:height' content='630' />
+    <meta property='og:image:alt' content='Fazza Razaq Amiarso personal site banner' />
+    <!--  -->
+    <!-- Twitter card -->
+    <meta name='twitter:card' content='summary' />
+    <meta name='twitter:creator' content='@faz_razq' />
+    <!--  -->
   </head>
   <body class='font-inter'>
-    <header class='border-b-[1px] border-gray-100'>
-      <div class='layout flex items-center py-6'>
-        <a href='/'><img src={logo} alt='' width='50px' class='' /></a>
-        <nav class='ml-auto'>
-          <ul class='flex items-center gap-8'>
-            {
-              navigations.map((nav) => {
-                return (
-                  <li>
-                    <a href={nav.href} class='font-bold'>
-                      {nav.name}
-                    </a>
-                  </li>
-                );
-              })
-            }
-          </ul>
-        </nav>
-      </div>
-    </header>
+    <Navbar />
     <slot />
     <footer class='border-t-2 border-gray-100'>
       <div class='layout flex items-center py-8'>
         <nav class=''>
           <ul class='flex items-center gap-8'>
-             {
+            {
               navigations.map((nav) => {
                 return (
                   <li>
@@ -115,7 +90,7 @@ const { title ,desc} = Astro.props;
   }
 
   html {
-    @apply scroll-smooth
+    @apply scroll-smooth;
   }
 
   .layout {

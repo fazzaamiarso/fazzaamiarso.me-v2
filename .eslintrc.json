@@ -1,5 +1,5 @@
 {
-  "extends": ["plugin:astro/recommended", "prettier"],
+  "extends": ["plugin:astro/recommended", "plugin:@typescript-eslint/recommended", "prettier"],
   "env": { "es6": true },
   "parserOptions": { "sourceType": "module" },
   "overrides": [

@@ -3,11 +3,10 @@ type Props = {
   pageHeadings: Array<{ depth: number; text: string; slug: string }>;
 };
 const { pageHeadings } = Astro.props;
-console.log(pageHeadings)
 ---
 
-<aside id='toc' class='relative'>
-  <nav class='sticky top-20'>
+<div id='toc' class=''>
+  <nav class=''>
     <h2 class='font-bold uppercase tracking-widest mb-4'>Table of content</h2>
     <ul class='space-y-3 text-sm'>
       {
@@ -25,7 +24,7 @@ console.log(pageHeadings)
       }
     </ul>
   </nav>
-</aside>
+</div>
 
 <style>
   .active {

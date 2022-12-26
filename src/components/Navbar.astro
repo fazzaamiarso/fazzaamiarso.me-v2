@@ -1,0 +1,30 @@
+---
+import logo from "../assets/logo.png";
+
+const navigations = [
+  { name: "Blog", href: "/blog" },
+  { name: "Projects", href: "/projects" },
+  { name: "Snippets", href: "/" },
+  { name: "About", href: "/about" },
+];
+---
+<header class='sticky top-0  z-50 backdrop-blur-md'>
+      <div class='layout flex items-center py-4'>
+        <a href='/'><img src={logo} alt='' width='40px' class='' /></a>
+        <nav class='ml-auto'>
+          <ul class='flex items-center gap-8'>
+            {
+              navigations.map((nav) => {
+                return (
+                  <li>
+                    <a href={nav.href} class='font-bold'>
+                      {nav.name}
+                    </a>
+                  </li>
+                );
+              })
+            }
+          </ul>
+        </nav>
+      </div>
+    </header>

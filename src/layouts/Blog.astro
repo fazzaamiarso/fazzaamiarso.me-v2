@@ -1,34 +1,65 @@
 ---
 import TOC from "components/mdx/TOC.astro";
+import { prisma } from "lib/prisma";
 import Layout from "./Layout.astro";
 
 const { frontmatter, headings } = Astro.props;
----
+// const ip = Astro.clientAddress;
 
+const postMeta = await prisma.post.upsert({
+  where: { slug: frontmatter.slug },
+  select: { views: true, _count: { select: { likes: true } } },
+  create: { slug: frontmatter.slug },
+  update: { views: { increment: 1 } },
+});
+---
 <Layout title={frontmatter.title} desc={frontmatter.description}>
-  <main class='space-y-12'>
-    <div class='bg-gray-200 py-12 pt-24'>
+  <main class='space-y-12 pb-24'>
+    <div class='bg-gray-200 pb-12 pt-24'>
       <div class='layout'>
-        <a href="/" class="text-sm underline">Home</a>
+        <a href='/' class='text-sm underline'>Home</a>
         <h1 class='mb-2 text-4xl font-bold'>{frontmatter.title}</h1>
         <p class='text-lg'>{frontmatter.description}</p>
         <div class='flex items-center gap-2'>
-          <p class='text-sm'>{new Intl.DateTimeFormat("en-US", {dateStyle : 'long'}).format(new Date(frontmatter.publishedAt))}</p>
+          <p class='text-sm'>
+            {
+              new Intl.DateTimeFormat("en-US", { dateStyle: "long" }).format(
+                new Date(frontmatter.publishedAt)
+              )
+            }
+          </p>
           -
-          <p class='text-sm'>1000 views</p>
+          <p class='text-sm'>{postMeta.views} views</p>
           -
-          <p class='text-sm'>230 likes</p>
+          <p class='text-sm'>{postMeta._count.likes} likes</p>
         </div>
       </div>
     </div>
-    <div class="grid grid-cols-4 gap-x-2 layout">
-      <article class='col-span-3 blog prose prose-headings:scroll-mt-20 md:prose-lg'>
+    <div class='layout grid grid-cols-4 gap-x-2'>
+      <article
+        class='blog prose col-span-3 prose-headings:scroll-mt-20 max-lg:col-span-4 md:prose-lg'>
         <slot />
       </article>
-      <TOC pageHeadings={headings} />
+      <aside class='max-lg:hidden'>
+        <div class='sticky top-20'>
+          <TOC pageHeadings={headings} />
+          <div class='my-4 h-px w-full bg-black'></div>
+          <div class='flex justify-between'>
+            <button type='button'>❤️ 200</button>
+            <button id='scroll-top' type='button' class='text-sm'>⬆️ Back to top</button>
+          </div>
+        </div>
+      </aside>
     </div>
   </main>
 </Layout>
+
+<script>
+  const scrollTopButton = document.querySelector("#scroll-top") as HTMLButtonElement;
+  scrollTopButton.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+</script>
 
 <style is:global>
   code {

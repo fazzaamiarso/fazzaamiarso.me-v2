@@ -1,7 +1,42 @@
 ---
 import Layout from "layouts/Layout.astro";
+import { prisma } from "lib/prisma";
 
-const posts = await Astro.glob("./*.mdx");
+type FrontMatter = {
+  slug: string;
+  title: string;
+  series?: string;
+  description: string;
+  publishedAt: string;
+  featured?: boolean;
+};
+const posts = await Astro.glob<FrontMatter>("./*.mdx");
+
+let finalPosts:Array<{ slug: string, title: string; description: string; publishedAt: string; views: number; likes: number }>= [];
+for (let p of posts) {
+  const viewsAndLike = await prisma.post.findUnique({
+    where: { slug: p.frontmatter.slug },
+    select: { views: true, _count: { select: { likes: true } } },
+  });
+  if (viewsAndLike) {
+    finalPosts.push({
+      slug : p.frontmatter.slug,
+      title: p.frontmatter.title,
+      publishedAt : p.frontmatter.publishedAt,
+      description: p.frontmatter.description,
+      views: viewsAndLike.views,
+      likes: viewsAndLike._count.likes,
+    });
+  } else {
+    finalPosts.push({
+      slug : p.frontmatter.slug,
+      title: p.frontmatter.title,
+      publishedAt : p.frontmatter.publishedAt,
+      description: p.frontmatter.description,
+      views: 0,
+      likes: 0,
+    });}
+}
 ---
 
 <Layout title='Blog | Fazza Razaq Amiarso'>
@@ -15,17 +50,18 @@ const posts = await Astro.glob("./*.mdx");
     </div>
     <ul>
       {
-        posts.map((p) => {
+        finalPosts.map((p) => {
           return (
             <li class='-ml-4 flex items-start gap-8 rounded-md p-4 hover:bg-gray-100'>
               <p class='basis-16'>
                 {Intl.DateTimeFormat("en-US", { day: "numeric", month: "short" }).format(
-                  new Date(p.frontmatter.publishedAt)
+                  new Date(p.publishedAt)
                 )}
               </p>
               <div class='basis-full'>
-                <h2 class='font-bold'><a href={`/blog/${p.frontmatter.slug}`}>{p.frontmatter.title}</a></h2>
-                <p class="text-sm">{p.frontmatter.description}</p>
+                <h2 class='font-bold'><a href={`/blog/${p.slug}`}>{p.title}</a></h2>
+                <p class="text-sm">{p.description}</p>
+                <div>{p.views} views</div>
               </div>
             </li>
           );
