@@ -1,0 +1,56 @@
+---
+type Props = {
+  pageHeadings: Array<{ depth: number; text: string; slug: string }>;
+};
+const { pageHeadings } = Astro.props;
+console.log(pageHeadings)
+---
+
+<aside id='toc' class='relative'>
+  <nav class='sticky top-20'>
+    <h2 class='font-bold uppercase tracking-widest mb-4'>Table of content</h2>
+    <ul class='space-y-3 text-sm'>
+      {
+        pageHeadings.map((h) => {
+          return (
+            h.depth < 4 && (
+              <li class={h.depth > 2 ? "ml-4" : ""}>
+                <a href={`#${h.slug}`} class='line-clamp-1'>
+                  {h.text}
+                </a>
+              </li>
+            )
+          );
+        })
+      }
+    </ul>
+  </nav>
+</aside>
+
+<style>
+  .active {
+    @apply text-red-500;
+  }
+</style>
+<script>
+  const setCurrent: IntersectionObserverCallback = (entries) => {
+    for (let entry of entries) {
+      const { id } = entry.target;
+      const tocHeadingEl = document.querySelector(`#toc a[href="#${id}"]`);
+      if (!tocHeadingEl) return;
+      if (entry.isIntersecting) {
+        document.querySelectorAll("#toc a").forEach((e) => e.classList.remove("active"));
+        tocHeadingEl.classList.add("active");
+      }
+    }
+  };
+
+  const observerOption: IntersectionObserverInit = {
+    rootMargin: "0px 0px -66%",
+    threshold: 1,
+  };
+  const headingObserver = new IntersectionObserver(setCurrent, observerOption);
+  document
+    .querySelectorAll("article :is(h2,h3,h4)")
+    .forEach((heading) => headingObserver.observe(heading));
+</script>

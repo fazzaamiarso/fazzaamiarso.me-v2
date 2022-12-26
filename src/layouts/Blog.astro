@@ -1,17 +1,19 @@
 ---
+import TOC from "components/mdx/TOC.astro";
 import Layout from "./Layout.astro";
 
-const { frontmatter } = Astro.props;
+const { frontmatter, headings } = Astro.props;
 ---
 
-<Layout title={frontmatter.title}>
+<Layout title={frontmatter.title} desc={frontmatter.description}>
   <main class='space-y-12'>
     <div class='bg-gray-200 py-12 pt-24'>
       <div class='layout'>
+        <a href="/" class="text-sm underline">Home</a>
         <h1 class='mb-2 text-4xl font-bold'>{frontmatter.title}</h1>
         <p class='text-lg'>{frontmatter.description}</p>
         <div class='flex items-center gap-2'>
-          <p class='text-sm'>{frontmatter.publishedAt}</p>
+          <p class='text-sm'>{new Intl.DateTimeFormat("en-US", {dateStyle : 'long'}).format(new Date(frontmatter.publishedAt))}</p>
           -
           <p class='text-sm'>1000 views</p>
           -
@@ -19,13 +21,27 @@ const { frontmatter } = Astro.props;
         </div>
       </div>
     </div>
-    <article class='layout blog prose md:prose-lg prose-headings:scroll-mt-20'>
-      <slot />
-    </article>
+    <div class="grid grid-cols-4 gap-x-2 layout">
+      <article class='col-span-3 blog prose prose-headings:scroll-mt-20 md:prose-lg'>
+        <slot />
+      </article>
+      <TOC pageHeadings={headings} />
+    </div>
   </main>
 </Layout>
 
 <style is:global>
+  code {
+    counter-reset: step;
+    counter-increment: step 0;
+  }
+
+  code .line::before {
+    content: counter(step);
+    counter-increment: step;
+    margin-right: 1.5rem;
+  }
+
   .heading-group {
     position: relative;
   }
@@ -35,7 +51,7 @@ const { frontmatter } = Astro.props;
     height: 100%;
     width: 50px;
     transform: scale(1.5);
-    left: -2rem;
+    left: -1rem;
     opacity: 0;
     transition: all 100ms ease-in-out;
   }

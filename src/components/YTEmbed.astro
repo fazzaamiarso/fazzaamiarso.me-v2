@@ -1,0 +1,14 @@
+---
+type Props = {
+  id: string;
+  title: string;
+};
+
+const { id, title } = Astro.props;
+---
+
+<lite-youtube videoid={id} title={title}></lite-youtube>
+
+<script>
+  import "@justinribeiro/lite-youtube";
+</script>
