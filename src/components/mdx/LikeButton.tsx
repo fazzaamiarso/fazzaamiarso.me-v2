@@ -5,21 +5,25 @@ const queryClient = new QueryClient();
 type Props = {
   ip: string;
   slug: string;
+  initialLikes: number;
 };
 
-const likePost = async (data: Props) => {
+const likePost = async (data: Omit<Props, "initialLikes">) => {
   return await fetch("/api/like", { method: "POST", body: JSON.stringify(data) });
 };
 
-export const LikeButton = ({ ip, slug }: Props) => {
+export const LikeButton = ({ ip, slug, initialLikes }: Props) => {
   const { data } = useQuery({
     queryKey: [`like-${slug}`],
     queryFn: async () => {
-      const savedLikes = await fetch(`/api/like?slug=${slug}`, {
+      const savedLikes = await fetch(`/api/like?slug=${slug}&ip=${ip}`, {
         method: "GET",
       });
       return await savedLikes.json();
     },
+    initialData: () => ({
+      likes: initialLikes,
+    }),
   });
 
   const likeMutation = useMutation(likePost, {
@@ -29,15 +33,18 @@ export const LikeButton = ({ ip, slug }: Props) => {
   });
 
   return (
-    <button
-      type='button'
-      disabled={likeMutation.isLoading}
-      onClick={() => {
-        likeMutation.mutate({ ip, slug });
-      }}
-      className='disabled:opacity-50'>
-      🔥 {data ? data.likes : 0}
-    </button>
+    <div>
+      <button
+        type='button'
+        disabled={likeMutation.isLoading}
+        onClick={() => {
+          likeMutation.mutate({ ip, slug });
+        }}
+        className='relative block overflow-hidden disabled:opacity-50'>
+        <span className='inline-block'>🔥 {data ? data.likes : 0}</span>
+        <span>{data ? data.myLikes : 0}</span>
+      </button>
+    </div>
   );
 };
 

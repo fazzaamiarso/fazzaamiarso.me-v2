@@ -32,7 +32,7 @@ const postMeta = await prisma.post.upsert({
           -
           <p class='text-sm'>{postMeta.views} views</p>
           -
-          <p class='text-sm'>{postMeta._count.likes} likes</p>
+          <p class='text-sm'>10 minutes</p>
         </div>
       </div>
     </div>
@@ -46,7 +46,7 @@ const postMeta = await prisma.post.upsert({
           <TOC pageHeadings={headings} />
           <div class='my-4 h-px w-full bg-black'></div>
           <div class='flex justify-between'>
-            <LikeWrapper client:load slug={frontmatter.slug} ip={ip} />
+            <LikeWrapper client:load slug={frontmatter.slug} ip={ip} initialLikes={postMeta._count.likes}/>
             <button id='scroll-top' type='button' class='text-sm'>⬆️ Back to top</button>
           </div>
         </div>

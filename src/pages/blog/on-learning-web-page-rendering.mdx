@@ -1,0 +1,199 @@
+---
+layout: "../../layouts/Blog.astro"
+title: "On Learning Web Page Rendering"
+description: "A Guide to Client Side Rendering, Server Side Rendering, and Static Site Generation."
+publishedAt: "2022-03-18"
+slug: "on-learning-web-page-rendering"
+---
+import Notes from 'components/mdx/Notes.astro'
+
+As I was learning and building projects with Next js, I surely came across various ways of rendering your app and just proceed without fully understanding them. One thing for sure is that I was amazed by it. Eventually, I can make stuff with it, but no idea how it works.
+
+Looking back, maybe it was the reason that I struggled a lot with `getStaticProps` and `getStaticPath` in the first place. A couple of projects and tutorials later, I decided to get away from Next and build stronger fundamentals on Javascript and React. From that point, I started to grow and learn more about Javascript and React.
+
+As I become more comfortable with writing code and my fundamentals overall, I started to get interested in React frameworks again. When I was learning, I learned a lot of stuff from Kent C. Dodds's content, whether it is a blog, podcast, or youtube live streams. In there, He always mentioned and talks about Remix all the time, and every time he did, he is always so excited and happy with Remix that it almost feels like I was brainwashed (Sorry Kent).
+
+It gets to me eventually and I decided to learn Remix which is a fully server-rendered framework that leads me to build my first full-stack app and got me interested in how actually all these SSR, SSG, and CSR fundamentally worked. So, I wrote this blog to solidify my understanding and hopefully help you not go through a hard time trying to understand page rendering.
+
+## Client-Side Rendering
+
+Client-side rendering is a relatively new way of rendering from Javascript frameworks like React that emerges. When you create your app with `create-react-app`, you are working with client-side rendering by default or unknowingly if you like me before😝.
+
+**What does it mean by client-side?** It means that your website is fully rendered or loaded by a client-side framework when Javascript has already finished downloading and parsed by the browser when a user visits your site.
+
+Okay, what is happening?
+
+1. User visits your site and requested a page.
+2. Browser received the initial index.html and then started downloading all the script tags found that contain all of your client-side code.
+3. When all Javascript files have been downloaded, then the browser starts parsing and evaluating its content
+4. As you wait, you got rendered a blank HTML page.
+5. Finally, React will render the DOM of your page with all the HTML, CSS, and JS (Event handlers, focus management and states, etc.) you wrote.
+
+As you can see, the browser (client) do all of the work there, such as downloading all necessary assets, parsing and evaluating Javascript files.
+
+Let's check out the network tab to understand it more:
+
+![client-side example](https://cdn.hashnode.com/res/hashnode/image/upload/v1647519032920/wfygsYZPD.gif)
+
+Do you see what happened there?
+
+1. First thing first, the browser will download the initial index.html file, which contains all the assets on its head such as CSS and script tags, but the body is empty. The empty body is why you got a blank page.
+2. Browser noticed the script tag and stylesheet. So, it started downloading them.
+3. After the assets are downloaded and parsed, React renders the page.
+
+Now, your app starts working and it is interactive because React has attached all event handlers, initialized states, and all the good stuff you wrote.
+
+### Pros
+
+- **There is no need to run a server**. You can fetch data from the client.
+- After the initial render, your **app will become faster and snappier** as you don't need to make an extra network request to render pages because React will just update the DOM. Unless you do some fetching on the client or poor performance handling (e.g. too much re-renders and unoptimized expensive computations).
+- **It is relatively easier and simpler to develop**. You can host it for free most of the time.
+
+### Cons
+
+- **As your app grows bigger and more dependencies are installed, your javascript bundle size will get proportionally larger**. This means there is more Javascript sent over the network which leads users to download and parse more Javascript which causes slower load time.
+- **Parsing a javascript file is a CPU-intensive task**. You need your machine CPU to parse it. If you have a great and performant CPU, you are good to go, but you also must consider users that still use a low-end phone that is less performant. It is not going to be a good experience.
+- Users' networks are also important. As you can see from the network tab before,**when the network is slow, users will only stare at a blank page for a while which can be confusing🙃**.
+- **If a user disabled javascript on the browser, your site will completely not work**.
+
+### Tools or framework:
+
+- React
+- Vue
+- Angular
+- Svelte
+
+## Static Site Generation (SSG)
+
+If you have been learning javascript and using its frameworks, you certainly have heard of SSG.
+
+**What exactly is SSG?**
+
+It is a method of rendering all of your site pages asset such as HTML, CSS, and server-side Javascript (e.g. pulling data from API or database for blog data) on build time to static file so that it can be served immediately on request to your site. SSG is also called pre-rendering because you render or build all pages with build scripts e.g. `npm run build` ahead of time. After that, your built files will live on the build output folder and be deployed to a CDN. When users visit your site, the server will send back a response with the pre-rendered page that their browser can immediately render. Then, any client-side javascript will start downloading and hydrate the page after. Now, your page will start working fully client-side.
+
+Here is what the network tab looks like:
+
+![static site generation example](https://cdn.hashnode.com/res/hashnode/image/upload/v1647523135648/o1erFRjoP.gif)
+
+<Notes>The site belongs to Vercel from their demo page. https://next-blog-wordpress.vercel.app/</Notes>
+
+### Pros
+
+- **SSG initial load is blazingly fast** as you already pre-rendered all pages beforehand. So, the extra javascript you send over the network is significantly smaller, which means less downloading and parsing.
+- **Serving or hosting static files is relatively cheap and cost-effective** because as your site gain traffic, you always serve the same file and there is no need to hit your API or database again.
+- **No need to run a server.**
+
+### Cons
+
+- **As your app pages grow, your app build time consequently increased too**. Imagine if you are running an e-commerce site with thousands of products. Its build time will undoubtedly take a long time to finish as you must generate thousands of different pages.
+- **Making changes mean that you must rebuild your site and wait until the whole site is finished building**. After that, redeploy it. Imagine it is the e-commerce site, yikes😐.
+- **Data on your site most likely will be static or stale until you do a rebuild**. You could do some fetching on the client to get dynamic data. That is great for blogs, docs, or marketing pages, but not for dynamic page that always needs up-to-date data.
+
+<Notes>By looking at the cons, Next js actually try to eliminate those problems by introducing Incremental Static Generation (ISG). Which fundamentally is SSG, but with an extra capability to implement SSG on a per-page basis. This means you don't need to rebuild the entire site if there are changes happen.</Notes>
+
+Here are what a typical flow will look like with an SSG site, assuming that there is no caching implemented:
+
+🛠🛳😀😀😀📝😅😅😅🛠🛳😀😀
+
+1. You run the build script and build all pages.
+2. Deploy your site
+3. Every user that visits your site will be served a page with up-to-date data.
+4. You make changes to your code.
+5. Now, every user will still be served page, but with stale data.
+6. You rebuild and redeploy your site.
+7. User served a page with up-to-date data again.
+
+ <Notes>
+    🛠 - Build website  
+    🛳 - Deploy  
+    😀 - Get page with fresh data  
+    📝 - Make changes  
+    😅 - Get page, but data is stale  
+    🥱 - Waiting for page to build  
+
+     p.s. I borrowed the idea above from [Ryan Florence's video](https://www.youtube.com/watch?v=bfLFHp7Sbkg&t=511s).
+ </Notes>
+
+### Tools or framework
+
+- Next js
+- VuePress
+- Gatsby
+- Hugo
+- Eleventy
+
+## Server Side Rendering (SSR)
+
+SSR is type page rendering which your page will be built and rendered on the server every request or visit user makes before sending a response to the browser. API call or pulling data from the database (or any server-side stuff) will also happen on that particular request. After the browser received the rendered page, it will start downloading and then parse client-side javascript. Finally, hydrating your app with client-side code is just like SSG.
+
+Let's investigate the network tab:
+
+![server-side rendering example](https://cdn.hashnode.com/res/hashnode/image/upload/v1647521755754/XcTfNvnrE.gif)
+
+What is happening?
+
+1. Browser request the page, the server starts processing that request.
+2. Returned response with HTML that browser can render, but not interactive.
+3. Notices script tags and start downloading them.
+4. Finished downloading and start parsing javascript.
+5. React hydrate the site and now the page is interactive.
+
+### Pros
+
+-** Data on your page will always be up-to-date** because the page is built on every request. So, SSR is suitable for a site that needs dynamic data that frequently change. For example, e-commerce, news, or social media sites.
+
+- **Minimal javascript sent over the network** because most of the work and load is being done by the server such as API calls, querying a database, logics (normalizing and transforming data, etc.), and of course rendering your page.
+- **Initial render on the browser is fast** because you don't need to wait for Javascript to load. No blank page, Hurray🙌🙌.
+- **Changes made on the database or CMS will take effect immediately and you don't need to rebuild the site**.
+
+### Cons
+
+- **Need to run a server** to handle incoming requests. 
+- **Running a server means it potentially needs more costs** as your server will be hit on every request.
+- Your site will **rely on the server to do heavy lifting and work** which can make it slow sometimes, especially if you process complex data.
+- If your server is not powerful or ready enough to handle increased traffic, **it can give you high latency** (time needed from request to response). It can delay or slow down the browsing experience for everybody.
+
+Here are what a typical flow will look like with an SSR site, assuming that there is no caching implemented:
+
+🛠🚢🥱😀🥱😀📝🥱😀🥱😀
+
+1. Site is built and deployed
+2. User visits the site and sends a request to the server
+3. Server starts to process the request
+4. User waits for the response from the server
+5. Page is rendered with fresh and up-to-date data, start again from step 4 for every subsequent request
+6. Now, there are some changes on your site such as database or CMS
+7. Changes took effect immediately for the next subsequent request that happens
+
+### Tools or framework
+
+- Next js
+- Remix
+- SvelteKit
+
+## SEO Considerations
+
+It would be a shame to miss out on SEO if we talked about page rendering. There is a lot of things for SEO. So, I won't go too deep here and try to keep it simple. I hope at least you can get some context on what is going on.
+
+**How does page rendering fit into context?**
+
+When search engines bots (crawlers) visit your page, an HTTP request is made and will expect a response from your site. On successful requests, they will process the returned HTML and parse it so they can see and evaluate its content. They also process all javascript found as part of the rendering process. Keep in mind that not all bots can process javascript.
+
+### SSR and SSG
+
+For SEO, both of them are a great choice, why? because when bots got a response from your site, it brought an HTML page that contains its actual content that is either pre-rendered ahead of time (SSG) or built on-demand in the server (SSR). This means that search engines will be able to evaluate your site more accurately.
+
+### CSR
+
+Unfortunately, client rendered site will not be the best for SEO because the returned HTTP response from your site will only contain HTML with all the links, scripts, and empty body (blank page) that to get its actual content, bots need to process javascript first. This is not optimal because bots have limitations processing javascript and not all bots can. There are ways to improve SEO, but it could be tedious and sub-optimal.
+
+Did I make a mistake? or do you have any questions? Feel free to reach out to me. I will definitely be around the corner. Thank you for your time!!🙏
+
+## Resources
+
+- [https://developers.google.com/web/updates/2019/02/rendering-on-the-web](https://developers.google.com/web/updates/2019/02/rendering-on-the-web)
+- [https://unicorn-utterances.com/posts/what-is-ssr-and-ssg](https://unicorn-utterances.com/posts/what-is-ssr-and-ssg)
+- [https://www.youtube.com/watch?v=bfLFHp7Sbkg&t=511s](https://www.youtube.com/watch?v=bfLFHp7Sbkg&t=511s)
+- [https://remix.run/blog/remix-vs-next](https://remix.run/blog/remix-vs-next)
+- [https://techstacker.com/server-side-rendering-ssr-pros-and-cons/](https://techstacker.com/server-side-rendering-ssr-pros-and-cons/)
+- [https://developers.google.com/search/docs/advanced/guidelines/how-search-works](https://developers.google.com/search/docs/advanced/guidelines/how-search-works)

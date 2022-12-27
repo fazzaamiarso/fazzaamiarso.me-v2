@@ -1,0 +1,41 @@
+---
+import clsx from "clsx";
+type Props = {
+  heading?: string;
+  type?: "warn" | "danger" | "normal";
+};
+
+const { heading, type = "normal" } = Astro.props;
+---
+
+<aside class={clsx("py-4 mb-20 px-6 rounded-r-md rounded-l-sm border-l-4", type === "warn" && "warn")}>
+  {heading && <strong class="font-bold not-prose ">{heading}</strong>}
+  <slot />
+</aside>
+
+<style>
+  :root {
+    --warn-border: #ff9d00;
+    --warn-background: #fef6ce;
+    --normal-border: #4433ff;
+    --normal-background: #deebf6;
+    --text: black;
+  }
+
+  body.dark {
+    --normal-background: #182635;
+    --warn-background: #25231d;
+    --text: white;
+  }
+
+  aside {
+    background-color: var(--normal-background);
+    border-color: var(--normal-border);
+    color: var(--text) !important;
+  }
+
+  aside.warn {
+    background-color: var(--warn-background);
+    border-color: var(--warn-border);
+  }
+</style>

@@ -6,6 +6,8 @@ slug: "inclusive-react-part1"
 publishedAt: "2022-07-12"
 ---
 
+import Notes from 'components/mdx/Notes.astro'
+
 When making an app, we get into code and solve problems most of the time. We focused on that cool feature. Finally, our app is finished. We are happy.
 
 However, most developers forgot that we build the app for others.
@@ -20,7 +22,7 @@ I chose React over vanilla Javascript because most of the resources online are i
 
 In this blog post, we will build three common components from scratch and make them accessible.
 
-
+<Notes>This blog will focus more on the accessibility side. So, we won’t go too deep on React and styling. I won't provide the styling here, but you can surely check out the [repo](https://github.com/fazzaamiarso/inclusive-react) or [live demo](https://inclusive-react.netlify.app/)</Notes>
 
 ## To-Do List
 
@@ -39,7 +41,7 @@ There are two ways to create a region, either by using `<section />` or `<div />
 
 Most people use sections recklessly without giving an accessible name. So, it will be identified as a generic element in the accessibility tree. Section should be used when there is no more specific element to represent a structure.
 
-
+<Notes>according to [WebAIM](https://webaim.org/projects/screenreadersurvey8/#finding), 68.8% of screen reader users primarily use heading to navigate by pressing 1 – 6 or `h` key.</Notes>
 
 ```jsx
 <section aria-labelledby='todo-heading'>
@@ -186,7 +188,10 @@ const createTodo = (e) => {
 </form>;
 ```
 
-
+<Notes>
+  We use the form element because by some screen readers, users will be informed when entering a form. When users of screen readers like JAWS or NVDA encounter an element, they are automatically entered into a special interaction mode variously called “forms mode” or “application mode”.
+   ~ Inclusive Components by Heydon Pickering.
+</Notes>
 
 Form makes submitting easier with the button inside it by enabling us to submit by pressing enter. We just need to add `type="submit"` to the submit button and listen for a submit event.
 
@@ -242,7 +247,6 @@ const deleteTodo = (id) => {
             />
           ))}
         </ul>
-
 const TodoItem = ({
   id,
   name,
@@ -292,7 +296,6 @@ Let’s update accordingly.
 
 ```jsx
 const [action, setAction] = useState(null); // no action when mounted
-
 const deleteTodo = (id) => {
     setAction('delete');
     setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
@@ -324,7 +327,7 @@ This action state might seem redundant. But, it pays off when there are more act
 
 After we set up the focus management, we still need to make our heading focusable. We can do that easily by adding `tabIndex={-1}` to the heading.
 
-
+<Notes>What do [tabIndex](https://web.dev/using-tabindex/) values mean.</Notes>
 
 - **-1** means the element focusable programmatically i.e., the focus can only be done with our code.
 - **0** means the element is added to focus order and can be focused when users use tab key.
@@ -354,7 +357,6 @@ const TodoItem = ({id,name, completed, deleteTodo, toggleTodo}) => {
       <label htmlFor={id}>
         {name}
       </label>
-
 //parent.jsx
 const toggleTodo = (id) => {
     setTodos((prevTodos) => {
@@ -372,7 +374,7 @@ setAction("toggle")
 
 Remember that checkboxes must have a label to identify them. Screen readers will read the label along with the focused checkbox. Additionally, the label expands its input field activation area. We can say that label is an area extension of an input field.
 
-
+<Notes heading="Pitfall" type="warning">Don’t prevent default a checkbox because it will prevent it from being toggled. Checkbox doesn’t cause form submission. Preventing default is useful when the element causes unintended behavior.</Notes>
 
 Accessibility is useful, right?
 
@@ -383,7 +385,7 @@ Now, our to-do list is good and accessible. Its accessibility is fine, but scree
 They will never know until they traverse our app again. What an annoying and cumbersome experience.
 Luckily, we have [live region](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Live_Regions) that can give screen readers an announcement when something changed in our app. The live region could be implemented on notification, confirmation, etc.
 
-
+<Notes>We can trigger the live region announcement by modifying, adding, or removing the content in it. Live region default is to announce when content is added. If we want to change the default, we can set the aria-relevant to “removals”, “all”, “additions”, or “text”.</Notes>
 
 We will visually hide our live region because we just want it for screen readers.
 
@@ -391,7 +393,6 @@ Now, we want to give users feedback when a to-do is successfully added. So, they
 
 ```jsx
 const liveRegionRef= useRef('')
-
 const createTodo = (e) => {
 	//...omitted for brevity
     setTodos((prevTodos) => [...prevTodos, newTodo]);
@@ -491,7 +492,6 @@ const EyeHideIcon = () => {
     </svg>
   );
 };
-
 const EyeIcon = () => {
   return (
     <svg
@@ -577,7 +577,6 @@ const [mode, setMode] = useState('light'); // 'light' | 'dark'
     <DarkModeSwitch mode={mode} setMode={setMode} />
   </li>
 </ul>
-
 const DarkModeSwitch = ({ mode, setMode }) => {
   return (
     <>
@@ -601,9 +600,7 @@ const DarkModeSwitch = ({ mode, setMode }) => {
     </>
   );
 };
-
 export default DarkModeSwitch;
-
 const SunIcon = () => {
   return (
     <svg
@@ -621,7 +618,6 @@ const SunIcon = () => {
     </svg>
   );
 };
-
 const MoonIcon = () => {
   return (
     <svg
@@ -649,12 +645,10 @@ Here is the implementation.
   display: flex;
   align-items: center;
   gap: 1rem;
-
   border: gray solid 1px;
   border-radius: 5px;
   padding: 0.25rem;
 }
-
 .switch[aria-checked="false"]::after,
 .switch[aria-checked="true"]::after {
   position: absolute;
@@ -667,7 +661,6 @@ Here is the implementation.
   top: 50%;
   transform: translateY(-50%);
 }
-
 .switch[aria-checked="false"]::after {
   right: 5%;
 }
@@ -685,7 +678,6 @@ How to implement the dark mode colour switch? We won’t go deep, but we utilize
   --text: black;
   --input: white;
 }
-
 .dark {
   --bg-primary: #0e151a;
   --bg-secondary: #ff0a78;

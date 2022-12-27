@@ -7,7 +7,8 @@ slug: "a11y-fem-card-details"
 publishedAt: "2022-12-20"
 featured: true
 ---
-import Youtube from 'components/YTEmbed.astro'
+import YoutubeEmbed from 'components/YTEmbed.astro'
+import Notes from 'components/mdx/Notes.astro'
 
 ## Introduction
 
@@ -17,7 +18,7 @@ Sounds interesting? Let's start.
 
 ## What we are building?
 
-<Youtube id="X0yhi5-uJlo" title=""></Youtube>
+<YoutubeEmbed id="X0yhi5-uJlo" title="Card details demo" />
 
 🔗 [Github Repository](https://github.com/fazzaamiarso/Frontendmentor-challenges/tree/main/apps/card-details)
 
@@ -27,7 +28,7 @@ Sounds interesting? Let's start.
 
 In the design below, the cards are responsible to reflect the form's input data.
 
-<img src='https://i.imgur.com/bq4WH4E.png' alt='cards container' width='500' />
+<img  src="https://i.imgur.com/bq4WH4E.png" alt="cards container" width="500" />
 
 When dealing with decorative interface, we should ask ourselves, do assistive technology users gain any value or more context with the interface?
 
@@ -46,8 +47,8 @@ So, we can add a `presentation` or `none` role to the container element. By addi
 We can see that there are many uppercased texts in the design.
 
 <figure>
-  <img src='https://i.imgur.com/pN0EkCf.png' alt='uppercased text' />
-  <figcaption style='text-align:center;'>Uppercased texts in orange container</figcaption>
+<img src="https://i.imgur.com/pN0EkCf.png" alt="uppercased text" />
+<figcaption style="text-align:center;">Uppercased texts in orange container</figcaption>
 </figure>
 
 Some of us might think to type those uppercased texts in HTML. This isn't wrong per se, but it has its use case.
@@ -61,27 +62,17 @@ Here's how to uppercase in CSS.
 ```css
 text-transform: uppercase;
 ```
-
 > For more details, [https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform)
-
 ## Building an Accessible Form
-
 In the [previous article](https://fazzaamiarso.me/blog/a11y-fem-interactive-rating/), we covered how to handle a form submission. However, it was a simple form with 1 input field. Now, we will deal with a significantly more complex form.
-
 ### Number Input Field
-
 Most of us (should) think that to create a number input field, we use `<input type="number">`. Which does make sense.
-
 Weirdly, that's not the best solution for every use case. Some of the reasons are:
-
 - It's intended for incrementable integers. Credit card numbers and social security numbers are not incrementable integers.
 - It has an annoying number stepper/arrow. Users can accidentally click on the stepper and increment/decrement unknowingly.
 - It has no feedback for assistive technologies on the type it's accepting.
-
 In our case, we ask users for credit card numbers and CVC. So, we will use the well-known method. Which is input with `type="text"` and extra HTML attributes.
-
 Here is the markup.
-
 ```html
 <input type="text" inputmode="numeric" pattern="[0-9]*" />
 ```
@@ -94,7 +85,6 @@ Let's break it down.
 Although we define a pattern, users still can type anything. However, the browser will validate the form on submission. If you want, you can add javascript logic to prevent users from typing the wrong type. But, we won't do it.
 
 > For more details about input type numbers, check out the official UK government take on this matter [https://technology.blog.gov.uk/2020/02/24/why-the-gov-uk-design-system-team-changed-the-input-type-for-numbers/](https://technology.blog.gov.uk/2020/02/24/why-the-gov-uk-design-system-team-changed-the-input-type-for-numbers/)
-
 ### Should We Provide an `Autocomplete` Attribute?
 
 Based on [Web Content Accessibility Guideline](https://www.w3.org/WAI/WCAG21/Understanding/identify-input-purpose.html), there are benefits when using autocomplete on an input field. Especially, for people with cognitive disabilities and motor impairments.
@@ -169,7 +159,6 @@ Firstly, remove the hint from the `legend` to avoid redundancy. After that, wrap
 Secondly, create the input with format hinting. Following the design, we'll use the input's placeholder as a format hint. Similarly, giving hints directly on the label is also possible.
 
 > Why not both? because that will be redundant. Screen readers will announce something like this "Expiry month, MM, MM".
-
 ```html
 <fieldset>
     // legend from before
@@ -203,6 +192,9 @@ Secondly, create the input with format hinting. Following the design, we'll use 
 ### Handling Validation Error
 
 We inevitably have to validate input and handle errors when dealing with forms. So, we're going to implement an accessible error message.
+<Notes heading="Important">
+  We're going to cover the validation details in the next part.
+</Notes>
 
 #### Invalid Form
 
@@ -266,120 +258,82 @@ if(!ccName.validity.valid) {
     // get the error message element
     const errEl = document.querySelector("#cc-number-err");
     el.setAttribute("aria-invalid", "true");
-
     // required field error
     if (ccName.validity.valueMissing) {
         errEl.innerText = "Can't be blank!";
     }
 ```
-
 Now, screen readers will be alerted when an error occurred. But, it's only going to work once, since there are no changes to the error text on the next validation.
-
 To trigger the alert again, simply remove the error text when we set the `aria-invalid` to false.
-
 #### Improving the Design's Error Message
-
 In the challenge specification, some messages should be given for certain errors.
-
 - **Empty field** -> "Can't be blank".
 - **Length is too short** -> "Should be \<number\> characters long".
 - **Wrong Pattern** -> "Wrong format, numbers only".
-
 Technically, the errors are fine. So, what can be improved? According to [WCAG specification](https://www.w3.org/WAI/WCAG21/Understanding/error-identification.html), an error message should contain the field that owns the error. In other words, the error is too general.
-
 Therefore, we can improve the errors into:
-
 - **Empty Field** -> "Card number can't be blank".
 - **Length is too short** -> "Card number must contain 16 digits".
 - **Wrong Pattern** -> "Card number is in a wrong format, numbers only".
-
 #### Managing Focus
-
 When we submit a form, what do you think will happen to the focus? There is a lot that can happen.
-
 However, when an error occurred, we want to guide users to the easiest way to fix the error.
-
 We already implemented the error messages. But, the user experience isn't great since we don't know where the focus is located. Imagine a screen reader user that has to find where the invalid input's located with keyboard navigation.
-
 Don't worry, we can fix that problem by focusing on the top-most field that is invalid. So, users can easily navigate back down to the submit button while going through the error.
-
 Let's implement it in our `submit` listener.
-
 ```ts
 // check form validity with Constraint Validation API
 if (!form.checkValidity()) {
   // find the first and top-most invalid input inside the form
   const invalidInput = form.querySelector("input[aria-invalid='true']");
-
   // focus on the input
   invalidInput?.focus();
 }
 ```
-
 Here is the result.
-
 ![focus management demo](https://i.imgur.com/YZL3n2c.gif)
-
 > More information on focus. [https://web.dev/focus/](https://web.dev/focus/)
-
 ## Validate Input with Constraint Validation API
-
 We're going to use a browser's built-in validation API to validate input values, it's called [Constraint Validation API](https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation). Although it's not well-known, it's simple and powerful.
-
 It's powerful because it combines native HTML attributes such as `required`, `pattern`, and `minLength` to set the constraint and built-in javascript API. We just set the constraint in HTML and it'll be reflected in its `validityState` in Javascript.
-
 Let's implement it on the credit card number input.
-
 ```html
 <input id="cc-number" pattern="[0-9*]" minlength="16" maxlength="16" required />
 ```
-
 ```ts
 // Get the element we want to validate
 const ccNumber = document.querySelector("#cc-number");
-
 // check if the element is valid
 if (!ccNumber.validity.valid) {
   let errorMessage = "";
-
   // check for empty field or `required`.
-  if (ccNumber.validity.valueMissing) errorMessage = `Card number can't be blank`;
-
+  if (ccNumber.validity.valueMissing)
+    errorMessage = `Card number can't be blank`;
   // check for mismatched patterns defined in `pattern`
   if (ccNumber.validity.patternMismatch)
     errorMessage = `Card number is in a wrong format, numbers only`;
-
   // check if the length is less than the `maxLength`
-  if (ccNumber.validity.tooShort) errorMessage = `Card number must have 16 digits`;
+  if (ccNumber.validity.tooShort)
+    errorMessage = `Card number must have 16 digits`;
 }
 ```
-
 Here's a breakdown of the above example.
-
 - `pattern` -> `validity.patternMismatch`. Input must contain numbers only.
 - `maxLength` -> `validity.tooLong`. Input must be less than or equal to 16 characters.
 - `minLength` -> `validity.tooShort`. Input must be at least 16 characters.
 - `required` -> `validity.valueMissing`. Input Must have a value.
-
 We can also trigger a validation by ourselves with `checkValidity`.
-
 ```ts
 const formElement = document.querySelector("form");
-
 if (formElement.checkValidity()) {
   // Do something when all form values are valid.
 }
-
 const inputEl = document.querySelector("input");
 if (inputEl.checkValidity()) {
   // Do something when the input value is valid
 }
 ```
-
 Here's an old but gold article by Google on Constraint Validation API [https://web.dev/constraintvalidation/](https://web.dev/constraintvalidation/). Interesting, right?
-
 ## Recap
-
 We've learned plenty about implementing accessibility, especially about forms. We also learned to implement validation with Constraint validation API.
-
 I hope now you can solve similar accessibility problems or implement them by yourself.

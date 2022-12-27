@@ -8,6 +8,8 @@ publishedAt: "2022-12-13"
 featured: true
 
 ---
+import YoutubeEmbed from 'components/YTEmbed.astro'
+import Notes from "components/mdx/Notes.astro";
 
 ## Series Introduction
 	 
@@ -21,13 +23,17 @@ I'm not an accessibility expert, but I will learn them by building and writing t
   
 ## What will we build?
   
+<YoutubeEmbed id="KfSvlUd41TQ" title="Interactive ratings demo" />
   
 🔗 [Github Repository](https://github.com/fazzaamiarso/Frontendmentor-challenges/tree/main/apps/interactive-rating)
   
 🔗 [Live Demo](https://frontendmentor-challenges-interactive-rating.vercel.app/)
   
-
->  I will not go in-depth on styling and markup. I will only focus on things related to accessibility implementation. **Please refer to the GitHub repo for the details**.
+<Notes heading="Important" type="warning">
+  I will not go in-depth on styling and markup. I will only focus on things
+  related to accessibility implementation. **Please refer to the GitHub repo for
+  the details**.
+</Notes>
   
 ## Tools We Use
   
@@ -153,13 +159,10 @@ We can listen to the submit event on the form and get the form data with `FormDa
   
 ```ts
 const form = document.querySelector("form") as HTMLFormElement;
-
 form.addEventListener("submit", (e) => {
   e.preventDefault();
-
   // Make sure it's a form element
   if (!(e.currentTarget instanceof HTMLFormElement)) return;
-
   // Create a new formData entries containing submitted data
   const formData = new FormData(e.currentTarget);
 });
@@ -191,10 +194,8 @@ Let's add this line of code to the `form` listener from before
 ```ts
 const mainPage = document.getElementById("rate") as HTMLElement;
 const thankPage = document.getElementById("thank") as HTMLElement;
-
 mainPage.classList.remove("active");
 thankPage.classList.add("active");
-
 // Select h1 from the thank you page and focus on it
 thankPage.querySelector("h1")?.focus();
 ```
