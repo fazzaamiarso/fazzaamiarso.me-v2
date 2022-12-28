@@ -1,0 +1,36 @@
+---
+import Layout from "layouts/Layout.astro";
+
+type Frontmatter = {
+  title: string;
+  description: string;
+  publishedAt: string;
+  tags: string[];
+};
+
+const snippets = await Astro.glob<Frontmatter>("./*.mdx");
+---
+
+<Layout title='Snippets | Fazza Razaq Amiarso'>
+  <main class='layout space-y-6 py-12'>
+    <div>
+      <h1 class='text-4xl font-bold'>Snippets</h1>
+      <p class='max-w-[60ch] text-lg'>
+        Collection of code snippets that I found useful. Hope it can help someone too.
+      </p>
+    </div>
+    <ul>
+      {
+        snippets.map((s) => {
+          return (
+            <li class="ring-1 ring-black p-4 rounded-md">
+                <h2 class='font-bold text-xl'><a href={s.url}>{s.frontmatter.title}</a></h2>
+                <p>{s.frontmatter.description}</p>
+                <ul class="space-x-4 flex items-center">{s.frontmatter.tags.map(t => <li>#{t}</li>)}</ul>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </main>
+</Layout>

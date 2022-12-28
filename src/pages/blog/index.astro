@@ -14,7 +14,7 @@ const _posts = await Astro.glob<FrontMatter>("./*.mdx");
 const posts = await Promise.all(
   _posts.map(async (p) => {
     const viewsAndLike = await prisma.post.findUnique({
-      where: { slug: p.frontmatter.slug },
+      where: { slug: p.url },
       select: { views: true, _count: { select: { likes: true } } },
     });
 
@@ -22,7 +22,7 @@ const posts = await Promise.all(
       title: p.frontmatter.title,
       description: p.frontmatter.description,
       publishedAt: p.frontmatter.publishedAt,
-      slug: p.frontmatter.slug,
+      slug: p.url,
       views: viewsAndLike?.views ?? 0,
       likes: viewsAndLike?._count.likes ?? 0,
     };
@@ -51,7 +51,7 @@ const posts = await Promise.all(
               </p>
               <div class='basis-full'>
                 <h2 class='font-bold'>
-                  <a href={`/blog/${p.slug}`}>{p.title}</a>
+                  <a href={p.slug}>{p.title}</a>
                 </h2>
                 <p class='text-sm'>{p.description}</p>
                 <div>{p.views} views</div>

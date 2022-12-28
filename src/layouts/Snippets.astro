@@ -1,0 +1,23 @@
+---
+import Layout from "./Layout.astro";
+
+type Props = {
+  title: string;
+  description: string;
+  publishedAt: string;
+  tags: string[];
+};
+
+const { frontmatter } = Astro.props;
+---
+
+<Layout title={frontmatter.title} desc={frontmatter.description}>
+  <main class='layout py-12 !max-w-3xl space-y-12'>
+    <div>
+        <h1 class='font-bold text-4xl'>{frontmatter.title}</h1>
+        <p>{frontmatter.description}</p>
+        <ul class="flex items-center gap-4">{frontmatter.tags.map(t => <li>#{t}</li>)}</ul>
+    </div>
+    <article class='prose'><slot /></article>
+  </main>
+</Layout>

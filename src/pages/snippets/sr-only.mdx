@@ -1,0 +1,27 @@
+---
+layout: "../../layouts/Snippets.astro"
+title: "Screen Readers Only"
+description: "Hide elements visually"
+tags:
+  - a11y
+  - css
+publishedAt: ""
+---
+
+A utility class inspired from tailwind css `sr-only`.
+
+When implementing accessibility, sometimes there's a need to hide an element visually but still accessible to screen readers.
+
+```css
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+```
