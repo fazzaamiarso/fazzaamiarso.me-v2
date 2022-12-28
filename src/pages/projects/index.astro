@@ -1,5 +1,38 @@
 ---
 import Layout from "layouts/Layout.astro";
+import { prisma } from "lib/prisma";
+
+type FrontMatter = {
+  title: string;
+  description: string;
+  cover: string;
+  publishedAt: string;
+  github: string;
+  liveSite: string;
+  featured?: boolean;
+};
+
+const _projects = await Astro.glob<FrontMatter>("./*.mdx");
+const projects = await Promise.all(
+  _projects.map(async (p) => {
+    const slug = p.frontmatter.title.toLowerCase().split(" ").join("-");
+
+    const viewsAndLike = await prisma.post.findUnique({
+      where: { slug },
+      select: { views: true, _count: { select: { likes: true } } },
+    });
+
+    return {
+      slug,
+      title: p.frontmatter.title,
+      publishedAt: p.frontmatter.publishedAt,
+      desription: p.frontmatter.description,
+      cover: p.frontmatter.cover,
+      views: viewsAndLike?.views ?? 0,
+      likes: viewsAndLike?._count.likes ?? 0,
+    };
+  })
+);
 ---
 
 <Layout title='Projects | Fazza Razaq Amiarso'>
@@ -7,8 +40,26 @@ import Layout from "layouts/Layout.astro";
     <div>
       <h1 class='text-4xl font-bold'>Projects</h1>
       <p class='max-w-[60ch] text-lg'>
-       
+        Showcase of my selected projects over the years. Including projects from hackathons,
+        open-source, and self-started. In details.
       </p>
     </div>
+    <ul>
+      {
+        projects.map((p) => {
+          return (
+            <li class='space-y-2 rounded-lg p-6 hover:bg-gray-100'>
+              <div class='aspect-square w-10 rounded-full bg-black ring-1 ring-black ring-offset-4' />
+              <h3 class='text-lg font-semibold'><a href={`/projects/${p.slug}`}>{p.title}</a></h3>
+              <p class=''>{p.desription}</p>
+              <div class='flex items-center gap-6'>
+                <p>{p.views} views</p>
+                <p>{p.likes} likes</p>
+              </div>
+            </li>
+          );
+        })
+      }
+    </ul>
   </main>
 </Layout>

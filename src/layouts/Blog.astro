@@ -1,19 +1,22 @@
 ---
-import {  LikeWrapper } from "components/mdx/LikeButton";
+import { LikeWrapper } from "components/mdx/LikeButton";
 import TOC from "components/mdx/TOC.astro";
 import { prisma } from "lib/prisma";
 import Layout from "./Layout.astro";
 
 const { frontmatter, headings } = Astro.props;
-const ip= Astro.clientAddress;
+const ip = Astro.clientAddress;
 
+const slug = frontmatter?.slug ?? frontmatter.title.toLowerCase().split(" ").join("-");
+// TODO: Separate layout for blog and projects
 const postMeta = await prisma.post.upsert({
-  where: { slug: frontmatter.slug },
+  where: { slug },
   select: { views: true, _count: { select: { likes: true } } },
-  create: { slug: frontmatter.slug },
+  create: { slug },
   update: { views: { increment: 1 } },
 });
 ---
+
 <Layout title={frontmatter.title} desc={frontmatter.description}>
   <main class='space-y-12 pb-24'>
     <div class='bg-gray-200 pb-12 pt-24'>
@@ -32,7 +35,7 @@ const postMeta = await prisma.post.upsert({
           -
           <p class='text-sm'>{postMeta.views} views</p>
           -
-          <p class='text-sm'>10 minutes</p>
+          <p class='text-sm'>{frontmatter.minutesRead} minutes</p>
         </div>
       </div>
     </div>
@@ -46,7 +49,12 @@ const postMeta = await prisma.post.upsert({
           <TOC pageHeadings={headings} />
           <div class='my-4 h-px w-full bg-black'></div>
           <div class='flex justify-between'>
-            <LikeWrapper client:load slug={frontmatter.slug} ip={ip} initialLikes={postMeta._count.likes}/>
+            <LikeWrapper
+              client:load
+              slug={frontmatter.slug}
+              ip={ip}
+              initialLikes={postMeta._count.likes}
+            />
             <button id='scroll-top' type='button' class='text-sm'>⬆️ Back to top</button>
           </div>
         </div>

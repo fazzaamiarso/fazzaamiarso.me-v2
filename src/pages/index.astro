@@ -11,31 +11,59 @@ type FrontMatter = {
   publishedAt: string;
   featured?: boolean;
 };
-const posts = await Astro.glob<FrontMatter>("./blog/*.mdx");
-const featuredPosts = posts.filter((p) => p.frontmatter.featured);
 
-let finalPosts: Array<{ title: string; description: string; views: number; likes: number }> = [];
-for (let fp of featuredPosts) {
-  const viewsAndLike = await prisma.post.findUnique({
-    where: { slug: fp.frontmatter.slug },
-    select: { views: true, _count: { select: { likes: true } } },
-  });
-  if (viewsAndLike) {
-    finalPosts.push({
-      title: fp.frontmatter.title,
-      description: fp.frontmatter.description,
-      views: viewsAndLike.views,
-      likes: viewsAndLike._count.likes,
-    });
-  } else {
-    finalPosts.push({
-      title: fp.frontmatter.title,
-      description: fp.frontmatter.description,
-      views: 0,
-      likes: 0,
-    });
-  }
-}
+type ProjectFrontMatter = {
+  title: string;
+  description: string;
+  cover: string;
+  publishedAt: string;
+  github: string;
+  liveSite: string;
+  featured?: boolean;
+};
+
+const _posts = await Astro.glob<FrontMatter>("./blog/*.mdx");
+const posts = await Promise.all(
+  _posts
+    .filter((p) => p.frontmatter.featured)
+    .map(async (p) => {
+      const viewsAndLike = await prisma.post.findUnique({
+        where: { slug: p.frontmatter.slug },
+        select: { views: true, _count: { select: { likes: true } } },
+      });
+
+      return {
+        title: p.frontmatter.title,
+        description: p.frontmatter.description,
+        views: viewsAndLike?.views ?? 0,
+        likes: viewsAndLike?._count.likes ?? 0,
+      };
+    })
+);
+
+const _projects = await Astro.glob<ProjectFrontMatter>("./projects/*.mdx");
+const projects = await Promise.all(
+  _projects
+    .filter((p) => p.frontmatter.featured)
+    .map(async (p) => {
+      const slug = p.frontmatter.title.toLowerCase().split(" ").join("-");
+
+      const viewsAndLike = await prisma.post.findUnique({
+        where: { slug },
+        select: { views: true, _count: { select: { likes: true } } },
+      });
+
+      return {
+        slug,
+        title: p.frontmatter.title,
+        publishedAt: p.frontmatter.publishedAt,
+        desription: p.frontmatter.description,
+        cover: p.frontmatter.cover,
+        views: viewsAndLike?.views ?? 0,
+        likes: viewsAndLike?._count.likes ?? 0,
+      };
+    })
+);
 ---
 
 <Layout title='Fazza Razaq Amiarso'>
@@ -60,7 +88,7 @@ for (let fp of featuredPosts) {
         <h2 class='text-2xl font-bold'>Featured Posts</h2>
         <ul class='flex gap-8'>
           {
-            finalPosts.map((p) => {
+            posts.map((p) => {
               return (
                 <li class='basis-1/3'>
                   <div class='h-full  rounded-md'>
@@ -83,33 +111,21 @@ for (let fp of featuredPosts) {
       <div class='layout py-12'>
         <h2 class='mb-4 text-2xl font-bold'>Featured Projects</h2>
         <ul class='flex -translate-x-6 items-start gap-8'>
-          <li class='space-y-2 rounded-lg p-6 hover:bg-gray-100'>
-            <div class='aspect-square w-10 rounded-full bg-black ring-1 ring-black ring-offset-4'>
-            </div>
-            <h3 class='text-lg font-semibold'>Invoys</h3>
-            <p class=''>
-              About Open source and self-hostable invoice management app built with Next.js. Made to
-              be free of cost.
-            </p>
-          </li>
-          <li class='space-y-2 rounded-lg p-6 hover:bg-gray-100'>
-            <div class='aspect-square w-10 rounded-full bg-black ring-1 ring-black ring-offset-4'>
-            </div>
-            <h3 class='text-lg font-semibold'>Invoys</h3>
-            <p class=''>
-              About Open source and self-hostable invoice management app built with Next.js. Made to
-              be free of cost.
-            </p>
-          </li>
-          <li class='space-y-2 rounded-lg p-6 hover:bg-gray-100'>
-            <div class='aspect-square w-10 rounded-full bg-black ring-1 ring-black ring-offset-4'>
-            </div>
-            <h3 class='text-lg font-semibold'>Invoys</h3>
-            <p class=''>
-              About Open source and self-hostable invoice management app built with Next.js. Made to
-              be free of cost.
-            </p>
-          </li>
+          {
+            projects.map((p) => {
+              return (
+                <li class='space-y-2 rounded-lg p-6 hover:bg-gray-100'>
+                  <div class='aspect-square w-10 rounded-full bg-black ring-1 ring-black ring-offset-4' />
+                  <h3 class='text-lg font-semibold'>{p.title}</h3>
+                  <p class=''>{p.desription}</p>
+                  <div class='flex items-center gap-6'>
+                    <p>{p.views} views</p>
+                    <p>{p.likes} likes</p>
+                  </div>
+                </li>
+              );
+            })
+          }
         </ul>
         <a href='/projects' class='inline-block py-2 first-line:font-semibold'>See all projects</a>
       </div>

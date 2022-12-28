@@ -10,47 +10,38 @@ type FrontMatter = {
   publishedAt: string;
   featured?: boolean;
 };
-const posts = await Astro.glob<FrontMatter>("./*.mdx");
-
-let finalPosts:Array<{ slug: string, title: string; description: string; publishedAt: string; views: number; likes: number }>= [];
-for (let p of posts) {
-  const viewsAndLike = await prisma.post.findUnique({
-    where: { slug: p.frontmatter.slug },
-    select: { views: true, _count: { select: { likes: true } } },
-  });
-  if (viewsAndLike) {
-    finalPosts.push({
-      slug : p.frontmatter.slug,
-      title: p.frontmatter.title,
-      publishedAt : p.frontmatter.publishedAt,
-      description: p.frontmatter.description,
-      views: viewsAndLike.views,
-      likes: viewsAndLike._count.likes,
+const _posts = await Astro.glob<FrontMatter>("./*.mdx");
+const posts = await Promise.all(
+  _posts.map(async (p) => {
+    const viewsAndLike = await prisma.post.findUnique({
+      where: { slug: p.frontmatter.slug },
+      select: { views: true, _count: { select: { likes: true } } },
     });
-  } else {
-    finalPosts.push({
-      slug : p.frontmatter.slug,
+
+    return {
       title: p.frontmatter.title,
-      publishedAt : p.frontmatter.publishedAt,
       description: p.frontmatter.description,
-      views: 0,
-      likes: 0,
-    });}
-}
+      publishedAt: p.frontmatter.publishedAt,
+      slug: p.frontmatter.slug,
+      views: viewsAndLike?.views ?? 0,
+      likes: viewsAndLike?._count.likes ?? 0,
+    };
+  })
+);
 ---
 
 <Layout title='Blog | Fazza Razaq Amiarso'>
-  <main class='layout py-12 space-y-6'>
+  <main class='layout space-y-6 py-12'>
     <div>
-        <h1 class='text-4xl font-bold'>Blog</h1>
-        <p class='max-w-[60ch] text-lg'>
-          A place where I share my knowldege and learning mostly on Frontend (React), A11Y, and
-          sometimes full-stack. Sharing struggles at time.
-        </p>
+      <h1 class='text-4xl font-bold'>Blog</h1>
+      <p class='max-w-[60ch] text-lg'>
+        A place where I share my knowldege and learning mostly on Frontend (React), A11Y, and
+        sometimes full-stack. Sharing struggles at time.
+      </p>
     </div>
     <ul>
       {
-        finalPosts.map((p) => {
+        posts.map((p) => {
           return (
             <li class='-ml-4 flex items-start gap-8 rounded-md p-4 hover:bg-gray-100'>
               <p class='basis-16'>
@@ -59,8 +50,10 @@ for (let p of posts) {
                 )}
               </p>
               <div class='basis-full'>
-                <h2 class='font-bold'><a href={`/blog/${p.slug}`}>{p.title}</a></h2>
-                <p class="text-sm">{p.description}</p>
+                <h2 class='font-bold'>
+                  <a href={`/blog/${p.slug}`}>{p.title}</a>
+                </h2>
+                <p class='text-sm'>{p.description}</p>
                 <div>{p.views} views</div>
               </div>
             </li>
@@ -70,4 +63,3 @@ for (let p of posts) {
     </ul>
   </main>
 </Layout>
-
