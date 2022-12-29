@@ -1,0 +1,25 @@
+---
+layout: "../../layouts/Snippets.astro"
+title: "Code Block Line Number"
+description: "Give line number to code block with CSS"
+tags:
+  - css 
+publishedAt: ""
+---
+
+A trick to insert line number to an html `code` element. Found somewhere in github.
+
+Using Vanilla CSS and `step`
+
+```css
+code {
+  counter-reset: step;
+  counter-increment: step 0;
+}
+
+code .line::before {
+  content: counter(step);
+  counter-increment: step;
+  margin-right: 1.5rem;
+}
+```

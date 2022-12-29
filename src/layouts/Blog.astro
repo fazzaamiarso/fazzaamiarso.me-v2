@@ -1,4 +1,5 @@
 ---
+import Icon from "astro-icon";
 import Giscus from "components/Giscus.astro";
 import { LikeWrapper } from "components/mdx/LikeButton";
 import TOC from "components/mdx/TOC.astro";
@@ -23,8 +24,8 @@ const postMeta = await prisma.post.upsert({
       <div class='layout'>
         <a href='/' class='text-sm underline'>Home</a>
         <h1 class='mb-2 text-4xl font-bold'>{frontmatter.title}</h1>
-        <p class='text-lg'>{frontmatter.description}</p>
-        <div class='flex items-center gap-2'>
+        <p class='mb-2 text-lg'>{frontmatter.description}</p>
+        <div class='mb-6 flex items-center gap-2'>
           <p class='text-sm'>
             {
               new Intl.DateTimeFormat("en-US", { dateStyle: "long" }).format(
@@ -35,8 +36,52 @@ const postMeta = await prisma.post.upsert({
           -
           <p class='text-sm'>{postMeta.views} views</p>
           -
-          <p class='text-sm'>{frontmatter.minutesRead} minutes</p>
+          <p class='text-sm'>{Math.round(frontmatter.minutesRead)} minutes read</p>
         </div>
+        <ul class='flex items-center gap-4 empty:hidden'>
+          {
+            frontmatter.github && (
+              <li>
+                <a
+                  href={frontmatter.github}
+                  target='_blank'
+                  referrerpolicy='strict-origin-when-cross-origin'
+                  class='flex items-center gap-2'>
+                  <Icon name='simple-icons:github' class='w-6' aria-hidden='true' />
+                  Github
+                </a>
+              </li>
+            )
+          }
+          {
+            frontmatter.liveSite && (
+              <li>
+                <a
+                  href={frontmatter.liveSite}
+                  target='_blank'
+                  referrerpolicy='strict-origin-when-cross-origin'
+                  class='flex items-center gap-2'>
+                  <Icon name='system-uicons:chain' class='w-6' aria-hidden='true' />
+                  Live Site
+                </a>
+              </li>
+            )
+          }
+          {
+            frontmatter.demo && (
+              <li>
+                <a
+                  href={frontmatter.demo}
+                  target='_blank'
+                  referrerpolicy='strict-origin-when-cross-origin'
+                  class='flex items-center gap-2'>
+                  <Icon name='simple-icons:youtube' class='w-6' aria-hidden='true' />
+                  Demo
+                </a>
+              </li>
+            )
+          }
+        </ul>
       </div>
     </div>
     <div class='layout grid grid-cols-4 gap-x-2'>
@@ -49,18 +94,13 @@ const postMeta = await prisma.post.upsert({
           <TOC pageHeadings={headings} />
           <div class='my-4 h-px w-full bg-black'></div>
           <div class='flex justify-between'>
-            <LikeWrapper
-              client:load
-              slug={slug}
-              ip={ip}
-              initialLikes={postMeta._count.likes}
-            />
+            <LikeWrapper client:load slug={slug} ip={ip} initialLikes={postMeta._count.likes} />
             <button id='scroll-top' type='button' class='text-sm'>⬆️ Back to top</button>
           </div>
         </div>
       </aside>
     </div>
-    <Giscus/>
+    <Giscus />
   </main>
 </Layout>
 

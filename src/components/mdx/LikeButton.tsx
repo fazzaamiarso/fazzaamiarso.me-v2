@@ -42,7 +42,6 @@ export const LikeButton = ({ ip, slug, initialLikes }: Props) => {
         }}
         className='relative block overflow-hidden disabled:opacity-50'>
         <span className='inline-block'>🔥 {data ? data.likes : 0}</span>
-        <span>{data ? data.myLikes : 0}</span>
       </button>
     </div>
   );

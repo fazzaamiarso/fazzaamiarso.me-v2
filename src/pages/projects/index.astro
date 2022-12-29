@@ -1,4 +1,5 @@
 ---
+import { Icon } from "astro-icon";
 import Layout from "layouts/Layout.astro";
 import { prisma } from "lib/prisma";
 
@@ -15,14 +16,13 @@ type FrontMatter = {
 const _projects = await Astro.glob<FrontMatter>("./*.mdx");
 const projects = await Promise.all(
   _projects.map(async (p) => {
-
     const viewsAndLike = await prisma.post.findUnique({
       where: { slug: p.url },
       select: { views: true, _count: { select: { likes: true } } },
     });
 
     return {
-      slug : p.url,
+      slug: p.url,
       title: p.frontmatter.title,
       publishedAt: p.frontmatter.publishedAt,
       desription: p.frontmatter.description,
@@ -36,24 +36,35 @@ const projects = await Promise.all(
 
 <Layout title='Projects | Fazza Razaq Amiarso'>
   <main class='layout space-y-6 py-12'>
-    <div>
-      <h1 class='text-4xl font-bold'>Projects</h1>
+    <div class='pb-8'>
+      <h1 class='mb-2 text-4xl font-bold'>Projects</h1>
       <p class='max-w-[60ch] text-lg'>
         Showcase of my selected projects over the years. Including projects from hackathons,
         open-source, and self-started. In details.
       </p>
     </div>
-    <ul>
+
+    <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {
         projects.map((p) => {
           return (
-            <li class='space-y-2 rounded-lg p-6 hover:bg-gray-100'>
-              <div class='aspect-square w-10 rounded-full bg-black ring-1 ring-black ring-offset-4' />
-              <h3 class='text-lg font-semibold'><a href={p.slug}>{p.title}</a></h3>
-              <p class=''>{p.desription}</p>
+            <li class='space-y-4 rounded-lg p-6 hover:bg-gray-100'>
+              <div class='aspect-square w-8 rounded-full bg-black ring-1 ring-black ring-offset-4' />
+              <div class='space-y-2'>
+                <h3 class='text-lg font-semibold'>
+                  <a href={p.slug}>{p.title}</a>
+                </h3>
+                <p class='line-clamp-3'>{p.desription}</p>
+              </div>
               <div class='flex items-center gap-6'>
-                <p>{p.views} views</p>
-                <p>{p.likes} likes</p>
+                <div class='flex items-center gap-1'>
+                  <Icon name='ic:outline-remove-red-eye' class='w-5' aria-hidden='true' />
+                  <span class='text-sm'> {p.views}</span>
+                </div>
+                <div class='flex items-center gap-1'>
+                  <Icon name='mdi:cards-heart-outline' class='w-5' aria-hidden='true' />
+                  <span class='text-sm'> {p.likes}</span>
+                </div>
               </div>
             </li>
           );
