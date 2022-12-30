@@ -7,7 +7,7 @@ import { MobileNav } from "./Menu";
 ---
 
 <header class='sticky top-0 z-50 bg-white'>
-  <div class='layout flex items-center py-4 gap-12'>
+  <div class='layout flex items-center gap-12 py-4'>
     <a href='/'><Image src={import("assets/logo.png")} format='webp' alt='' class='w-10' /></a>
     <nav class='max-md:hidden'>
       <ul class='flex items-center gap-8'>
@@ -24,7 +24,7 @@ import { MobileNav } from "./Menu";
         }
       </ul>
     </nav>
-    <DarkMode/>
+    <DarkMode />
     <MobileNav client:load />
   </div>
 </header>

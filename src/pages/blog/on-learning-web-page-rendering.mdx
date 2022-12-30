@@ -5,7 +5,8 @@ description: "A Guide to Client Side Rendering, Server Side Rendering, and Stati
 publishedAt: "2022-03-18"
 slug: "on-learning-web-page-rendering"
 ---
-import Notes from 'components/mdx/Notes.astro'
+
+import Notes from "components/mdx/Notes.astro";
 
 As I was learning and building projects with Next js, I surely came across various ways of rendering your app and just proceed without fully understanding them. One thing for sure is that I was amazed by it. Eventually, I can make stuff with it, but no idea how it works.
 
@@ -75,7 +76,9 @@ Here is what the network tab looks like:
 
 ![static site generation example](https://cdn.hashnode.com/res/hashnode/image/upload/v1647523135648/o1erFRjoP.gif)
 
-<Notes>The site belongs to Vercel from their demo page. https://next-blog-wordpress.vercel.app/</Notes>
+<Notes>
+  The site belongs to Vercel from their demo page. https://next-blog-wordpress.vercel.app/
+</Notes>
 
 ### Pros
 
@@ -89,7 +92,12 @@ Here is what the network tab looks like:
 - **Making changes mean that you must rebuild your site and wait until the whole site is finished building**. After that, redeploy it. Imagine it is the e-commerce site, yikes😐.
 - **Data on your site most likely will be static or stale until you do a rebuild**. You could do some fetching on the client to get dynamic data. That is great for blogs, docs, or marketing pages, but not for dynamic page that always needs up-to-date data.
 
-<Notes>By looking at the cons, Next js actually try to eliminate those problems by introducing Incremental Static Generation (ISG). Which fundamentally is SSG, but with an extra capability to implement SSG on a per-page basis. This means you don't need to rebuild the entire site if there are changes happen.</Notes>
+<Notes>
+  By looking at the cons, Next js actually try to eliminate those problems by introducing
+  Incremental Static Generation (ISG). Which fundamentally is SSG, but with an extra capability to
+  implement SSG on a per-page basis. This means you don't need to rebuild the entire site if there
+  are changes happen.
+</Notes>
 
 Here are what a typical flow will look like with an SSG site, assuming that there is no caching implemented:
 
@@ -109,9 +117,10 @@ Here are what a typical flow will look like with an SSG site, assuming that ther
     😀 - Get page with fresh data  
     📝 - Make changes  
     😅 - Get page, but data is stale  
-    🥱 - Waiting for page to build  
+    🥱 - Waiting for page to build
 
      p.s. I borrowed the idea above from [Ryan Florence's video](https://www.youtube.com/watch?v=bfLFHp7Sbkg&t=511s).
+
  </Notes>
 
 ### Tools or framework
@@ -148,7 +157,7 @@ What is happening?
 
 ### Cons
 
-- **Need to run a server** to handle incoming requests. 
+- **Need to run a server** to handle incoming requests.
 - **Running a server means it potentially needs more costs** as your server will be hit on every request.
 - Your site will **rely on the server to do heavy lifting and work** which can make it slow sometimes, especially if you process complex data.
 - If your server is not powerful or ready enough to handle increased traffic, **it can give you high latency** (time needed from request to response). It can delay or slow down the browsing experience for everybody.

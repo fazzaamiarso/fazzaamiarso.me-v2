@@ -8,8 +8,9 @@ type Props = {
 const { heading, type = "normal" } = Astro.props;
 ---
 
-<aside class={clsx("py-4 mb-20 px-6 rounded-r-md rounded-l-sm border-l-4", type === "warn" && "warn")}>
-  {heading && <strong class="font-bold not-prose ">{heading}</strong>}
+<aside
+  class={clsx("py-4 mb-20 px-6 rounded-r-md rounded-l-sm border-l-4", type === "warn" && "warn")}>
+  {heading && <strong class='not-prose font-bold '>{heading}</strong>}
   <slot />
 </aside>
 
