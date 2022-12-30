@@ -1,5 +1,4 @@
 ---
-import { Icon } from "astro-icon";
 import Layout from "layouts/Layout.astro";
 import { prisma } from "lib/prisma";
 
@@ -31,7 +30,7 @@ const posts = await Promise.all(
 );
 ---
 
-<Layout title='Blog | Fazza Razaq Amiarso'>
+<Layout title='Blog'>
   <main class='layout space-y-6 py-12'>
     <div class='border-b-[1px] border-black pb-8'>
       <h1 class='mb-2 text-4xl font-bold'>Blog</h1>
@@ -44,9 +43,11 @@ const posts = await Promise.all(
       {
         posts.map((p) => {
           return (
-            <li class='-ml-4  gap-8 rounded-md p-4 hover:bg-gray-100'>
+            <li class='group  relative -ml-4 gap-8 rounded-md p-4 transition-all hover:bg-gray-100'>
               <h2 class='mb-2 text-lg font-bold'>
-                <a href={p.slug}>{p.title}</a>
+                <a href={p.slug} class='link-card group-hover:text-blue-500'>
+                  {p.title}
+                </a>
               </h2>
               <div class='mb-4 flex items-center gap-4'>
                 <span class='text-sm text-gray-600'>
