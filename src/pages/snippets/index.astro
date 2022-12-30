@@ -19,17 +19,19 @@ const snippets = await Astro.glob<Frontmatter>("./*.mdx");
         Collection of code snippets that I found useful. Hope it can help someone too.
       </p>
     </div>
-    <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <ul class='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
       {
         snippets.map((s) => {
           return (
-            <li class='rounded-md p-5 ring-1 ring-black'>
+            <li class='group relative rounded-md p-5 ring-1 ring-black'>
               <h2 class='text-lg font-bold'>
-                <a href={s.url}>{s.frontmatter.title}</a>
+                <a href={s.url} class='link-card transition-all group-hover:text-blue-500'>
+                  {s.frontmatter.title}
+                </a>
               </h2>
-              <ul class='flex items-center space-x-4 mb-2'>
+              <ul class='mb-2 flex items-center space-x-4'>
                 {s.frontmatter.tags.map((t) => (
-                  <li class="text-sm">#{t}</li>
+                  <li class='text-sm'>#{t}</li>
                 ))}
               </ul>
               <p>{s.frontmatter.description}</p>

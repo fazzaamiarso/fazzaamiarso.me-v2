@@ -44,15 +44,17 @@ const projects = await Promise.all(
       </p>
     </div>
 
-    <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <ul class='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
       {
         projects.map((p) => {
           return (
-            <li class='space-y-4 rounded-lg p-6 hover:bg-gray-100'>
+            <li class='group relative space-y-4 rounded-lg p-6 hover:bg-gray-100 transition-all'>
               <div class='aspect-square w-8 rounded-full bg-black ring-1 ring-black ring-offset-4' />
               <div class='space-y-2'>
                 <h3 class='text-lg font-semibold'>
-                  <a href={p.slug}>{p.title}</a>
+                  <a href={p.slug} class='link-card group-hover:text-blue-500'>
+                    {p.title}
+                  </a>
                 </h3>
                 <p class='line-clamp-3'>{p.desription}</p>
               </div>

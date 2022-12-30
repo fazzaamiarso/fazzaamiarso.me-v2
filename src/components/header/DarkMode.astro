@@ -1,0 +1,37 @@
+---
+import Icon from "astro-icon";
+import clsx from "clsx";
+---
+
+<button
+  role='switch'
+  id='dark-mode'
+  class={clsx("ml-auto")}
+  onclick='window.toggleMode()'
+  aria-label='dark mode'>
+  <!-- <Icon id='sun' name="akar-icons:sun" width="20"  class="hidden dark:inline-block" />  -->
+  <!-- <Icon id='moon' name="ri:moon-fill" width="20" class="inline-block dark:hidden "  />          -->
+  <Icon id='moon' name='ri:moon-fill' width='20' class='inline-block' />
+</button>
+
+<!-- <script is:inline>
+  const root = document.documentElement;
+  const currentTheme = localStorage.getItem("theme");
+  const switchBtn = document.querySelector("button");
+  const toggleMode = () => {
+    root.classList.toggle("dark");
+    switchBtn.ariaChecked = root.classList.contains("dark") ? "true" : "false";
+    localStorage.setItem("theme", root.classList.contains("dark") ? "dark" : "light");
+  };
+  window.toggleMode = toggleMode;
+  if (
+    currentTheme === "dark" ||
+    (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
+  ) {
+    root.classList.add("dark");
+    switchBtn.ariaChecked = "true";
+  } else {
+    root.classList.remove("dark");
+    switchBtn.ariaChecked = "false";
+  }
+</script> -->

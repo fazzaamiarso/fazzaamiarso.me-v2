@@ -1,0 +1,37 @@
+---
+import "@fontsource/inter";
+import "@fontsource/inter/variable.css";
+import { Image } from "@astrojs/image/components";
+import SEO from "components/SEO.astro";
+---
+
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <SEO title='404 not found' />
+    <!--  -->
+  </head>
+  <body class='font-inter'>
+    <main class='flex h-screen w-screen flex-wrap items-center justify-center font-inter'>
+      <div
+        class='mx-auto w-11/12 max-w-5xl items-center text-center md:flex md:flex-row-reverse md:gap-12 md:text-start'>
+        <Image
+          src={import("assets/kayden-404.jpeg")}
+          alt='thinking cat named kayden'
+          format='webp'
+          class='rounded-lg mx-auto mb-12'
+          width={300}
+        />
+        <div>
+          <h1 class='mb-4 break-all text-4xl font-semibold'>
+            Hmmm... Looks Like You've Lost Your Way
+          </h1>
+          <p class='text-2xl'>But you can still go home</p>
+          <div><a href='/' class='text-xl font-semibold underline'>Go to Home</a></div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

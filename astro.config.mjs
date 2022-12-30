@@ -17,20 +17,36 @@ import { remarkReadingTime } from "./remarkPlugins.mjs";
 import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
+import image from "@astrojs/image";
+
+// https://astro.build/config
 export default defineConfig({
   output: "server",
   site: "https://fazzaamiarso.me",
-  integrations: [tailwind(), mdx({
-    extendPlugins: true,
-    remarkPlugins: [remarkReadingTime],
-    rehypePlugins: [[rehypeAutolinkHeadings, {
-      behavior: "before",
-      group: () => {
-        return h("div.heading-group");
-      },
-      content: node => {
-        return [h("span.sr-only", `go to ${toString(node)} section`)];
-      }
-    }]]
-  }), react(), sitemap()]
+  integrations: [
+    tailwind(),
+    mdx({
+      extendPlugins: true,
+      remarkPlugins: [remarkReadingTime],
+      rehypePlugins: [
+        [
+          rehypeAutolinkHeadings,
+          {
+            behavior: "before",
+            group: () => {
+              return h("div.heading-group");
+            },
+            content: (node) => {
+              return [h("span.sr-only", `go to ${toString(node)} section`)];
+            },
+          },
+        ],
+      ],
+    }),
+    react(),
+    sitemap(),
+    image({
+      serviceEntryPoint: "@astrojs/image/sharp",
+    }),
+  ],
 });

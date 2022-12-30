@@ -1,0 +1,41 @@
+---
+type Props = {
+  title: string;
+  desc?: string;
+};
+
+const props = Astro.props;
+const title = `${props.title} | Fazza Razaq Amiarso`;
+const description =
+  props.desc || "Personal website of Fazza Razaq Amiarso. Blog, Projects, and Snippets.";
+const site = import.meta.env.SITE;
+---
+
+<meta name='generator' content={Astro.generator} />
+<title>{title}</title>
+<meta name='description' content={description} />
+<!-- Open Graph -->
+<meta property='og:title' content={title} />
+<meta property='og:url' content={site} />
+<meta property='og:description' content={description} />
+<meta property='og:type' content='website' />
+<meta property='og:image' content='/og.jpeg' />
+<meta property='og:image:type' content='image/jpeg' />
+<meta property='og:image:width' content='1200' />
+<meta property='og:image:height' content='630' />
+<meta property='og:image:alt' content='Fazza Razaq Amiarso personal site banner' />
+<!--  -->
+<!-- Twitter card -->
+<meta name='twitter:card' content='summary' />
+<meta name='twitter:creator' content='@faz_razq' />
+<!--  -->
+<!-- Favicon -->
+<link rel='icon' type='image/x-icon' href='/favicon/favicon.ico' />
+<link rel='apple-touch-icon' sizes='180x180' href='/favicon/apple-touch-icon.png' />
+<link rel='icon' type='image/png' sizes='32x32' href='/favicon/favicon-32x32.png' />
+<link rel='icon' type='image/png' sizes='16x16' href='/favicon/favicon-16x16.png' />
+<link rel='mask-icon' href='/favicon/safari-pinned-tab.svg' color='#5bbad5' />
+<meta name='msapplication-TileColor' content='#da532c' />
+<link rel='manifest' href='/site.webmanifest' />
+<meta name='theme-color' content='#ffffff' />
+<!--  -->

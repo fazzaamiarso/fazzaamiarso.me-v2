@@ -1,18 +1,14 @@
 ---
 import "@fontsource/inter";
-import "@fontsource/manrope";
-import Navbar from "components/Navbar.astro";
+import "@fontsource/inter/variable.css";
+import Footer from "components/Footer.astro";
+import Navbar from "components/header/Navbar.astro";
+import SEO from "components/SEO.astro";
 
 export interface Props {
   title: string;
   desc?: string;
 }
-const navigations = [
-  { name: "Blog", href: "/blog" },
-  { name: "Projects", href: "/projects" },
-  { name: "Snippets", href: "/snippets" },
-  { name: "About", href: "/about" },
-];
 
 const { title, desc } = Astro.props;
 ---
@@ -22,104 +18,37 @@ const { title, desc } = Astro.props;
   <head>
     <meta charset='UTF-8' />
     <meta name='viewport' content='width=device-width, initial-scale=1' />
-    <title>{title}</title>
-    <meta
-      name='description'
-      content={desc || "Personal website of Fazza Razaq Amiarso. Blog, Projects, and more."}
-    />
-    <!-- Open Graph -->
-    <meta name='generator' content={Astro.generator} />
-    <meta property='og:title' content={title} />
-    <meta property='og:url' content='https://fazzaamiarso.me' />
-    <meta
-      property='og:description'
-      content={desc || "Personal website of Fazza Razaq Amiarso. Blog, Projects, and more."}
-    />
-    <meta property='og:type' content={"website"} />
-    <meta property='og:image' content='/og.jpeg' />
-    <meta property='og:image:type' content='image/jpeg' />
-    <meta property='og:image:width' content='1200' />
-    <meta property='og:image:height' content='630' />
-    <meta property='og:image:alt' content='Fazza Razaq Amiarso personal site banner' />
-    <!--  -->
-    <!-- Twitter card -->
-    <meta name='twitter:card' content='summary' />
-    <meta name='twitter:creator' content='@faz_razq' />
-    <!--  -->
-    <!-- Favicon -->
-    <link rel='icon' type='image/x-icon' href='/favicon/favicon.ico' />
-    <link rel='apple-touch-icon' sizes='180x180' href='/favicon/apple-touch-icon.png' />
-    <link rel='icon' type='image/png' sizes='32x32' href='/favicon/favicon-32x32.png' />
-    <link rel='icon' type='image/png' sizes='16x16' href='/favicon/favicon-16x16.png' />
-    <link rel='mask-icon' href='/favicon/safari-pinned-tab.svg' color='#5bbad5' />
-    <meta name='msapplication-TileColor' content='#da532c' />
-    <link rel='manifest' href='/site.webmanifest' />
-    <meta name='theme-color' content='#ffffff' />
+    <SEO title={title} desc={desc} />
     <!--  -->
   </head>
   <body class='font-inter'>
     <Navbar />
     <slot />
-    <footer class='border-t-2 border-gray-100'>
-      <div class='layout flex items-center py-8'>
-        <nav class=''>
-          <ul class='flex items-center gap-8'>
-            {
-              navigations.map((nav) => {
-                return (
-                  <li>
-                    <a href={nav.href} class='text-sm font-bold'>
-                      {nav.name}
-                    </a>
-                  </li>
-                );
-              })
-            }
-          </ul>
-        </nav>
-        <p class='ml-auto text-sm'>© 2022 Fazza Razaq Amiarso. All rights reserved.</p>
-      </div>
-    </footer>
+    <Footer />
+    <style is:global>
+      :root {
+        --color-gray-100: #f7f7f7;
+        --color-gray-200: #e6e9ee;
+        --color-gray-300: #dde0e4;
+        --color-gray-400: #818890;
+        --color-gray-500: #535661;
+        --color-gray-600: #4b4c53;
+        --color-gray-700: #3a3d4a;
+        --color-gray-800: #2e3039;
+        --color-gray-900: #1f2028;
+      }
+
+      html {
+        @apply scroll-smooth;
+      }
+
+      .layout {
+        @apply mx-auto w-11/12 max-w-5xl;
+      }
+
+      .link-card {
+        @apply before:absolute before:inset-0 before:z-10;
+      }
+    </style>
   </body>
 </html>
-<style is:global>
-  :root {
-    --color-gray-100: #f7f7f7;
-    --color-gray-200: #e6e9ee;
-    --color-gray-300: #dde0e4;
-    --color-gray-400: #818890;
-    --color-gray-500: #535661;
-    --color-gray-600: #4b4c53;
-    --color-gray-700: #3a3d4a;
-    --color-gray-800: #2e3039;
-    --color-gray-900: #1f2028;
-  }
-
-  html {
-    @apply scroll-smooth;
-  }
-
-  .layout {
-    @apply mx-auto w-11/12 max-w-5xl;
-  }
-
-  .animate-updown {
-    animation: alternate updown 3s infinite;
-  }
-
-  .mask {
-    -webkit-mask-image: "url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/234228/alpha-cat.png)";
-    -webkit-mask-repeat: "no-repeat";
-    -webkit-masks-size: "80%";
-  }
-
-  @keyframes updown {
-    from {
-      transform: translateY(0);
-    }
-
-    to {
-      transform: translateY(-10%);
-    }
-  }
-</style>

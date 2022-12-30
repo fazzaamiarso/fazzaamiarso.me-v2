@@ -1,0 +1,60 @@
+---
+import { navigations, otherLinks, socialLinks } from "common";
+
+const socials = Object.entries(socialLinks);
+---
+
+<footer class='border-t-2 border-gray-100'>
+  <div class='layout py-8 space-y-12'>
+    <nav class='grid grid-cols-3 w-full'>
+      <ul class='space-y-3'>
+        {
+          navigations.map((nav) => {
+            return (
+              <li>
+                <a href={nav.href} class='text-sm'>
+                  {nav.name}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+      <ul class='space-y-3'>
+        {
+          socials.map((s) => {
+            return (
+              <li>
+                <a
+                  href={s[1]}
+                  class='text-sm'
+                  target='_blank'
+                  referrerpolicy='strict-origin-when-cross-origin'>
+                  {s[0].charAt(0).toUpperCase() + s[0].slice(1)}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+      <ul class='space-y-3'>
+        {
+          otherLinks.map((o) => {
+            return (
+              <li>
+                <a
+                  href={o.href}
+                  class='text-sm'
+                  target='_blank'
+                  referrerpolicy='strict-origin-when-cross-origin'>
+                  {o.name}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+    <p class='ml-auto text-sm'>© 2022 Fazza Razaq Amiarso <span class="italic">--- Bogor, Indonesia</span></p>
+  </div>
+</footer>

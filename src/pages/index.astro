@@ -4,13 +4,16 @@ import { prisma } from "lib/prisma";
 import { Icon } from "astro-icon";
 import clsx from "clsx";
 
-const featureGradients = ["bg-gradient-to-tr from-pink-500 via-red-500 to-yellow-500", "bg-gradient-to-tr from-green-300 via-blue-500 to-purple-600", "bg-gradient-to-tr from-green-300 via-yellow-300 to-pink-300"]
+const featureGradients = [
+  "bg-gradient-to-tr from-pink-500 via-red-500 to-yellow-500",
+  "bg-gradient-to-tr from-green-300 via-blue-500 to-purple-600",
+  "bg-gradient-to-tr from-green-300 via-yellow-300 to-pink-300",
+];
 
 type FrontMatter = {
   slug: string;
   title: string;
   series?: string;
-  description: string;
   publishedAt: string;
   featured?: boolean;
 };
@@ -37,7 +40,6 @@ const posts = await Promise.all(
 
       return {
         title: p.frontmatter.title,
-        description: p.frontmatter.description,
         views: viewsAndLike?.views ?? 0,
         likes: viewsAndLike?._count.likes ?? 0,
       };
@@ -84,36 +86,36 @@ const projects = await Promise.all(
           <a href='/projects' class='rounded-sm p-4 text-sm ring-1 ring-black'>See projects</a>
         </div>
       </div>
-      <!-- <img src={globe} alt='' width='400px' class='animate-updown' /> -->
     </div>
     <div class=''>
       <div class='layout space-y-6 py-12'>
         <h2 class='text-2xl font-bold'>Featured Posts</h2>
-        <ul class='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
+        <ul class='grid gap-6 sm:grid-cols-2 lg:grid-cols-3'>
           {
             posts.map((p, i) => {
               return (
-                <li class={clsx('basis-1/3 rounded-md p-2', featureGradients[i])}>
-                  <div class='flex flex-col bg-white h-full  p-4'>
-                      <h3 class='mb-2 text-lg font-semibold'>{p.title}</h3>
-                      <p class="mb-4">{p.description}</p>
-                      <div class='mt-auto flex items-center gap-2'>
-                        <div class='flex items-center gap-1'>
-                          <Icon name='ic:outline-remove-red-eye' class='w-5' aria-hidden='true' />
-                          <span class='text-sm'> {p.views}</span>
-                        </div>
-                        <div class='flex items-center gap-1'>
-                          <Icon name='mdi:cards-heart-outline' class='w-5' aria-hidden='true' />
-                          <span class='text-sm'> {p.likes}</span>
-                        </div>
+                <li class={clsx("basis-1/3 rounded-md p-2", featureGradients[i])}>
+                  <div class='flex h-full flex-col bg-white p-4'>
+                    <h3 class='mb-8 text-xl font-semibold'>{p.title}</h3>
+                    <div class='mt-auto flex items-center gap-2'>
+                      <div class='flex items-center gap-1'>
+                        <Icon name='ic:outline-remove-red-eye' class='w-5' aria-hidden='true' />
+                        <span class='text-sm'> {p.views}</span>
                       </div>
+                      <div class='flex items-center gap-1'>
+                        <Icon name='mdi:cards-heart-outline' class='w-5' aria-hidden='true' />
+                        <span class='text-sm'> {p.likes}</span>
+                      </div>
+                    </div>
                   </div>
                 </li>
               );
             })
           }
         </ul>
-        <a href='/blog' class='inline-block py-2 first-line:font-semibold'>Read all post</a>
+        <a href='/blog' class='flex items-center gap-1 py-2 first-line:font-semibold'
+          >Read all post <Icon name='ic:sharp-arrow-right-alt' class="w-8"/>
+        </a>
       </div>
     </div>
     <div class=''>
@@ -146,7 +148,9 @@ const projects = await Promise.all(
             })
           }
         </ul>
-        <a href='/projects' class='inline-block py-2 first-line:font-semibold'>See all projects</a>
+        <a href='/projects' class='flex items-center gap-1 py-2 first-line:font-semibold'
+          >See all projects <Icon name='ic:sharp-arrow-right-alt' class="w-8"/>
+        </a>
       </div>
     </div>
   </main>

@@ -3,7 +3,6 @@ import rss from "@astrojs/rss";
 const glob = import.meta.glob("./blog/*.mdx", { eager: true });
 const posts = Object.values(glob);
 
-console.log(posts[0]);
 export const get = () =>
   rss({
     title: "Fazza Razaq Amiarso's Blog",

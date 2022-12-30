@@ -1,0 +1,28 @@
+---
+import { Image } from "@astrojs/image/components";
+import clsx from "clsx";
+import { navigations } from "common";
+import DarkMode from "./DarkMode.astro";
+---
+
+<header class='sticky top-0 z-50 bg-white'>
+  <div class='layout flex items-center py-4 gap-12'>
+    <a href='/'><Image src={import("assets/logo.png")} format='webp' alt='' class='w-10' /></a>
+    <nav class=''>
+      <ul class='flex items-center gap-8'>
+        {
+          navigations.map((nav) => {
+            return (
+              <li class={clsx("p-2")}>
+                <a href={nav.href} class=''>
+                  {nav.name}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+    <DarkMode/>
+  </div>
+</header>
