@@ -107,6 +107,12 @@ const { title, desc } = Astro.props;
     animation: alternate updown 3s infinite;
   }
 
+  .mask {
+    -webkit-mask-image: "url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/234228/alpha-cat.png)";
+    -webkit-mask-repeat: "no-repeat";
+    -webkit-masks-size: "80%";
+  }
+
   @keyframes updown {
     from {
       transform: translateY(0);

@@ -1,5 +1,6 @@
 ---
 import logo from "../assets/logo.png";
+import clsx from 'clsx'
 
 const navigations = [
   { name: "Blog", href: "/blog" },
@@ -7,16 +8,18 @@ const navigations = [
   { name: "Snippets", href: "/snippets" },
   { name: "About", href: "/about" },
 ];
+
 ---
-<header class='sticky top-0  z-50 backdrop-blur-md'>
+<header class='sticky top-0  z-50 bg-white'>
       <div class='layout flex items-center py-4'>
         <a href='/'><img src={logo} alt='' width='40px' class='' /></a>
         <nav class='ml-auto'>
           <ul class='flex items-center gap-8'>
             {
               navigations.map((nav) => {
+                
                 return (
-                  <li class="">
+                  <li class={clsx("p-2")}>
                     <a href={nav.href} class='font-bold'>
                       {nav.name}
                     </a>

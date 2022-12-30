@@ -95,7 +95,7 @@ const postMeta = await prisma.post.upsert({
           <div class='my-4 h-px w-full bg-black'></div>
           <div class='flex justify-between'>
             <LikeWrapper client:load slug={slug} ip={ip} initialLikes={postMeta._count.likes} />
-            <button id='scroll-top' type='button' class='text-sm'>⬆️ Back to top</button>
+            <button id='scroll-top' type='button' class='text-sm'>Back to top</button>
           </div>
         </div>
       </aside>
