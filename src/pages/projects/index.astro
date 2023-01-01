@@ -37,14 +37,14 @@ const projects = await Promise.all(
 <Layout title='Projects'>
   <main class='layout space-y-6 py-12'>
     <div class='pb-8'>
-      <h1 class='mb-2 text-4xl font-bold'>Projects</h1>
-      <p class='max-w-[60ch] text-lg'>
+      <h1 class='mb-2 text-4xl font-bold text-primary'>Projects</h1>
+      <p class='max-w-[60ch] text-lg dark:text-zinc-400'>
         Showcase of my selected projects over the years. Including projects from hackathons,
         open-source, and self-started. In details.
       </p>
     </div>
 
-    <ul class='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
+    <ul class='grid gap-x-12 gap-y-16 sm:grid-cols-2 lg:grid-cols-3'>
       {
         projects.map((p) => {
           return <ProjectCard {...p} />;

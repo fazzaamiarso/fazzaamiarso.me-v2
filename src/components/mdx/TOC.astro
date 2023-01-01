@@ -1,4 +1,6 @@
 ---
+import clsx from "clsx";
+
 type Props = {
   pageHeadings: Array<{ depth: number; text: string; slug: string }>;
 };
@@ -7,13 +9,18 @@ const { pageHeadings } = Astro.props;
 
 <div id='toc' class=''>
   <nav class=''>
-    <h2 class='mb-4 font-bold uppercase tracking-widest'>Table of content</h2>
-    <ul class='space-y-3 text-sm'>
+    <h2 class='mb-4 font-medium uppercase tracking-widest'>Table of content</h2>
+    <ul class='space-y-4 text-sm'>
       {
         pageHeadings.map((h) => {
           return (
             h.depth < 4 && (
-              <li class={h.depth > 2 ? "ml-4" : ""}>
+              <li
+                class={clsx(
+                  "text-zinc-600 dark:text-zinc-300",
+                  h.depth === 2 && "text-[15px] " ,
+                  h.depth === 3 && "ml-4 text-[14px]" 
+                )}>
                 <a href={`#${h.slug}`} class='line-clamp-1'>
                   {h.text}
                 </a>
@@ -28,7 +35,7 @@ const { pageHeadings } = Astro.props;
 
 <style>
   .active {
-    @apply text-red-500;
+    @apply text-primary;
   }
 </style>
 <script>

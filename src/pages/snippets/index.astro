@@ -1,6 +1,5 @@
 ---
 import Layout from "layouts/Layout.astro";
-import {Code} from 'astro/components'
 
 type Frontmatter = {
   title: string;
@@ -12,11 +11,11 @@ type Frontmatter = {
 const snippets = await Astro.glob<Frontmatter>("./*.mdx");
 ---
 
-<Layout title='Snippets | Fazza Razaq Amiarso'>
+<Layout title='Snippets'>
   <main class='layout space-y-6 py-12'>
     <div class='pb-8'>
-      <h1 class='mb-2 text-4xl font-bold'>Snippets</h1>
-      <p class='max-w-[60ch] text-lg'>
+      <h1 class='mb-2 text-4xl font-bold text-primary'>Snippets</h1>
+      <p class='max-w-[60ch] text-lg dark:text-zinc-400'>
         Collection of code snippets that I found useful. Hope it can help someone too.
       </p>
     </div>
@@ -25,18 +24,18 @@ const snippets = await Astro.glob<Frontmatter>("./*.mdx");
       {
         snippets.map((s) => {
           return (
-            <li class='group relative rounded-md p-5 ring-1 ring-black'>
-              <h2 class='text-lg font-bold'>
-                <a href={s.url} class='link-card transition-all group-hover:text-blue-500'>
+            <li class='group relative flex flex-col rounded-md bg-white p-5 ring-1 ring-zinc-200 transition-all hover:ring-2 hover:ring-primary dark:bg-bgDark dark:ring-zinc-700 dark:hover:ring-primary'>
+              <h2 class='mb-1 text-lg font-bold'>
+                <a href={s.url} class='link-card'>
                   {s.frontmatter.title}
                 </a>
               </h2>
-              <ul class='mb-2 flex items-center space-x-4'>
+              <p class='mb-4 dark:text-zinc-400'>{s.frontmatter.description}</p>
+              <ul class='mt-auto flex items-center space-x-4'>
                 {s.frontmatter.tags.map((t) => (
                   <li class='text-sm'>#{t}</li>
                 ))}
               </ul>
-              <p>{s.frontmatter.description}</p>
             </li>
           );
         })

@@ -14,10 +14,12 @@ type Props = {
 const props = Astro.props;
 ---
 
-<li class='group relative space-y-4 rounded-lg p-6 transition-all hover:bg-gray-100'>
-  <div class='shadow-3xl h-10 w-10 rounded-full p-1 shadow-black ring-1 ring-gray-300'>
+<li class='group relative space-y-4 rounded-lg transition-all dark:text-zinc-400'>
+  <div class='h-10 w-10 rounded-full p-[6px] ring-1 ring-zinc-900/25 dark:bg-zinc-600/50 dark:ring-zinc-500/50'>
     <Image
-      src={props.cover.startsWith("https") ? props.cover : import(`../assets/projects/${props.cover}`)}
+      src={props.cover.startsWith("https")
+        ? props.cover
+        : import(`../assets/projects/${props.cover}.png`)}
       alt=''
       width={400}
       height={400}
@@ -25,12 +27,15 @@ const props = Astro.props;
     />
   </div>
   <div class='space-y-2'>
-    <h3 class='text-lg font-semibold'>
-      <a href={props.slug} class='link-card group-hover:text-blue-500'>
+    <h3 class='text-lg font-semibold dark:text-white'>
+      <a href={props.slug} class='link-card'>
+        <span
+          class='absolute -inset-5 -z-20 scale-95 rounded-md bg-zinc-100 dark:bg-zinc-900 opacity-0 transition-all group-hover:scale-100 group-hover:opacity-100'
+        ></span>
         {props.title}
       </a>
     </h3>
-    <p class='line-clamp-3'>{props.description}</p>
+    <p class='line-clamp-3 '>{props.description}</p>
   </div>
   <div class='flex items-center gap-6'>
     <div class='flex items-center gap-1'>

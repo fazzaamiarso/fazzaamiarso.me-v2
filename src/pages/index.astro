@@ -77,28 +77,27 @@ const projects = await Promise.all(
   <main class=''>
     <div class='layout flex items-center justify-between py-20'>
       <div class='space-y-12'>
-        <h1 class='text-3xl font-bold leading-relaxed sm:text-5xl'>
+        <h1 class='text-3xl font-bold leading-relaxed sm:text-5xl sm:leading-[4rem] dark:text-white max-w-3xl'>
           <span
-            class='bg-gradient-to-tr from-pink-500 via-red-500 to-yellow-500 bg-clip-text text-transparent'
-            >Hello! I'm Fazza</span
-          >. I build software to create a better world. I love to share and teach while I'm at it.
+            class='bg-gradient-to-tr from-pink-500 via-red-500 to-yellow-500 bg-clip-text text-transparent text-2xl sm:text-4xl'
+            >Hello! 안녕! こんにちは! I'm Fazza</span
+          >. <p>I build software to create a better world.</p> <p>I love to share and teach while I'm at it.</p>
         </h1>
-        <div class='space-x-4'>
-          <a href='/blog' class='rounded-sm bg-black p-4 text-sm text-white'>Read the blog</a>
-          <a href='/projects' class='rounded-sm p-4 text-sm ring-1 ring-black'>See projects</a>
+        <div class='space-x-4 flex items-center'>
+          <a href='/blog' class='rounded-md bg-[hsl(260,43%,96%)] dark:bg-primary dark:text-white font-medium p-4 text-sm  text-[#6548c3] flex items-center gap-2'>Read the blog <Icon name="ic:sharp-chevron-right" class="w-5" /></a>
+          <a href='/projects' class='rounded-sm p-4 text-sm font-medium underline underline-offset-1'>See projects</a>
         </div>
       </div>
     </div>
-    <div class=''>
-      <div class='layout space-y-6 py-12'>
-        <h2 class='text-2xl font-bold'>Featured Posts</h2>
+      <div class='layout space-y-8 py-8'>
+        <h2 class='text-2xl font-bold dark:text-white sm:text-3xl'>Featured Posts</h2>
         <ul class='grid gap-6 sm:grid-cols-2 lg:grid-cols-3'>
           {
             posts.map((p, i) => {
               return (
-                <li class={clsx("relative rounded-md p-1 group", featureGradients[i])}>
-                  <div class='flex h-full flex-col bg-white p-4'>
-                    <h3 class='mb-8 text-xl font-semibold'><a href={p.slug} class="link-card group-hover:text-blue-500 transition-all">{p.title}</a></h3>
+                <li class={clsx("relative rounded-md p-[6px] group hover:scale-[101%] transition-transform ", featureGradients[i])}>
+                  <div class='flex h-full flex-col rounded-sm bg-white p-4 dark:bg-bgDark dark:text-white'>
+                    <h3 class='mb-8 text-xl font-medium'><a href={p.slug} class="link-card">{p.title}</a></h3>
                     <div class='mt-auto flex items-center gap-2'>
                       <div class='flex items-center gap-1'>
                         <Icon name='ic:outline-remove-red-eye' class='w-5' aria-hidden='true' />
@@ -115,15 +114,13 @@ const projects = await Promise.all(
             })
           }
         </ul>
-        <a href='/blog' class='flex items-center gap-1 py-2 first-line:font-semibold'
+        <a href='/blog' class='flex items-center gap-1 py-2 first-line:font-semibold dark:text-zinc-300 dark:hover:text-zinc-100 transition-color'
           >Read all post <Icon name='ic:sharp-arrow-right-alt' class='w-8' />
         </a>
       </div>
-    </div>
-    <div class=''>
-      <div class='layout py-12'>
-        <h2 class='mb-4 text-2xl font-bold'>Featured Projects</h2>
-        <ul class='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
+      <div class='layout py-12 space-y-8'>
+        <h2 class='mb-4 text-2xl font-bold dark:text-white sm:text-3xl'>Featured Projects</h2>
+        <ul class='grid sm:grid-cols-2 lg:grid-cols-3 gap-12'>
           {
             projects.map((p) => {
               return (
@@ -132,11 +129,10 @@ const projects = await Promise.all(
             })
           }
         </ul>
-        <a href='/projects' class='flex items-center gap-1 py-2 first-line:font-semibold'
+        <a href='/projects' class='flex items-center gap-1 py-2 first-line:font-semibold dark:text-zinc-300 dark:hover:text-zinc-100 transition-color'
           >See all projects <Icon name='ic:sharp-arrow-right-alt' class='w-8' />
         </a>
       </div>
-    </div>
   </main>
 </Layout>
 

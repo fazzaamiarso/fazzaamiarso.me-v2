@@ -9,12 +9,11 @@ import clsx from "clsx";
   class={clsx("ml-auto")}
   onclick='window.toggleMode()'
   aria-label='dark mode'>
-  <!-- <Icon id='sun' name="akar-icons:sun" width="20"  class="hidden dark:inline-block" />  -->
-  <!-- <Icon id='moon' name="ri:moon-fill" width="20" class="inline-block dark:hidden "  />          -->
-  <Icon id='moon' name='ri:moon-fill' width='20' class='inline-block' />
+  <Icon id='moon' name='ri:moon-fill' width='20' class='inline-block dark:hidden' />
+  <Icon id='sun' name='ri:sun-fill' width='20' class='dark:inline-block hidden text-white' />
 </button>
 
-<!-- <script is:inline>
+<script is:inline>
   const root = document.documentElement;
   const currentTheme = localStorage.getItem("theme");
   const switchBtn = document.querySelector("button");
@@ -34,4 +33,4 @@ import clsx from "clsx";
     root.classList.remove("dark");
     switchBtn.ariaChecked = "false";
   }
-</script> -->
+</script>

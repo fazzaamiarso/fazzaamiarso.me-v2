@@ -9,9 +9,12 @@ export const MobileNav = ({}) => {
       {({ close }) => (
         <Fragment>
           <Menu.Button className=''>
+            <span className='sr-only'>Navigation menu</span>
             <BarSVG />
           </Menu.Button>
-          <Menu.Items as='div' className='fixed inset-0 z-50 flex flex-col bg-white p-8'>
+          <Menu.Items
+            as='div'
+            className='fixed inset-0 z-50 flex flex-col bg-bg p-8 dark:bg-bgDark'>
             <button onClick={close} className='ml-auto'>
               <XmarkSVG />
             </button>
@@ -22,7 +25,7 @@ export const MobileNav = ({}) => {
                     {({ active }) => (
                       <a
                         href={nav.href}
-                        className={clsx(active && "text-red-500", "py-2 font-semibold")}>
+                        className={clsx(active && "text-primary", "py-2 font-semibold")}>
                         {nav.name}
                       </a>
                     )}

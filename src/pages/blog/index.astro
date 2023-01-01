@@ -31,34 +31,35 @@ const posts = await Promise.all(
 ---
 
 <Layout title='Blog'>
-  <main class='layout space-y-6 py-12'>
-    <div class='border-b-[1px] border-black pb-8'>
-      <h1 class='mb-2 text-4xl font-bold'>Blog</h1>
-      <p class='max-w-[60ch] text-lg'>
+  <main class='layout space-y-6 py-12 pb-24'>
+    <div class='pb-8'>
+      <h1 class='mb-2 text-4xl font-bold text-primary'>Blog</h1>
+      <p class='max-w-[60ch] text-lg dark:text-zinc-400'>
         A place where I share my knowldege and learning mostly on Frontend (React), A11Y, and
         sometimes full-stack. Sharing struggles at time.
       </p>
     </div>
-    <ul class='space-y-4'>
+    <ul class='space-y-10'>
       {
         posts.map((p) => {
           return (
-            <li class='group  relative gap-8 rounded-md p-4 transition-all hover:bg-gray-100'>
-              <h2 class='mb-2 text-lg font-medium'>
-                <a href={p.slug} class='link-card group-hover:text-blue-500'>
+            <li class='group relative gap-8 rounded-md transition-all'>
+              <h2 class='mb-2 text-lg font-medium '>
+                <a href={p.slug} class='link-card'>
+                  <span class="absolute -inset-5 -z-20 scale-95 rounded-md bg-zinc-100 dark:bg-zinc-900 opacity-0 transition-all group-hover:scale-100 group-hover:opacity-100"></span>
                   {p.title}
                 </a>
               </h2>
               <div class='mb-4 flex items-center gap-4'>
-                <span class='text-sm text-gray-600'>
+                <span class='text-sm text-zinc-600 dark:text-zinc-400'>
                   {Intl.DateTimeFormat("en-US", { day: "numeric", month: "short" }).format(
                     new Date(p.publishedAt)
                   )}
                 </span>
-                <span class='text-sm text-gray-600'> {p.views} views</span>
-                <span class='text-sm text-gray-600'> {p.likes} likes</span>
+                <span class='text-sm text-zinc-600 dark:text-zinc-400'> {p.views} views</span>
+                <span class='text-sm text-zinc-600 dark:text-zinc-400'> {p.likes} likes</span>
               </div>
-              <p class=''>{p.description}</p>
+              <p class='dark:text-zinc-400 text-zinc-600'>{p.description}</p>
             </li>
           );
         })
