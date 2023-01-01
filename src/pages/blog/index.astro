@@ -43,8 +43,8 @@ const posts = await Promise.all(
       {
         posts.map((p) => {
           return (
-            <li class='group  relative -ml-4 gap-8 rounded-md p-4 transition-all hover:bg-gray-100'>
-              <h2 class='mb-2 text-lg font-bold'>
+            <li class='group  relative gap-8 rounded-md p-4 transition-all hover:bg-gray-100'>
+              <h2 class='mb-2 text-lg font-medium'>
                 <a href={p.slug} class='link-card group-hover:text-blue-500'>
                   {p.title}
                 </a>

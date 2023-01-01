@@ -1,6 +1,5 @@
 ---
 import Icon from "astro-icon";
-import Giscus from "components/Giscus.astro";
 import { LikeWrapper } from "components/mdx/LikeButton";
 import TOC from "components/mdx/TOC.astro";
 import { prisma } from "lib/prisma";
@@ -86,7 +85,7 @@ const postMeta = await prisma.post.upsert({
     </div>
     <div class='layout grid grid-cols-4 gap-x-2'>
       <article
-        class='blog prose col-span-3 prose-headings:scroll-mt-20 max-lg:col-span-4 md:prose-lg'>
+        class='blog prose col-span-3 prose-headings:scroll-mt-20 prose-code:font-code max-lg:col-span-4 md:prose-lg'>
         <slot />
       </article>
       <aside class='max-lg:hidden'>
@@ -100,7 +99,6 @@ const postMeta = await prisma.post.upsert({
         </div>
       </aside>
     </div>
-    <Giscus />
   </main>
 </Layout>
 
@@ -112,12 +110,32 @@ const postMeta = await prisma.post.upsert({
 </script>
 
 <style is:global>
-  code {
+  .blog code {
     counter-reset: step;
     counter-increment: step 0;
   }
 
-  code .line::before {
+  .blog :not(pre) code {
+    @apply rounded-sm bg-gray-200 px-1 py-[6px];
+  }
+
+  .blog pre code {
+    font-size: 1rem;
+  }
+
+  .blog pre::-webkit-scrollbar {
+    @apply rounded-b-md h-1 bg-gray-900;
+  }
+  .blog pre::-webkit-scrollbar-thumb {
+    @apply rounded-full my-1 bg-gray-400;
+  }
+
+  .blog code::after,
+  .blog code::before {
+    content: "";
+  }
+
+  .blog code .line::before {
     content: counter(step);
     counter-increment: step;
     margin-right: 1.5rem;

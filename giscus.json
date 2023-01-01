@@ -1,3 +1,4 @@
 {
-  "origins": ["*"]
+  "origins": ["https://fazzaamiarso.me"],
+  "originsRegex": ["http://localhost:[0-9]+"]
 }

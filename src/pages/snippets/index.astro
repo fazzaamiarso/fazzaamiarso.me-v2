@@ -1,5 +1,6 @@
 ---
 import Layout from "layouts/Layout.astro";
+import {Code} from 'astro/components'
 
 type Frontmatter = {
   title: string;
@@ -19,6 +20,7 @@ const snippets = await Astro.glob<Frontmatter>("./*.mdx");
         Collection of code snippets that I found useful. Hope it can help someone too.
       </p>
     </div>
+
     <ul class='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
       {
         snippets.map((s) => {

@@ -1,4 +1,5 @@
 import { defineConfig } from "astro/config";
+import tokyoNight from "./tokyo-night.json";
 
 // https://astro.build/config
 import tailwind from "@astrojs/tailwind";
@@ -53,4 +54,9 @@ export default defineConfig({
     }),
   ],
   adapter: vercel(),
+  markdown: {
+    shikiConfig: {
+      theme: tokyoNight,
+    },
+  },
 });

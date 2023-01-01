@@ -1,5 +1,5 @@
 ---
-import { Icon } from "astro-icon";
+import ProjectCard from "components/ProjectCard.astro";
 import Layout from "layouts/Layout.astro";
 import { prisma } from "lib/prisma";
 
@@ -22,10 +22,10 @@ const projects = await Promise.all(
     });
 
     return {
-      slug: p.url,
+      slug: p.url ?? "",
       title: p.frontmatter.title,
       publishedAt: p.frontmatter.publishedAt,
-      desription: p.frontmatter.description,
+      description: p.frontmatter.description,
       cover: p.frontmatter.cover,
       views: viewsAndLike?.views ?? 0,
       likes: viewsAndLike?._count.likes ?? 0,
@@ -47,29 +47,7 @@ const projects = await Promise.all(
     <ul class='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
       {
         projects.map((p) => {
-          return (
-            <li class='group relative space-y-4 rounded-lg p-6 transition-all hover:bg-gray-100'>
-              <div class='aspect-square w-8 rounded-full bg-black ring-1 ring-black ring-offset-4' />
-              <div class='space-y-2'>
-                <h3 class='text-lg font-semibold'>
-                  <a href={p.slug} class='link-card group-hover:text-blue-500'>
-                    {p.title}
-                  </a>
-                </h3>
-                <p class='line-clamp-3'>{p.desription}</p>
-              </div>
-              <div class='flex items-center gap-6'>
-                <div class='flex items-center gap-1'>
-                  <Icon name='ic:outline-remove-red-eye' class='w-5' aria-hidden='true' />
-                  <span class='text-sm'> {p.views}</span>
-                </div>
-                <div class='flex items-center gap-1'>
-                  <Icon name='mdi:cards-heart-outline' class='w-5' aria-hidden='true' />
-                  <span class='text-sm'> {p.likes}</span>
-                </div>
-              </div>
-            </li>
-          );
+          return <ProjectCard {...p} />;
         })
       }
     </ul>

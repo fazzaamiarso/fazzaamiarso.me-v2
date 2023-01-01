@@ -9,6 +9,7 @@ module.exports = {
       fontFamily: {
         inter: ["InterVariable", "Inter", ...defaultTheme.fontFamily.sans],
         manrope: ["ManropeVariable", "Manrope", ...defaultTheme.fontFamily.sans],
+        code: ["League Mono", ...defaultTheme.fontFamily.mono],
       },
     },
   },

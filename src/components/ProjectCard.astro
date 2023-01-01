@@ -1,0 +1,45 @@
+---
+import { Image } from "@astrojs/image/components";
+import { Icon } from "astro-icon";
+
+type Props = {
+  cover: string;
+  slug: string;
+  title: string;
+  description: string;
+  views: number;
+  likes: number;
+};
+
+const props = Astro.props;
+---
+
+<li class='group relative space-y-4 rounded-lg p-6 transition-all hover:bg-gray-100'>
+  <div class='shadow-3xl h-10 w-10 rounded-full p-1 shadow-black ring-1 ring-gray-300'>
+    <Image
+      src={props.cover.startsWith("https") ? props.cover : import(`../assets/projects/${props.cover}`)}
+      alt=''
+      width={400}
+      height={400}
+      class='h-full w-full object-cover object-center rounded-full'
+    />
+  </div>
+  <div class='space-y-2'>
+    <h3 class='text-lg font-semibold'>
+      <a href={props.slug} class='link-card group-hover:text-blue-500'>
+        {props.title}
+      </a>
+    </h3>
+    <p class='line-clamp-3'>{props.description}</p>
+  </div>
+  <div class='flex items-center gap-6'>
+    <div class='flex items-center gap-1'>
+      <Icon name='ic:outline-remove-red-eye' class='w-5' aria-hidden='true' />
+      <span class='text-sm'> {props.views}</span>
+    </div>
+    <div class='flex items-center gap-1'>
+      <Icon name='mdi:cards-heart-outline' class='w-5' aria-hidden='true' />
+      <span class='text-sm'> {props.likes}</span>
+    </div>
+  </div>
+</li>

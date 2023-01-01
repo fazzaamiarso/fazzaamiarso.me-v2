@@ -8,15 +8,17 @@ type Props = {
   tags: string[];
 };
 
-const { frontmatter } = Astro.props;
+const {
+  frontmatter: { tags, title, description },
+} = Astro.props;
 ---
 
-<Layout title={frontmatter.title} desc={frontmatter.description}>
+<Layout title={title} desc={description}>
   <main class='layout !max-w-3xl space-y-12 py-12'>
     <div>
-      <h1 class='text-4xl font-bold'>{frontmatter.title}</h1>
-      <p>{frontmatter.description}</p>
-      <ul class='flex items-center gap-4'>{frontmatter.tags.map((t) => <li>#{t}</li>)}</ul>
+      <h1 class='text-4xl font-bold'>{title}</h1>
+      <p>{description}</p>
+      <ul class='flex items-center gap-4'>{tags.map((t) => <li>#{t}</li>)}</ul>
     </div>
     <article class='prose'><slot /></article>
   </main>

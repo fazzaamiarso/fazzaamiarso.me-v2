@@ -1,6 +1,8 @@
 ---
 import "@fontsource/inter";
 import "@fontsource/inter/variable.css";
+import "@fontsource/league-mono";
+
 import Footer from "components/Footer.astro";
 import Navbar from "components/header/Navbar.astro";
 import SEO from "components/SEO.astro";
@@ -11,6 +13,8 @@ export interface Props {
 }
 
 const { title, desc } = Astro.props;
+
+
 ---
 
 <!DOCTYPE html>
@@ -21,7 +25,7 @@ const { title, desc } = Astro.props;
     <SEO title={title} desc={desc} />
     <!--  -->
   </head>
-  <body class='font-inter'>
+  <body class='font-inter bg-[#f9fbfa]'>
     <Navbar />
     <slot />
     <Footer />
