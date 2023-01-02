@@ -13,7 +13,7 @@ const { heading, type = "normal" } = Astro.props;
     "text-base pt-4 pb-6 mb-10 px-6 rounded-r-md rounded-l-sm border-l-4 not-prose notes",
     type === "warn" && "warn"
   )}>
-  {heading && <strong class='leading-[2] font-bold '>{heading}</strong>}
+  {heading && <strong class='font-bold leading-[2] '>{heading}</strong>}
   <slot />
 </aside>
 
@@ -40,11 +40,11 @@ const { heading, type = "normal" } = Astro.props;
   }
 
   :global(.notes > p > a) {
-    @apply text-base font-medium underline decoration-1 underline-offset-4 hover:decoration-2 text-[var(--text)] decoration-[var(--normal-border)];
+    @apply text-base font-medium text-[var(--text)] underline decoration-[var(--normal-border)] decoration-1 underline-offset-4 hover:decoration-2;
   }
 
   :global(.notes.warn > p > a) {
-    @apply text-base font-medium underline decoration-1 underline-offset-4 hover:decoration-2 text-[var(--text)] decoration-[var(--warn-border)];
+    @apply text-base font-medium text-[var(--text)] underline decoration-[var(--warn-border)] decoration-1 underline-offset-4 hover:decoration-2;
   }
 
   aside {

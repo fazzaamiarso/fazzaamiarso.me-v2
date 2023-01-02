@@ -55,8 +55,11 @@ export const LikeButton = ({ ip, slug, initialLikes }: Props) => {
             aria-hidden='true'
             className={clsx(
               translateVals[data?.likes ? data.likes : 0],
-              "absolute -z-10 h-full w-full rounded-md bg-gradient-to-tl from-pink-400 to-pink-600 transition-all"
+              "absolute -z-20 h-full w-full rounded-md bg-gradient-to-tl from-pink-400 to-pink-600 transition-all"
             )}></div>
+          <div
+            aria-hidden='true'
+            className={"absolute bottom-0 -z-10 h-[5px] w-full bg-bg dark:bg-bgDark"}></div>
           <svg
             className='aspect-square h-8 w-8 rounded-md'
             width='507'

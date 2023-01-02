@@ -19,7 +19,7 @@ Let's get started.
 
 ## What are we building?
 
-<YoutubeEmbed id="w1CRsiEWfrE" title="interactive pricing demo" />
+<YoutubeEmbed id='w1CRsiEWfrE' title='interactive pricing demo' />
 
 🔗 [Github Repository](https://github.com/fazzaamiarso/Frontendmentor-challenges/tree/main/apps/interactive-pricing)
 
@@ -88,9 +88,7 @@ someEL.addEventListener("input", () => {
   const min = Number(pricingSlider.min);
   const max = Number(pricingSlider.max);
   const sliderVal = Number(pricingSlider.value);
-  const sliderGradientPercentage = `${
-    ((sliderVal - min) * 100) / (max - min)
-  }% 100%`;
+  const sliderGradientPercentage = `${((sliderVal - min) * 100) / (max - min)}% 100%`;
   // Set the `background-size` dynamically
   pricingSlider.style.backgroundSize = sliderGradientPercentage;
 });
@@ -119,6 +117,7 @@ pricingSlider.ariaValueText = `${pageViews} page views for ${price} per month`;
 ```
 
 > For more details, check it out [on MDN](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-valuetext)
+
 ## Billing Frequency Switch
 
 The second element we will tackle is the switch.

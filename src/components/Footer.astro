@@ -4,7 +4,7 @@ import { navigations, otherLinks, socialLinks } from "common";
 const socials = Object.entries(socialLinks);
 ---
 
-<footer class='border-t-2 border-gray-100 dark:text-zinc-400 dark:border-zinc-900 transition-all'>
+<footer class='border-t-2 border-gray-100 transition-all dark:border-zinc-900 dark:text-zinc-400'>
   <div class='layout space-y-12 py-8'>
     <nav class='grid w-full grid-cols-3'>
       <ul class='space-y-3'>
@@ -12,7 +12,7 @@ const socials = Object.entries(socialLinks);
           navigations.map((nav) => {
             return (
               <li>
-                <a href={nav.href} class='text-sm hover:text-primary transition-colors'>
+                <a href={nav.href} class='text-sm transition-colors hover:text-primary'>
                   {nav.name}
                 </a>
               </li>
@@ -27,7 +27,7 @@ const socials = Object.entries(socialLinks);
               <li>
                 <a
                   href={s[1]}
-                  class='text-sm hover:text-primary transition-colors'
+                  class='text-sm transition-colors hover:text-primary'
                   target='_blank'
                   referrerpolicy='strict-origin-when-cross-origin'>
                   {s[0].charAt(0).toUpperCase() + s[0].slice(1)}
@@ -44,7 +44,7 @@ const socials = Object.entries(socialLinks);
               <li>
                 <a
                   href={o.href}
-                  class='text-sm hover:text-primary transition-colors'
+                  class='text-sm transition-colors hover:text-primary'
                   target='_blank'
                   referrerpolicy='strict-origin-when-cross-origin'>
                   {o.name}

@@ -9,7 +9,7 @@
 <style is:global lang='scss'>
   .blog {
     p {
-      @apply dark:text-zinc-300
+      @apply dark:text-zinc-300;
     }
 
     a {
@@ -17,7 +17,7 @@
     }
 
     a:not(.notes a) {
-      @apply dark:text-primary text-primaryDarker;
+      @apply text-primaryDarker dark:text-primary;
       text-decoration: none;
       background-image: linear-gradient(#8761ff, #8761ff);
       background-repeat: no-repeat;

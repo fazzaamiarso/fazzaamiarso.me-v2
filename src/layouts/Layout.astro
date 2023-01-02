@@ -10,9 +10,10 @@ import SEO from "components/SEO.astro";
 export interface Props {
   title: string;
   desc?: string;
+  ogImage?: string;
 }
 
-const { title, desc } = Astro.props;
+const { title, desc, ogImage } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -20,10 +21,10 @@ const { title, desc } = Astro.props;
   <head>
     <meta charset='UTF-8' />
     <meta name='viewport' content='width=device-width, initial-scale=1' />
-    <SEO title={title} desc={desc} />
+    <SEO title={title} desc={desc} ogImage={ogImage} />
     <!--  -->
   </head>
-  <body class='bg-bg font-inter dark:bg-bgDark transition-colors dark:text-zinc-100'>
+  <body class='bg-bg font-inter transition-colors dark:bg-bgDark dark:text-zinc-100'>
     <Navbar />
     <slot />
     <Footer />

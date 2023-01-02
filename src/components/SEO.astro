@@ -2,13 +2,15 @@
 type Props = {
   title: string;
   desc?: string;
+  ogImage?: string;
 };
 
 const props = Astro.props;
-const title =  props.title ?`${props.title} | Fazza Razaq Amiarso` : "Fazza Razaq Amiarso";
+const title = props.title ? `${props.title} | Fazza Razaq Amiarso` : "Fazza Razaq Amiarso";
 const description =
   props.desc || "Personal website of Fazza Razaq Amiarso. Blog, Projects, and Snippets.";
 const site = import.meta.env.SITE;
+const openGraphImg = props.ogImage ?? "/og.jpeg";
 ---
 
 <meta name='generator' content={Astro.generator} />
@@ -19,7 +21,7 @@ const site = import.meta.env.SITE;
 <meta property='og:url' content={site} />
 <meta property='og:description' content={description} />
 <meta property='og:type' content='website' />
-<meta property='og:image' content='/og.jpeg' />
+<meta property='og:image' content={openGraphImg} />
 <meta property='og:image:type' content='image/jpeg' />
 <meta property='og:image:width' content='1200' />
 <meta property='og:image:height' content='630' />

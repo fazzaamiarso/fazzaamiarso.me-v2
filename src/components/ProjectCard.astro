@@ -15,7 +15,8 @@ const props = Astro.props;
 ---
 
 <li class='group relative space-y-4 rounded-lg transition-all dark:text-zinc-400'>
-  <div class='h-10 w-10 rounded-full p-[6px] ring-1 ring-zinc-900/25 dark:bg-zinc-600/50 dark:ring-zinc-500/50'>
+  <div
+    class='h-10 w-10 rounded-full p-[6px] ring-1 ring-zinc-900/25 dark:bg-zinc-600/50 dark:ring-zinc-500/50'>
     <Image
       src={props.cover.startsWith("https")
         ? props.cover
@@ -30,12 +31,12 @@ const props = Astro.props;
     <h3 class='text-lg font-semibold dark:text-white'>
       <a href={props.slug} class='link-card'>
         <span
-          class='absolute -inset-5 -z-20 scale-95 rounded-md bg-zinc-100 dark:bg-zinc-900 opacity-0 transition-all group-hover:scale-100 group-hover:opacity-100'
+          class='absolute -inset-5 -z-20 scale-95 rounded-md bg-zinc-100 opacity-0 transition-all group-hover:scale-100 group-hover:opacity-100 dark:bg-zinc-900'
         ></span>
         {props.title}
       </a>
     </h3>
-    <p class='line-clamp-3 '>{props.description}</p>
+    <p class='line-clamp-3'>{props.description}</p>
   </div>
   <div class='flex items-center gap-6'>
     <div class='flex items-center gap-1'>
