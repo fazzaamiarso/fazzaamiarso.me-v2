@@ -1,31 +1,22 @@
 ---
 import Layout from "layouts/Layout.astro";
-import { prisma } from "lib/prisma";
+import type { BlogFrontmatter } from "types";
+import { getViewsAndLike } from "utils/content";
 
-type FrontMatter = {
-  slug: string;
-  title: string;
-  series?: string;
-  description: string;
-  publishedAt: string;
-  featured?: boolean;
-};
-const _posts = await Astro.glob<FrontMatter>("./*.mdx");
+const _posts = await Astro.glob<BlogFrontmatter>("./*.mdx");
 const posts = await Promise.all(
   _posts.map(async (p) => {
-    const viewsAndLike = await prisma.post.findUnique({
-      where: { slug: p.url },
-      select: { views: true, _count: { select: { likes: true } } },
-    });
+    const slug = p.url ?? "";
+      const { views, likes } = await getViewsAndLike(slug);
 
-    return {
-      title: p.frontmatter.title,
-      description: p.frontmatter.description,
-      publishedAt: p.frontmatter.publishedAt,
-      slug: p.url,
-      views: viewsAndLike?.views ?? 0,
-      likes: viewsAndLike?._count.likes ?? 0,
-    };
+      return {
+        title: p.frontmatter.title,
+        publishedAt: p.frontmatter.publishedAt,
+        description: p.frontmatter.description,
+        slug,
+        views,
+        likes,
+      };
   })
 );
 ---

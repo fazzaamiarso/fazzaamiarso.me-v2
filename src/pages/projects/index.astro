@@ -1,34 +1,23 @@
 ---
 import ProjectCard from "components/ProjectCard.astro";
 import Layout from "layouts/Layout.astro";
-import { prisma } from "lib/prisma";
+import type { ProjectFrontmatter } from "types";
+import { getViewsAndLike } from "utils/content";
 
-type FrontMatter = {
-  title: string;
-  description: string;
-  cover: string;
-  publishedAt: string;
-  github: string;
-  liveSite: string;
-  featured?: boolean;
-};
-
-const _projects = await Astro.glob<FrontMatter>("./*.mdx");
+const _projects = await Astro.glob<ProjectFrontmatter>("./*.mdx");
 const projects = await Promise.all(
   _projects.map(async (p) => {
-    const viewsAndLike = await prisma.post.findUnique({
-      where: { slug: p.url },
-      select: { views: true, _count: { select: { likes: true } } },
-    });
+    const slug = p.url ?? "";
+    const { views, likes } = await getViewsAndLike(slug);
 
     return {
-      slug: p.url ?? "",
+      slug,
       title: p.frontmatter.title,
       publishedAt: p.frontmatter.publishedAt,
       description: p.frontmatter.description,
       cover: p.frontmatter.cover,
-      views: viewsAndLike?.views ?? 0,
-      likes: viewsAndLike?._count.likes ?? 0,
+      views,
+      likes,
     };
   })
 );

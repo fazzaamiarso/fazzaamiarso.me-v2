@@ -1,12 +1,16 @@
 ---
+import type { MDXLayoutProps } from "astro";
+import Article from "components/mdx/Article.astro";
 import Layout from "./Layout.astro";
 
-type Props = {
+type Props = MDXLayoutProps<{
   title: string;
   description: string;
   publishedAt: string;
   tags: string[];
-};
+}>;
+
+
 
 const {
   frontmatter: { tags, title, description },
@@ -16,10 +20,10 @@ const {
 <Layout title={title} desc={description}>
   <main class='layout !max-w-3xl space-y-12 py-12'>
     <div>
-      <h1 class='text-4xl font-bold'>{title}</h1>
-      <p>{description}</p>
+      <h1 class='text-4xl font-bold dark:text-primary mb-2'>{title}</h1>
+      <p class="text-zinc-600 dark:text-zinc-400">{description}</p>
       <ul class='flex items-center gap-4'>{tags.map((t) => <li>#{t}</li>)}</ul>
     </div>
-    <article class='prose'><slot /></article>
+    <Article class='prose'><slot /></Article>
   </main>
 </Layout>

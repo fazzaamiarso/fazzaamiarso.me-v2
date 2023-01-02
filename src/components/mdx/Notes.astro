@@ -9,12 +9,15 @@ const { heading, type = "normal" } = Astro.props;
 ---
 
 <aside
-  class={clsx("pt-4 pb-8 mb-10 px-6 rounded-r-md rounded-l-sm border-l-4 not-prose", type === "warn" && "warn")}>
+  class={clsx(
+    "pt-4 pb-8 mb-10 px-6 rounded-r-md rounded-l-sm border-l-4 not-prose",
+    type === "warn" && "warn"
+  )}>
   {heading && <strong class=' font-bold '>{heading}</strong>}
   <slot />
 </aside>
 
-<style>
+<style lang='scss'>
   :root {
     --warn-border: #ff9d00;
     --warn-background: #fef6ce;
@@ -33,10 +36,9 @@ const { heading, type = "normal" } = Astro.props;
     background-color: var(--normal-background);
     border-color: var(--normal-border);
     color: var(--text) !important;
-  }
-
-  aside.warn {
-    background-color: var(--warn-background);
-    border-color: var(--warn-border);
+    &.warn {
+      background-color: var(--warn-background);
+      border-color: var(--warn-border);
+    }
   }
 </style>

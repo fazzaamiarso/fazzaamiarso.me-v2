@@ -1,0 +1,48 @@
+---
+---
+
+<article
+  class='blog prose prose-zinc col-span-3 prose-headings:scroll-mt-20 prose-code:font-code dark:prose-invert max-lg:col-span-4 md:prose-lg'>
+  <slot />
+</article>
+
+<style is:global lang='scss'>
+  .blog {
+    a {
+      @apply text-primary no-underline;
+    }
+
+    img {
+      @apply mx-auto rounded-md;
+    }
+
+    code {
+      counter-reset: step;
+      counter-increment: step 0;
+      & .line::before {
+        content: counter(step);
+        counter-increment: step;
+        margin-right: 1.5rem;
+      }
+      &::after,
+      &::before {
+        content: "";
+      }
+    }
+
+    pre {
+      .blog :not(&) code {
+        @apply rounded-sm bg-gray-200 px-1 py-[6px] dark:bg-[#20272f];
+      }
+      code {
+        font-size: 1rem;
+      }
+      &::-webkit-scrollbar {
+        @apply h-1 rounded-b-md bg-gray-900;
+      }
+      &::-webkit-scrollbar-thumb {
+        @apply my-1 rounded-full bg-zinc-400;
+      }
+    }
+  }
+</style>

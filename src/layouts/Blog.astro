@@ -1,12 +1,18 @@
 ---
+import type { MDXLayoutProps } from "astro";
 import Icon from "astro-icon";
+import Article from "components/mdx/Article.astro";
 import { LikeWrapper } from "components/mdx/LikeButton";
 import TOC from "components/mdx/TOC.astro";
 import { prisma } from "lib/prisma";
+import type { BlogFrontmatter, ProjectFrontmatter } from "types";
 import Layout from "./Layout.astro";
 
-const { frontmatter, headings, url: slug } = Astro.props;
+type Props = MDXLayoutProps<BlogFrontmatter | ProjectFrontmatter>;
+
+const { frontmatter, headings, url } = Astro.props;
 const ip = Astro.clientAddress;
+const slug = url ?? "";
 
 // TODO: Separate layout for blog and projects
 const postMeta = await prisma.post.upsert({
@@ -19,9 +25,11 @@ const postMeta = await prisma.post.upsert({
 
 <Layout title={frontmatter.title} desc={frontmatter.description}>
   <main class='space-y-12 pb-24'>
-    <div class='bg-[hsl(257,78%,95%)] dark:bg-[hsl(261,32%,14%)]  pb-12 pt-24'>
+    <div class='bg-[hsl(257,78%,95%)] pb-12 pt-24 dark:bg-[hsl(261,32%,14%)]'>
       <div class='layout'>
-        <a href='/' class='mb-4 text-sm flex dark:text-zinc-300 items-center gap-1'><Icon name="mdi:house" class="w-5"/> Home</a>
+        <a href='/' class='mb-4 flex items-center gap-1 text-sm dark:text-zinc-300'
+          ><Icon name='mdi:house' class='w-5' /> Home</a
+        >
         <h1 class='mb-2 text-4xl font-bold'>{frontmatter.title}</h1>
         <p class='mb-6 text-lg text-zinc-700 dark:text-zinc-400'>{frontmatter.description}</p>
         <div class='mb-6 flex items-center gap-2'>
@@ -35,59 +43,54 @@ const postMeta = await prisma.post.upsert({
           -
           <p class='text-sm'>{postMeta.views} views</p>
           -
-          <p class='text-sm'>{Math.round(frontmatter.minutesRead)} minutes read</p>
+          <p class='text-sm'>{Math.round(frontmatter.minutesRead ?? 0)} minutes read</p>
         </div>
-        <ul class='flex items-center gap-4 empty:hidden'>
-          {
-            frontmatter.github && (
-              <li>
-                <a
-                  href={frontmatter.github}
-                  target='_blank'
-                  referrerpolicy='strict-origin-when-cross-origin'
-                  class='flex items-center gap-2'>
-                  <Icon name='simple-icons:github' class='w-6' aria-hidden='true' />
-                  Github
-                </a>
-              </li>
-            )
-          }
-          {
-            frontmatter.liveSite && (
-              <li>
-                <a
-                  href={frontmatter.liveSite}
-                  target='_blank'
-                  referrerpolicy='strict-origin-when-cross-origin'
-                  class='flex items-center gap-2'>
-                  <Icon name='system-uicons:chain' class='w-6' aria-hidden='true' />
-                  Live Site
-                </a>
-              </li>
-            )
-          }
-          {
-            frontmatter.demo && (
-              <li>
-                <a
-                  href={frontmatter.demo}
-                  target='_blank'
-                  referrerpolicy='strict-origin-when-cross-origin'
-                  class='flex items-center gap-2'>
-                  <Icon name='simple-icons:youtube' class='w-6' aria-hidden='true' />
-                  Demo
-                </a>
-              </li>
-            )
-          }
-        </ul>
+        {
+          "github" in frontmatter && (
+            <ul class='flex items-center gap-4 empty:hidden'>
+              {frontmatter.github && (
+                <li>
+                  <a
+                    href={frontmatter.github}
+                    target='_blank'
+                    referrerpolicy='strict-origin-when-cross-origin'
+                    class='flex items-center gap-2'>
+                    <Icon name='simple-icons:github' class='w-6' aria-hidden='true' />
+                    Github
+                  </a>
+                </li>
+              )}
+              {frontmatter.liveSite && (
+                <li>
+                  <a
+                    href={frontmatter.liveSite}
+                    target='_blank'
+                    referrerpolicy='strict-origin-when-cross-origin'
+                    class='flex items-center gap-2'>
+                    <Icon name='system-uicons:chain' class='w-6' aria-hidden='true' />
+                    Live Site
+                  </a>
+                </li>
+              )}
+              {frontmatter.demo && (
+                <li>
+                  <a
+                    href={frontmatter.demo}
+                    target='_blank'
+                    referrerpolicy='strict-origin-when-cross-origin'
+                    class='flex items-center gap-2'>
+                    <Icon name='simple-icons:youtube' class='w-6' aria-hidden='true' />
+                    Demo
+                  </a>
+                </li>
+              )}
+            </ul>
+          )
+        }
       </div>
     </div>
     <div class='layout grid grid-cols-4 gap-x-8'>
-      <article
-        class='blog prose prose-zinc col-span-3 prose-headings:scroll-mt-20 prose-code:font-code max-lg:col-span-4 md:prose-lg dark:prose-invert'>
-        <slot />
-      </article>
+      <Article><slot /></Article>
       <aside class='max-lg:hidden'>
         <div class='sticky top-20 h-[80vh] overflow-y-auto pr-4 pb-12'>
           <TOC pageHeadings={headings} />
@@ -109,73 +112,38 @@ const postMeta = await prisma.post.upsert({
   });
 </script>
 
-<style is:global>
-  .blog a{
-    @apply text-primary no-underline 
-  }
-
-  .blog code {
-    counter-reset: step;
-    counter-increment: step 0;
-  }
-
-  .blog :not(pre) code {
-    @apply rounded-sm bg-gray-200 px-1 py-[6px] dark:bg-[#20272f];
-  }
-
-  .blog pre code {
-    font-size: 1rem;
-  }
-
-  .blog pre::-webkit-scrollbar {
-    @apply rounded-b-md h-1 bg-gray-900;
-  }
-  .blog pre::-webkit-scrollbar-thumb {
-    @apply rounded-full my-1 bg-zinc-400;
-  }
-
-  .blog code::after,
-  .blog code::before {
-    content: "";
-  }
-
-  .blog code .line::before {
-    content: counter(step);
-    counter-increment: step;
-    margin-right: 1.5rem;
-  }
-
+<style lang='scss'>
   .heading-group {
     position: relative;
-  }
-  .heading-group::before {
-    position: absolute;
-    content: "#";
-    height: 100%;
-    width: 50px;
-    transform: scale(1.5);
-    left: -1rem;
-    opacity: 0;
-    transition: all 100ms ease-in-out;
-  }
-  .heading-group:hover::before {
-    opacity: 1;
-  }
-  .heading-group a {
-    content: "";
-    position: absolute;
-    inset: 0;
+
+    &::before {
+      position: absolute;
+      content: "#";
+      height: 100%;
+      width: 50px;
+      transform: scale(1.5);
+      left: -1rem;
+      opacity: 0;
+      transition: all 100ms ease-in-out;
+    }
+
+    &:hover::before {
+      opacity: 1;
+    }
+
+    a {
+      content: "";
+      position: absolute;
+      inset: 0;
+    }
   }
 
-  .blog img {
-    @apply mx-auto rounded-md;
-  }
-
-  aside > *::-webkit-scrollbar {
-    width: 4px;
-  }
-
-  aside > *::-webkit-scrollbar-thumb {
-    @apply bg-zinc-700 rounded-full
+  aside {
+    & > *::-webkit-scrollbar {
+      width: 4px;
+    }
+    & > *::-webkit-scrollbar-thumb {
+      @apply rounded-full bg-zinc-700;
+    }
   }
 </style>
