@@ -12,6 +12,6 @@ export const socialLinks = {
 };
 
 export const otherLinks = [
-  { name: "Source Code", href: "https://github.com/fazzaamiarso/" },
+  { name: "Source Code", href: "https://github.com/fazzaamiarso/fazzaamiarso.me-v2" },
   { name: "RSS", href: "/rss.xml" },
 ];

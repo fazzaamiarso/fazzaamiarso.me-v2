@@ -10,10 +10,10 @@ const { heading, type = "normal" } = Astro.props;
 
 <aside
   class={clsx(
-    "pt-4 pb-8 mb-10 px-6 rounded-r-md rounded-l-sm border-l-4 not-prose",
+    "text-base pt-4 pb-6 mb-10 px-6 rounded-r-md rounded-l-sm border-l-4 not-prose notes",
     type === "warn" && "warn"
   )}>
-  {heading && <strong class=' font-bold '>{heading}</strong>}
+  {heading && <strong class='leading-[2] font-bold '>{heading}</strong>}
   <slot />
 </aside>
 
@@ -23,19 +23,34 @@ const { heading, type = "normal" } = Astro.props;
     --warn-background: #fef6ce;
     --normal-border: #4433ff;
     --normal-background: #deebf6;
-    --text: black;
   }
 
   html.dark {
     --normal-background: #182635;
     --warn-background: #25231d;
-    --text: white;
+  }
+
+  :global(.notes > p) {
+    line-height: 2;
+    @apply text-zinc-700;
+  }
+
+  :global(html.dark .notes > p) {
+    @apply text-zinc-300;
+  }
+
+  :global(.notes > p > a) {
+    @apply text-base font-medium underline decoration-1 underline-offset-4 hover:decoration-2 text-[var(--text)] decoration-[var(--normal-border)];
+  }
+
+  :global(.notes.warn > p > a) {
+    @apply text-base font-medium underline decoration-1 underline-offset-4 hover:decoration-2 text-[var(--text)] decoration-[var(--warn-border)];
   }
 
   aside {
     background-color: var(--normal-background);
     border-color: var(--normal-border);
-    color: var(--text) !important;
+
     &.warn {
       background-color: var(--warn-background);
       border-color: var(--warn-border);

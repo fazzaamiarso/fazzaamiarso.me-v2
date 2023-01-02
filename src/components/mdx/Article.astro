@@ -8,8 +8,24 @@
 
 <style is:global lang='scss'>
   .blog {
+    p {
+      @apply dark:text-zinc-300
+    }
+
     a {
-      @apply text-primary no-underline;
+      @apply break-all  transition-all;
+    }
+
+    a:not(.notes a) {
+      @apply dark:text-primary text-primaryDarker;
+      text-decoration: none;
+      background-image: linear-gradient(#8761ff, #8761ff);
+      background-repeat: no-repeat;
+      background-position: left bottom;
+      background-size: 0% 2px;
+      &:hover {
+        background-size: 100% 2px;
+      }
     }
 
     img {
@@ -20,9 +36,10 @@
       counter-reset: step;
       counter-increment: step 0;
       & .line::before {
+        @apply text-zinc-400;
         content: counter(step);
         counter-increment: step;
-        margin-right: 1.5rem;
+        margin-right: 1.25rem;
       }
       &::after,
       &::before {
@@ -32,10 +49,10 @@
 
     pre {
       .blog :not(&) code {
-        @apply rounded-sm bg-gray-200 px-1 py-[6px] dark:bg-[#20272f];
+        @apply rounded-sm bg-gray-200 px-1 py-[6px] transition-colors dark:bg-[#20272f];
       }
       code {
-        font-size: 1rem;
+        font-size: 0.9rem;
       }
       &::-webkit-scrollbar {
         @apply h-1 rounded-b-md bg-gray-900;

@@ -17,7 +17,7 @@ const { pageHeadings } = Astro.props;
             h.depth < 4 && (
               <li
                 class={clsx(
-                  "text-zinc-600 dark:text-zinc-300",
+                  "text-zinc-600 dark:text-zinc-300 hover:text-zinc-500 dark:hover:text-zinc-100",
                   h.depth === 2 && "text-[15px] " ,
                   h.depth === 3 && "ml-4 text-[14px]" 
                 )}>
@@ -35,7 +35,7 @@ const { pageHeadings } = Astro.props;
 
 <style>
   .active {
-    @apply text-primary;
+    @apply text-primaryDarker dark:text-primary;
   }
 </style>
 <script>

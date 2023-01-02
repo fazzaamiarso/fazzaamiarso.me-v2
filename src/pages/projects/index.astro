@@ -5,22 +5,24 @@ import type { ProjectFrontmatter } from "types";
 import { getViewsAndLike } from "utils/content";
 
 const _projects = await Astro.glob<ProjectFrontmatter>("./*.mdx");
-const projects = await Promise.all(
-  _projects.map(async (p) => {
-    const slug = p.url ?? "";
-    const { views, likes } = await getViewsAndLike(slug);
+const projects = (
+  await Promise.all(
+    _projects.map(async (p) => {
+      const slug = p.url ?? "";
+      const { views, likes } = await getViewsAndLike(slug);
 
-    return {
-      slug,
-      title: p.frontmatter.title,
-      publishedAt: p.frontmatter.publishedAt,
-      description: p.frontmatter.description,
-      cover: p.frontmatter.cover,
-      views,
-      likes,
-    };
-  })
-);
+      return {
+        slug,
+        title: p.frontmatter.title,
+        publishedAt: p.frontmatter.publishedAt,
+        description: p.frontmatter.description,
+        cover: p.frontmatter.cover,
+        views,
+        likes,
+      };
+    })
+  )
+).sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
 ---
 
 <Layout title='Projects'>

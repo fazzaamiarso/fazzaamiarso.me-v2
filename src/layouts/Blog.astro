@@ -30,10 +30,10 @@ const postMeta = await prisma.post.upsert({
         <a href='/' class='mb-4 flex items-center gap-1 text-sm dark:text-zinc-300'
           ><Icon name='mdi:house' class='w-5' /> Home</a
         >
-        <h1 class='mb-2 text-4xl font-bold'>{frontmatter.title}</h1>
+        <h1 class='mb-2 text-4xl font-bold max-w-3xl'>{frontmatter.title}</h1>
         <p class='mb-6 text-lg text-zinc-700 dark:text-zinc-400'>{frontmatter.description}</p>
         <div class='mb-6 flex items-center gap-2'>
-          <p class='text-sm'>
+          <p class='text-xs sm:text-sm text-zinc-700 dark:text-zinc-300'>
             {
               new Intl.DateTimeFormat("en-US", { dateStyle: "long" }).format(
                 new Date(frontmatter.publishedAt)
@@ -41,13 +41,13 @@ const postMeta = await prisma.post.upsert({
             }
           </p>
           -
-          <p class='text-sm'>{postMeta.views} views</p>
+          <p class='text-xs sm:text-sm text-zinc-700 dark:text-zinc-300'>{postMeta.views} views</p>
           -
-          <p class='text-sm'>{Math.round(frontmatter.minutesRead ?? 0)} minutes read</p>
+          <p class='text-xs sm:text-sm text-zinc-700 dark:text-zinc-300'>{Math.round(frontmatter.minutesRead ?? 0)} minutes read</p>
         </div>
         {
           "github" in frontmatter && (
-            <ul class='flex items-center gap-4 empty:hidden'>
+            <ul class='flex items-center gap-4 empty:hidden dark:text-zinc-300 text-sm'>
               {frontmatter.github && (
                 <li>
                   <a
@@ -55,8 +55,8 @@ const postMeta = await prisma.post.upsert({
                     target='_blank'
                     referrerpolicy='strict-origin-when-cross-origin'
                     class='flex items-center gap-2'>
-                    <Icon name='simple-icons:github' class='w-6' aria-hidden='true' />
-                    Github
+                    <Icon name='simple-icons:github' class='w-5' aria-hidden='true' />
+                    <span class="bg-gradient-to-br from-rose-400 via-fuchsia-500 to-indigo-500 bg-clip-text font-medium text-transparent">Github</span>
                   </a>
                 </li>
               )}
@@ -67,8 +67,8 @@ const postMeta = await prisma.post.upsert({
                     target='_blank'
                     referrerpolicy='strict-origin-when-cross-origin'
                     class='flex items-center gap-2'>
-                    <Icon name='system-uicons:chain' class='w-6' aria-hidden='true' />
-                    Live Site
+                    <Icon name='system-uicons:chain' class='w-5' aria-hidden='true' />
+                    <span class="bg-gradient-to-br from-rose-400 via-fuchsia-500 to-indigo-500 bg-clip-text font-medium text-transparent">Live Site</span>
                   </a>
                 </li>
               )}
@@ -79,8 +79,8 @@ const postMeta = await prisma.post.upsert({
                     target='_blank'
                     referrerpolicy='strict-origin-when-cross-origin'
                     class='flex items-center gap-2'>
-                    <Icon name='simple-icons:youtube' class='w-6' aria-hidden='true' />
-                    Demo
+                    <Icon name='simple-icons:youtube' class='w-5' aria-hidden='true' />
+                    <span class="bg-gradient-to-br from-rose-400 via-fuchsia-500 to-indigo-500 bg-clip-text font-medium text-transparent">Demo</span>
                   </a>
                 </li>
               )}
@@ -97,7 +97,7 @@ const postMeta = await prisma.post.upsert({
           <div class='my-4 h-px w-full bg-black'></div>
           <div class='flex justify-between'>
             <LikeWrapper client:load slug={slug} ip={ip} initialLikes={postMeta._count.likes} />
-            <button id='scroll-top' type='button' class='text-sm'>Back to top</button>
+            <button id='scroll-top' type='button' class='text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-500 dark:hover:text-zinc-400'>Back to top</button>
           </div>
         </div>
       </aside>

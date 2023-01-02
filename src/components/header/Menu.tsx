@@ -21,11 +21,14 @@ export const MobileNav = ({}) => {
             <ul className='space-y-8'>
               {navigations.map((nav) => {
                 return (
-                  <Menu.Item key={nav.href} as='li'>
+                  <Menu.Item key={nav.href} as='li' className='w-full'>
                     {({ active }) => (
                       <a
                         href={nav.href}
-                        className={clsx(active && "text-primary", "py-2 font-semibold")}>
+                        className={clsx(
+                          active && "text-primary",
+                          "inline-block w-full py-2 font-semibold"
+                        )}>
                         {nav.name}
                       </a>
                     )}

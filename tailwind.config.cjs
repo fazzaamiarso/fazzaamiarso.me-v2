@@ -11,6 +11,7 @@ module.exports = {
         bg: "#f9fbfa",
         bgDark: "#101011",
         primary: "#8761ff",
+        primaryDarker: "#6C3DFF",
       },
       fontFamily: {
         inter: ["InterVariable", "Inter", ...defaultTheme.fontFamily.sans],
