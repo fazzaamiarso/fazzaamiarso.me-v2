@@ -18,3 +18,7 @@ export interface ProjectFrontmatter extends BaseFrontmatter {
   featured?: boolean;
   demo?: string;
 }
+
+export interface SnippetsFrontmatter extends BaseFrontmatter {
+  tags: string[];
+}

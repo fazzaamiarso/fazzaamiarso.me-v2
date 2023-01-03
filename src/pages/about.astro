@@ -1,10 +1,11 @@
 ---
 import Layout from "layouts/Layout.astro";
 import { Icon } from "astro-icon";
+import { socialLinks } from "common";
 ---
 
 <Layout title='About'>
-  <main class='layout space-y-6 py-12'>
+  <main id="skip-content" class='layout space-y-6 py-12'>
     <div>
       <h1 class='text-2xl font-bold'>
         About <div
@@ -21,40 +22,35 @@ import { Icon } from "astro-icon";
       </p>
       <p>
         I'm interested in teaching and sharing my knowledge to others. So, they don't have to
-        struggle. I help others by writing blog. Sometimes on frontendmentor.io. I would like to
-        build a community like Kent C. Dodds in Indonesia.
+        struggle. I help others by writing blog. Sometimes on <a
+          href='https://www.frontendmentor.io/profile/fazzaamiarso'
+          target='_blank'
+          referrerpolicy='strict-origin-when-cross-origin'
+          class='font-medium text-primaryDarker underline underline-offset-2 hover:no-underline dark:text-primary'
+          >frontendmentor.io</a
+        >.
       </p>
+      <p>I would like to build a community like Kent C. Dodds in Indonesia.</p>
     </div>
     <div class='space-y-4'>
       <h2>Want to chat/collaborate? Reach me out here!</h2>
       <ul class='flex items-center gap-6'>
-        <li>
-          <a
-            href='https://www.linkedin.com/in/fazzaamiarso'
-            target='_blank'
-            referrerpolicy='strict-origin-when-cross-origin'
-            class='external'
-            ><Icon name='simple-icons:linkedin' class='w-6' />
-          </a>
-        </li>
-        <li>
-          <a
-            href='https://github.com/fazzaamiarso'
-            target='_blank'
-            referrerpolicy='strict-origin-when-cross-origin'
-            class='external'
-            ><Icon name='simple-icons:github' class='w-6' />
-          </a>
-        </li>
-        <li>
-          <a
-            href='https://twitter.com/faz_razq'
-            target='_blank'
-            referrerpolicy='strict-origin-when-cross-origin'
-            class='external'
-            ><Icon name='simple-icons:twitter' class='w-6' />
-          </a>
-        </li>
+        {
+          Object.entries(socialLinks).map((s) => {
+            return (
+              <li>
+                <a
+                  href={s[1]}
+                  target='_blank'
+                  referrerpolicy='strict-origin-when-cross-origin'
+                  class='external'>
+                  <span class='sr-only'>go to fazzaamiarso's {s[0]} account</span>
+                  <Icon name={`simple-icons:${s[0]}`} class='w-6' aria-hidden='true' />
+                </a>
+              </li>
+            );
+          })
+        }
       </ul>
     </div>
   </main>

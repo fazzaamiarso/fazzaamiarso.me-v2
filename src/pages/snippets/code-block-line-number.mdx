@@ -7,9 +7,9 @@ tags:
 publishedAt: ""
 ---
 
-A trick to insert line number to an html `code` element. Found somewhere in github.
+A trick to pre-pend line number to an HTML `code` element.
 
-Using Vanilla CSS and `step`
+Using Vanilla CSS and CSS `counter`
 
 ```css
 code {
@@ -17,9 +17,10 @@ code {
   counter-increment: step 0;
 }
 
+/* Select the code line */
 code .line::before {
   content: counter(step);
   counter-increment: step;
-  margin-right: 1.5rem;
+  margin-right: 1.5rem; /* Margin between line number and actual code element */
 }
 ```

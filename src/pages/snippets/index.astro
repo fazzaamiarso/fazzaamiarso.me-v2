@@ -1,18 +1,12 @@
 ---
 import Layout from "layouts/Layout.astro";
+import type { SnippetsFrontmatter } from "types";
 
-type Frontmatter = {
-  title: string;
-  description: string;
-  publishedAt: string;
-  tags: string[];
-};
-
-const snippets = await Astro.glob<Frontmatter>("./*.mdx");
+const snippets = await Astro.glob<SnippetsFrontmatter>("./*.mdx");
 ---
 
 <Layout title='Snippets'>
-  <main class='layout space-y-6 py-12'>
+  <main id="skip-content" class='layout space-y-6 py-12'>
     <div class='pb-8'>
       <h1 class='mb-2 text-4xl font-bold text-primary'>Snippets</h1>
       <p class='max-w-[60ch] text-lg dark:text-zinc-400'>
