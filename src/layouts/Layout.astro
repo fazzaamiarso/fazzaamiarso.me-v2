@@ -27,7 +27,7 @@ const { title, desc, ogImage } = Astro.props;
       defer
       type='text/partytown'
       data-website-id='09ba0f32-6e20-421a-9f92-5c89f526e1ae'
-      src='/api/umami/script.js'
+      src={`${Astro.url.origin}/api/umami/script.js`}
     ></script>
   </head>
   <body class='bg-bg font-inter transition-colors dark:bg-bgDark dark:text-zinc-100'>
