@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/umami/script.js",
+      "destination": "https://resilient-lolly-2cb679.netlify.app/umami.js"
+    }
+  ]
+}

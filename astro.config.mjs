@@ -30,25 +30,37 @@ import partytown from "@astrojs/partytown";
 export default defineConfig({
   output: "server",
   site: "https://fazzaamiarso.me",
-  integrations: [tailwind(), mdx({
-    extendPlugins: true,
-    remarkPlugins: [remarkReadingTime],
-    rehypePlugins: [[rehypeAutolinkHeadings, {
-      behavior: "before",
-      group: () => {
-        return h("div.heading-group");
-      },
-      content: node => {
-        return [h("span.sr-only", `go to ${toString(node)} section`)];
-      }
-    }]]
-  }), react(), sitemap(), image({
-    serviceEntryPoint: "@astrojs/image/sharp"
-  }), partytown()],
+  integrations: [
+    tailwind(),
+    mdx({
+      extendPlugins: true,
+      remarkPlugins: [remarkReadingTime],
+      rehypePlugins: [
+        [
+          rehypeAutolinkHeadings,
+          {
+            behavior: "before",
+            group: () => {
+              return h("div.heading-group");
+            },
+            content: (node) => {
+              return [h("span.sr-only", `go to ${toString(node)} section`)];
+            },
+          },
+        ],
+      ],
+    }),
+    react(),
+    sitemap(),
+    image({
+      serviceEntryPoint: "@astrojs/image/sharp",
+    }),
+    partytown({ config: { debug: true } }),
+  ],
   adapter: vercel(),
   markdown: {
     shikiConfig: {
-      theme: tokyoNight
-    }
-  }
+      theme: tokyoNight,
+    },
+  },
 });
