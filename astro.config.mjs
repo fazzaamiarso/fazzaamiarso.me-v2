@@ -55,7 +55,7 @@ export default defineConfig({
     image({
       serviceEntryPoint: "@astrojs/image/sharp",
     }),
-    partytown({ config: { debug: true } }),
+    partytown(),
   ],
   adapter: vercel(),
   markdown: {
