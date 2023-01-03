@@ -22,12 +22,17 @@ const { title, desc, ogImage } = Astro.props;
     <meta charset='UTF-8' />
     <meta name='viewport' content='width=device-width, initial-scale=1' />
     <SEO title={title} desc={desc} ogImage={ogImage} />
-    <!--  -->
+    <script
+      async
+      defer
+      data-website-id='09ba0f32-6e20-421a-9f92-5c89f526e1ae'
+      src='https://resilient-lolly-2cb679.netlify.app/umami.js'
+    ></script>
   </head>
   <body class='bg-bg font-inter transition-colors dark:bg-bgDark dark:text-zinc-100'>
     <a
       href='#skip-content'
-      class='absolute left-0 top-0 z-[1000] -translate-x-[105%] font-semibold rounded-md bg-white p-3 text-black ring-primary ring-offset-2 focus-visible:translate-x-0 focus-visible:ring-2'
+      class='absolute left-0 top-0 z-[1000] -translate-x-[105%] rounded-md bg-white p-3 font-semibold text-black ring-primary ring-offset-2 focus-visible:translate-x-0 focus-visible:ring-2'
       >Skip to content</a
     >
     <Navbar />
