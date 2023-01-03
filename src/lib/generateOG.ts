@@ -15,18 +15,18 @@ const cld = new Cloudinary({
   },
 });
 
-const ogBase = cld.image("og-base");
 
 const generateTitle = (title: string) => {
   return source(
     text(
-      encodeURIComponent(title),
+      title,
       new TextStyle("helvetica", 60).fontWeight("bold").fontStyle("normal").textAlignment("left")
     ).textColor("#FFFFFF")
   ).position(new Position().gravity(compass("south_west")).offsetX(50).offsetY(150));
 };
 
 export const generateOgImage = ({ title, publishDate }: { title: string; publishDate: string }) => {
+  const ogBase = cld.image("og-base");
   const titleText = generateTitle(title);
 
   const OgImage = ogBase
@@ -40,7 +40,7 @@ export const generateOgImage = ({ title, publishDate }: { title: string; publish
     .overlay(
       source(
         text(
-          encodeURIComponent(publishDate),
+          publishDate,
           new TextStyle("helvetica", 24).fontStyle("normal").textAlignment("left")
         ).textColor("#d4d4d8")
       ).position(new Position().gravity(compass("south_west")).offsetX(50).offsetY(50))

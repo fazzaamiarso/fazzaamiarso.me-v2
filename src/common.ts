@@ -14,4 +14,8 @@ export const socialLinks = {
 export const otherLinks = [
   { name: "Source Code", href: "https://github.com/fazzaamiarso/fazzaamiarso.me-v2" },
   { name: "RSS", href: "/rss.xml" },
+  {
+    name: "Analytics",
+    href: "https://resilient-lolly-2cb679.netlify.app/share/LN2hVPFM/Fazza%20Razaq%20Amiarso",
+  },
 ];
