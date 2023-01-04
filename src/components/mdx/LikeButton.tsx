@@ -22,8 +22,10 @@ const likePost = async (data: Omit<Props, "initialLikes">) => {
 };
 
 export const LikeButton = ({ ip, slug, initialLikes }: Props) => {
+  const queryKey = [`like-${slug}`];
+
   const { data } = useQuery({
-    queryKey: [`like-${slug}`],
+    queryKey,
     queryFn: async () => {
       const savedLikes = await fetch(`/api/like?slug=${slug}&ip=${ip}`, {
         method: "GET",
@@ -36,8 +38,21 @@ export const LikeButton = ({ ip, slug, initialLikes }: Props) => {
   });
 
   const likeMutation = useMutation(likePost, {
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [`like-${slug}`] });
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey });
+      const prevLikes = queryClient.getQueryData(queryKey);
+
+      queryClient.setQueryData(queryKey, (prev) => ({
+        likes: (prev as { likes: number }).likes + 1,
+      }));
+
+      return { prevLikes };
+    },
+    onError: (err, newTodo, context) => {
+      queryClient.setQueryData(queryKey, (context as { prevLikes: { likes: number } }).prevLikes);
+    },
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey });
     },
   });
 
@@ -45,11 +60,11 @@ export const LikeButton = ({ ip, slug, initialLikes }: Props) => {
     <div>
       <button
         type='button'
-        disabled={likeMutation.isLoading}
         onClick={() => {
+          if (data?.likes >= 5) return;
           likeMutation.mutate({ ip, slug });
         }}
-        className='flex items-center gap-2  disabled:opacity-50'>
+        className='flex items-center gap-2'>
         <div className='group  relative overflow-hidden'>
           <div
             aria-hidden='true'
