@@ -7,7 +7,7 @@ const id = Math.floor(Math.random() * 100000).toString();
 ---
 
 <div class='wrap ring-1 ring-zinc-700' id={id}>
-  <div class='flex w-full items-center border-b-[1px] border-zinc-800 px-4 py-1 text-sm'>
+  <div class='flex w-full items-center border-b-[1px] border-zinc-800 px-4 py-1 text-sm text-zinc-300'>
     {filename && <span>{filename}</span>}
     <button
       type='button'
@@ -17,7 +17,7 @@ const id = Math.floor(Math.random() * 100000).toString();
         name='ph:copy-light'
         class='aspect-square w-4'
         id={`copy-${id}`}
-      /><Icon name='ic:baseline-check' class='aspect-square w-4 hidden' id={`check-${id}`} />
+      /><Icon name='ic:baseline-check' class='aspect-square w-4 hidden text-green-600' id={`check-${id}`} />
     </button>
   </div>
   <slot />

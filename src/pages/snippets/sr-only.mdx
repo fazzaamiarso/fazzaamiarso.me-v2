@@ -7,12 +7,13 @@ tags:
   - css
 publishedAt: ""
 ---
+import MetaCodeBlock from "../../components/mdx/MetaCodeBlock.astro"
 
-A utility class inspired from tailwind css `sr-only`. Mainly used for accessibility related.
+A utility class inspired from [tailwind css](https://tailwindcss.com/docs/screen-readers) `sr-only`. Mainly used for accessibility related.
 
 Sometimes there's a need to hide an element visually, but still accessible to screen readers.
 
-
+<MetaCodeBlock filename="sr-only utility class">
 ```css
 /* Can be any name. I just prefer sr-only */
 .sr-only {
@@ -27,3 +28,4 @@ Sometimes there's a need to hide an element visually, but still accessible to sc
   border-width: 0;
 }
 ```
+</MetaCodeBlock>
