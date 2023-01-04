@@ -1,0 +1,58 @@
+---
+import { Icon } from "astro-icon";
+
+const { filename } = Astro.props;
+
+const id = Math.floor(Math.random() * 100000).toString();
+---
+
+<div class='wrap ring-1 ring-zinc-700' id={id}>
+  <div class='flex w-full items-center border-b-[1px] border-zinc-800 px-4 py-1 text-sm'>
+    {filename && <span>{filename}</span>}
+    <button
+      type='button'
+      id={"button" + id}
+      class='ml-auto inline-block rounded-md bg-[hsl(237,18%,20%)] p-1 ring-2 ring-transparent transition-all hover:ring-primaryDarker'
+      ><span class='sr-only'>Copy code</span><Icon
+        name='clarity:copy-line'
+        class='aspect-square w-4'
+        id={`copy-${id}`}
+      /><Icon name='ic:baseline-check' class='aspect-square w-4 hidden' id={`check-${id}`} />
+    </button>
+  </div>
+  <slot />
+</div>
+
+<style lang='scss' is:global>
+  .wrap {
+    @apply rounded-md bg-[#1a1b26];
+    & pre {
+      @apply mt-0 rounded-t-none;
+    }
+    & code {
+      background: transparent !important;
+      & .line:first-child {
+        margin-left: -0.25rem;
+      }
+    }
+  }
+</style>
+
+<script define:vars={{ id }}>
+  const serverId = id;
+  const copybutton = document.querySelector(`#button${serverId}`);
+  const copyIcon = document.querySelector(`#copy-${serverId}`);
+  const checkIcon = document.querySelector(`#check-${serverId}`);
+
+  copybutton?.addEventListener("click", () => {
+    copyIcon.classList.add("hidden");
+    checkIcon.classList.remove("hidden");
+    setTimeout(() => {
+      copyIcon.classList.remove("hidden");
+      checkIcon.classList.add("hidden");
+    }, 1500);
+    navigator.clipboard.writeText(
+      copybutton.closest(".wrap").querySelector("pre code").textContent
+    );
+  });
+</script>

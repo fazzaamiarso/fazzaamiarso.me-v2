@@ -128,31 +128,6 @@ const blogOgImage =
 </script>
 
 <style lang='scss'>
-  .heading-group {
-    position: relative;
-
-    &::before {
-      position: absolute;
-      content: "#";
-      height: 100%;
-      width: 50px;
-      transform: scale(1.5);
-      left: -1rem;
-      opacity: 0;
-      transition: all 100ms ease-in-out;
-    }
-
-    &:hover::before {
-      opacity: 1;
-    }
-
-    a {
-      content: "";
-      position: absolute;
-      inset: 0;
-    }
-  }
-
   aside {
     & > *::-webkit-scrollbar {
       width: 4px;
