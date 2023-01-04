@@ -7,6 +7,7 @@ import tailwind from "@astrojs/tailwind";
 // https://astro.build/config
 import mdx from "@astrojs/mdx";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypeExternalLinks from "rehype-external-links";
 import { h } from "hastscript";
 import { toString } from "hast-util-to-string";
 
@@ -24,7 +25,7 @@ import image from "@astrojs/image";
 import vercel from "@astrojs/vercel/serverless";
 
 // https://astro.build/config
-import partytown from "@astrojs/partytown";
+// import partytown from "@astrojs/partytown";
 
 // https://astro.build/config
 export default defineConfig({
@@ -36,6 +37,14 @@ export default defineConfig({
       extendPlugins: true,
       remarkPlugins: [remarkReadingTime],
       rehypePlugins: [
+        [
+          rehypeExternalLinks,
+          {
+            rel: ["nofollow"],
+            referrerpolicy: "strict-origin-when-cross-origin",
+            target: "_blank",
+          },
+        ],
         [
           rehypeAutolinkHeadings,
           {
@@ -55,7 +64,6 @@ export default defineConfig({
     image({
       serviceEntryPoint: "@astrojs/image/sharp",
     }),
-    partytown(),
   ],
   adapter: vercel(),
   markdown: {
