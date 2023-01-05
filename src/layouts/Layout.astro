@@ -43,6 +43,10 @@ const { title, desc, ogImage } = Astro.props;
         @apply scroll-smooth;
       }
 
+      * {
+        @apply focus-visible:outline-primary;
+      }
+
       .layout {
         @apply mx-auto w-10/12 max-w-5xl;
       }

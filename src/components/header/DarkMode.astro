@@ -3,12 +3,8 @@ import Icon from "astro-icon";
 import clsx from "clsx";
 ---
 
-<button
-  role='switch'
-  id='dark-mode'
-  class={clsx("ml-auto")}
-  onclick='window.toggleMode()'
-  aria-label='dark mode'>
+<button role='switch' id='dark-mode' class={clsx("ml-auto")}>
+  <span class='sr-only'>dark mode</span>
   <Icon id='moon' name='ri:moon-fill' width='20' class='inline-block dark:hidden' />
   <Icon id='sun' name='ri:sun-fill' width='20' class='dark:inline-block hidden text-white' />
 </button>
@@ -16,13 +12,15 @@ import clsx from "clsx";
 <script is:inline>
   const root = document.documentElement;
   const currentTheme = localStorage.getItem("theme");
-  const switchBtn = document.querySelector("button");
+  const switchBtn = document.querySelector("button#dark-mode");
   const toggleMode = () => {
     root.classList.toggle("dark");
     switchBtn.ariaChecked = root.classList.contains("dark") ? "true" : "false";
     localStorage.setItem("theme", root.classList.contains("dark") ? "dark" : "light");
   };
-  window.toggleMode = toggleMode;
+
+  switchBtn.addEventListener("click", toggleMode);
+
   if (
     currentTheme === "dark" ||
     (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)

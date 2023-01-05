@@ -24,7 +24,7 @@ const props = Astro.props;
       alt=''
       width={400}
       height={400}
-      format="webp"
+      format='webp'
       class='h-full w-full object-cover object-center rounded-full'
     />
   </div>
@@ -34,6 +34,7 @@ const props = Astro.props;
         <span
           class='absolute -inset-5 -z-20 scale-95 rounded-md bg-zinc-100 opacity-0 transition-all group-hover:scale-100 group-hover:opacity-100 dark:bg-zinc-900'
         ></span>
+        <span class='sr-only'>See more detail on {props.title} project</span>
         {props.title}
       </a>
     </h3>

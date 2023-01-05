@@ -6,7 +6,7 @@ const snippets = await Astro.glob<SnippetsFrontmatter>("./*.mdx");
 ---
 
 <Layout title='Snippets'>
-  <main id="skip-content" class='layout space-y-6 py-12'>
+  <main id='skip-content' class='layout space-y-6 py-12'>
     <div class='pb-8'>
       <h1 class='mb-2 text-4xl font-bold text-primary'>Snippets</h1>
       <p class='max-w-[60ch] text-lg dark:text-zinc-400'>
@@ -21,6 +21,7 @@ const snippets = await Astro.glob<SnippetsFrontmatter>("./*.mdx");
             <li class='group relative flex flex-col rounded-md bg-white p-5 ring-1 ring-zinc-200 transition-all hover:ring-2 hover:ring-primary dark:bg-bgDark dark:ring-zinc-700 dark:hover:ring-primary'>
               <h2 class='mb-1 text-lg font-bold'>
                 <a href={s.url} class='link-card'>
+                  <span class='sr-only'>read {s.frontmatter.title} snippets</span>
                   {s.frontmatter.title}
                 </a>
               </h2>
