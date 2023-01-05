@@ -1,11 +1,15 @@
 import { QueryClient, QueryClientProvider, useMutation, useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
-const queryClient = new QueryClient();
+
 
 type Props = {
   ip: string;
   slug: string;
   initialLikes: number;
+};
+
+type LikeResponse = {
+  likes: number;
 };
 
 const translateVals = [
@@ -16,9 +20,17 @@ const translateVals = [
   "translate-y-[20%]",
   "translate-y-[0%]",
 ];
+const queryClient = new QueryClient();
 
 const likePost = async (data: Omit<Props, "initialLikes">) => {
   return await fetch("/api/like", { method: "POST", body: JSON.stringify(data) });
+};
+
+const fetchLikes = async ({ slug, ip }: Omit<Props, "initialLikes">): Promise<LikeResponse> => {
+  const savedLikes = await fetch(`/api/like?slug=${slug}&ip=${ip}`, {
+    method: "GET",
+  });
+  return await savedLikes.json();
 };
 
 export const LikeButton = ({ ip, slug, initialLikes }: Props) => {
@@ -26,12 +38,7 @@ export const LikeButton = ({ ip, slug, initialLikes }: Props) => {
 
   const { data } = useQuery({
     queryKey,
-    queryFn: async () => {
-      const savedLikes = await fetch(`/api/like?slug=${slug}&ip=${ip}`, {
-        method: "GET",
-      });
-      return await savedLikes.json();
-    },
+    queryFn: async () => await fetchLikes({ ip, slug }),
     initialData: () => ({
       likes: initialLikes,
     }),
@@ -43,13 +50,15 @@ export const LikeButton = ({ ip, slug, initialLikes }: Props) => {
       const prevLikes = queryClient.getQueryData(queryKey);
 
       queryClient.setQueryData(queryKey, (prev) => ({
-        likes: (prev as { likes: number }).likes + 1,
+        likes: (prev as LikeResponse).likes + 1,
       }));
 
-      return { prevLikes };
+      return { prevLikes } as { prevLikes: LikeResponse };
     },
-    onError: (err, newTodo, context) => {
-      queryClient.setQueryData(queryKey, (context as { prevLikes: { likes: number } }).prevLikes);
+    onError: (err, newLikes, context) => {
+      if (context?.prevLikes) {
+        queryClient.setQueryData(queryKey, context.prevLikes);
+      }
     },
     onSettled: async () => {
       await queryClient.invalidateQueries({ queryKey });

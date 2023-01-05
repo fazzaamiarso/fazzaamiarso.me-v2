@@ -6,22 +6,29 @@ const { filename } = Astro.props;
 const id = Math.floor(Math.random() * 100000).toString();
 ---
 
-<div class='wrap ring-1 ring-zinc-700' id={id}>
-  <div class='flex w-full items-center border-b-[1px] border-zinc-800 px-4 py-1 text-sm text-zinc-300'>
-    {filename && <span>{filename}</span>}
-    <button
-      type='button'
-      id={"button" + id}
-      class='ml-auto inline-block rounded-md bg-[hsl(237,18%,20%)] p-1 ring-2 ring-transparent transition-all hover:ring-primaryDarker'
-      ><span class='sr-only'>Copy code</span><Icon
-        name='ph:copy-light'
-        class='aspect-square w-4'
-        id={`copy-${id}`}
-      /><Icon name='ic:baseline-check' class='aspect-square w-4 hidden text-green-600' id={`check-${id}`} />
-    </button>
+<code-block id={id}>
+  <div class='wrap ring-1 ring-zinc-700' >
+    <div
+      class='flex w-full items-center border-b-[1px] border-zinc-800 px-4 py-1 text-sm text-zinc-300'>
+      {filename && <span>{filename}</span>}
+      <button
+        type='button'
+        id={"button" + id}
+        class='ml-auto inline-block rounded-md bg-[hsl(237,18%,20%)] p-1 ring-2 ring-transparent transition-all hover:ring-primaryDarker'
+        ><span class='sr-only'>Copy code</span><Icon
+          name='ph:copy-light'
+          class='aspect-square w-4'
+          id={`copy-${id}`}
+        /><Icon
+          name='ic:baseline-check'
+          class='aspect-square w-4 hidden text-green-600'
+          id={`check-${id}`}
+        />
+      </button>
+    </div>
+    <slot />
   </div>
-  <slot />
-</div>
+</code-block>
 
 <style lang='scss' is:global>
   .wrap {
@@ -38,21 +45,27 @@ const id = Math.floor(Math.random() * 100000).toString();
   }
 </style>
 
-<script define:vars={{ id }}>
-  const serverId = id;
-  const copybutton = document.querySelector(`#button${serverId}`);
-  const copyIcon = document.querySelector(`#copy-${serverId}`);
-  const checkIcon = document.querySelector(`#check-${serverId}`);
+<script>
+  class CodeBlock extends HTMLElement {
+    constructor() {
+      super();
 
-  copybutton?.addEventListener("click", () => {
-    copyIcon.classList.add("hidden");
-    checkIcon.classList.remove("hidden");
-    setTimeout(() => {
-      copyIcon.classList.remove("hidden");
-      checkIcon.classList.add("hidden");
-    }, 1500);
-    navigator.clipboard.writeText(
-      copybutton.closest(".wrap").querySelector("pre code").textContent
-    );
-  });
+      const id = this.id;
+      const copybutton = document.querySelector(`#button${id}`);
+      const copyIcon = document.querySelector(`#copy-${id}`);
+      const checkIcon = document.querySelector(`#check-${id}`);
+
+      copybutton?.addEventListener("click", () => {
+        copyIcon?.classList.add("hidden");
+        checkIcon?.classList.remove("hidden");
+        setTimeout(() => {
+          copyIcon?.classList.remove("hidden");
+          checkIcon?.classList.add("hidden");
+        }, 1500);
+        navigator.clipboard.writeText(this.querySelector("pre code")?.textContent ?? "");
+      });
+    }
+  }
+
+  customElements.define("code-block", CodeBlock);
 </script>
