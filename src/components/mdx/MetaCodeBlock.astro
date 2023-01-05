@@ -1,28 +1,29 @@
 ---
 import { Icon } from "astro-icon";
+import {nanoid} from 'nanoid'
 
 const { filename } = Astro.props;
 
-const id = Math.floor(Math.random() * 100000).toString();
+const elementId = nanoid()
 ---
 
-<code-block id={id}>
+<code-block id={elementId}>
   <div class='wrap ring-1 ring-zinc-700' >
     <div
       class='flex w-full items-center border-b-[1px] border-zinc-800 px-4 py-1 text-sm text-zinc-300'>
       {filename && <span>{filename}</span>}
       <button
         type='button'
-        id={"button" + id}
+        id={"button" + elementId}
         class='ml-auto inline-block rounded-md bg-[hsl(237,18%,20%)] p-1 ring-2 ring-transparent transition-all hover:ring-primaryDarker'
         ><span class='sr-only'>Copy code</span><Icon
           name='ph:copy-light'
           class='aspect-square w-4'
-          id={`copy-${id}`}
+          id={`copy-${elementId}`}
         /><Icon
           name='ic:baseline-check'
           class='aspect-square w-4 hidden text-green-600'
-          id={`check-${id}`}
+          id={`check-${elementId}`}
         />
       </button>
     </div>
