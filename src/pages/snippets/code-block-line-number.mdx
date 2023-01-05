@@ -14,15 +14,16 @@ A trick to pre-pend line number to an HTML `code` element.
 Using Vanilla CSS and CSS `counter`
 
 <MetaCodeBlock filename="CSS">
+
 ```css
 code {
   counter-reset: step;
   counter-increment: step 0;
 }
 
-/* Select the code line */
 code .line::before {
-  content: counter(step);
+  /* Style individual code line */
+  content: counter(step); 
   counter-increment: step;
   margin-right: 1.5rem; /* Margin between line number and actual code element */
 }

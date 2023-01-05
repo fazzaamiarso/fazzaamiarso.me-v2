@@ -6,6 +6,8 @@ slug: "nextjs-courier-send-invoice-and-reminder"
 publishedAt: "2023-01-03"
 ---
 
+import MetaCodeBlock from "../../components/mdx/MetaCodeBlock.astro";
+
 ## Background
 
 On the internet, a lot of open-source Invoice management apps are built with Laravel. As a Javascript developer, I want to build the “React Solution” for devs that are familiar with React and Javascript.
@@ -77,6 +79,7 @@ Next, I publish the template so I can use it. Then, go to send tab. It will show
 
 I will copy the test `AUTH_TOKEN` to the `.env` file and copy the snippet to `src/lib/courier.ts`.
 
+<MetaCodeBlock filename="src/lib/courier.ts">
 ```ts
 const authToken = process.env.COURIER_AUTH_TOKEN;
 
@@ -86,15 +89,16 @@ const testEmail = process.env.COURIER_TEST_EMAIL;
 const INVOICE_TEMPLATE_ID = <TEMPLATE_ID>;
 
 const courierClient = CourierClient({
-  authorizationToken: authToken,
+authorizationToken: authToken,
 });
-```
+
+````
+</MetaCodeBlock>
 
 Create a `sendInvoice` function that will be responsible for sending an email. To send an email from the code, I use the `courierClient.send()` function.
 
+<MetaCodeBlock filename="src/lib/courier.ts">
 ```ts
-// src/lib/courier.ts
-
 export const sendInvoice = async ({
   customerName,
   invoiceNumber,
@@ -123,13 +127,14 @@ export const sendInvoice = async ({
   });
   return requestId;
 };
-```
+````
+
+</MetaCodeBlock>
 
 Define types for the `sendInvoice` function.
 
+<MetaCodeBlock filename="src/lib/courier.ts">
 ```ts
-// src/lib/courier.ts
-
 interface SendInvoice {
   productName: string;
   dueDate: string;
@@ -139,43 +144,47 @@ interface SendInvoice {
   emailTo: string;
 }
 ```
+</MetaCodeBlock>
 
 Now that I can send the email, I will call it in the `sendEmail` trpc endpoint that resides in `src/server/trpc/router/invoice.ts`.
 
 > Just remember that trpc endpoint is a Next.js API route. In this case, `sendEmail` will be the same as calling the `/api/trpc/sendEmail` route with `fetch` under the hood. For more explanation [https://trpc.io/docs/quickstart](https://trpc.io/docs/quickstart).
 
+<MetaCodeBlock filename="src/server/trpc/router/invoice.ts">
 ```ts
-// src/server/trpc/router/invoice.ts
 import { sendInvoice } from '@lib/courier';
 import { dayjs } from '@lib/dayjs';
 
 // .....SOMEWHERE BELOW
-  sendEmail: protectedProcedure
-    .input(
-      z.object({
-        customerName: z.string(),
-        invoiceNumber: z.string(),
-        invoiceViewUrl: z.string(),
-        emailTo: z.string(),
-        invoiceId: z.string(),
-        productName: z.string(),
-        dueDate: z.date(),
-      })
-    )
-    .mutation(async ({ input }) => {
-      const invoiceData = {
-        ...input,
-        dueDate: dayjs(input.dueDate).format('D MMMM YYYY'),
-      };
+sendEmail: protectedProcedure
+.input(
+z.object({
+customerName: z.string(),
+invoiceNumber: z.string(),
+invoiceViewUrl: z.string(),
+emailTo: z.string(),
+invoiceId: z.string(),
+productName: z.string(),
+dueDate: z.date(),
+})
+)
+.mutation(async ({ input }) => {
+const invoiceData = {
+...input,
+dueDate: dayjs(input.dueDate).format('D MMMM YYYY'),
+};
 
       await sendInvoice(invoiceData);
     }),
-```
+
+````
+</MetaCodeBlock>
 
 For those who are unfamiliar with trpc, What I did is the same as handling a `POST` request. Let's break it down.
 
 1. Trpc way of defining **request input from client** by validating with Zod. Here I define all data that are needed for the `sendInvoice` function.
 
+<MetaCodeBlock filename="src/server/trpc/router/invoice.ts">
 ```ts
 .input(
       z.object({
@@ -188,10 +197,13 @@ For those who are unfamiliar with trpc, What I did is the same as handling a `PO
         dueDate: z.date(),
       })
     )
-```
+````
+
+</MetaCodeBlock>
 
 2. Define a `POST` request handler (mutation).
 
+<MetaCodeBlock filename="src/server/trpc/router/invoice.ts">
 ```ts
 // input from before
  .mutation(async ({ input }) => {
@@ -204,16 +216,18 @@ For those who are unfamiliar with trpc, What I did is the same as handling a `PO
       // send the email
       await sendInvoice(invoiceData);
     }),
-```
+
+````
+</MetaCodeBlock>
 
 #### Frontend
 
-Now, I can start to add the functionality to the send email button. I'm going to use the `trpc.useMutation()` function which is a thin wrapper of `tanstack-query's `useMutation`.
+Now, I can start to add the functionality to the send email button. I'm going to use the `trpc.useMutation()` function which is a thin wrapper of `tanstack-query's` `useMutation`.
 
 Let's add the mutation function. On successful response, I want to send a success toast on UI.
 
+<MetaCodeBlock filename="src/pages/invoices/[invoiceId]/index.tsx">
 ```tsx
-//src/pages/invoices/[invoiceId]/index.tsx
 import toast from "react-hot-toast";
 
 const InvoiceDetail: NextPage = () => {
@@ -224,42 +238,46 @@ const InvoiceDetail: NextPage = () => {
     },
   });
 };
-```
+````
+
+</MetaCodeBlock>
 
 I can just use the function as an inline handler, but I want to create a new handler for the button.
 
+<MetaCodeBlock filename="src/pages/invoices/[invoiceId]/index.tsx">
 ```tsx
-//src/pages/invoices/[invoiceId]/index.tsx
-
 // still inside the InvoiceDetail component
 const sendInvoiceEmail = () => {
   const hostUrl = window.location.origin;
 
-  // prevent a user from spamming when the API call is not done.
-  if (sendEmailMutation.isLoading) return;
+// prevent a user from spamming when the API call is not done.
+if (sendEmailMutation.isLoading) return;
 
-  // send input data to `sendEmail` trpc endpoint
-  sendEmailMutation.mutate({
-    customerName: invoiceDetail.customer.name,
-    invoiceNumber: `#${invoiceDetail.invoiceNumber}`,
-    invoiceViewUrl: `${hostUrl}/invoices/${invoiceDetail.id}/preview`,
-    emailTo: invoiceDetail.customer.email,
-    invoiceId: invoiceDetail.id,
-    dueDate: invoiceDetail.dueDate,
-    productName: invoiceDetail.name,
-  });
+// send input data to `sendEmail` trpc endpoint
+sendEmailMutation.mutate({
+customerName: invoiceDetail.customer.name,
+invoiceNumber: `#${invoiceDetail.invoiceNumber}`,
+invoiceViewUrl: `${hostUrl}/invoices/${invoiceDetail.id}/preview`,
+emailTo: invoiceDetail.customer.email,
+invoiceId: invoiceDetail.id,
+dueDate: invoiceDetail.dueDate,
+productName: invoiceDetail.name,
+});
 };
-```
+
+````
+</MetaCodeBlock>
 
 Now I can attach the handler to the send email button.
 
+<MetaCodeBlock filename="src/pages/invoices/[invoiceId]/index.tsx">
 ```tsx
-//src/pages/invoices/[invoiceId]/index.tsx
-
 <Button variant='primary' onClick={sendInvoiceEmail} isLoading={sendEmailMutation.isLoading}>
   Send to Email
 </Button>
-```
+````
+
+</MetaCodeBlock>
 
 Here's the working UI.
 
@@ -275,9 +293,8 @@ First, let's design the email template in Courier designer. As I already go thro
 
 Before adding the function, define the types for the parameter and refactor the types.
 
+<MetaCodeBlock filename="src/lib/courier.ts">
 ```tsx
-// src/lib/courier
-
 interface CourierBaseData {
   customerName: string;
   invoiceNumber: string;
@@ -286,21 +303,22 @@ interface CourierBaseData {
 }
 
 interface SendInvoice extends CourierBaseData {
-  productName: string;
-  dueDate: string;
+productName: string;
+dueDate: string;
 }
 
 interface ScheduleReminder extends CourierBaseData {
-  scheduledDate: Date;
-  invoiceId: string;
+scheduledDate: Date;
+invoiceId: string;
 }
-```
 
-Now, I add the `scheduleReminder` function to `src/lib/courier`
+````
+</MetaCodeBlock>
 
+Now, I add the `scheduleReminder` function to `src/lib/courier.ts`
+
+<MetaCodeBlock filename="src/lib/courier.ts">
 ```tsx
-//src/pages/invoices/[invoiceId]/index.tsx
-
 // check if the development environment is production
 const __IS_PROD__ = process.env.NODE_ENV === "production";
 
@@ -345,13 +363,14 @@ export const scheduleReminder = async ({
 
   return runId;
 };
-```
+````
+
+</MetaCodeBlock>
 
 To send the reminder, I will call `scheduleReminder` after a successful `sendInvoice` attempt. Let's modify the `sendEmail` trpc endpoint.
 
+<MetaCodeBlock filename="src/server/trpc/router/invoice.ts">
 ```tsx
-// src/server/trpc/router/invoice.ts
-
 sendEmail: protectedProcedure
     .input(..) // omitted for brevity
     .mutation(async ({ input }) => {
@@ -371,7 +390,9 @@ sendEmail: protectedProcedure
             scheduledDate,
       });
     }
-```
+
+````
+</MetaCodeBlock>
 
 Now if I try to send an invoice by email, I should get a reminder 20 seconds later since I'm in the development environment.
 
@@ -383,6 +404,7 @@ Finally, all the features are ready. However, I got a problem, what if a client 
 
 Let's add `cancelAutomationWorkflow` function that can cancel any automation workflow in `src/lib/courier.ts`.
 
+<MetaCodeBlock filename="src/lib/courier.ts">
 ```ts
 export const cancelAutomationWorkflow = async ({
   cancelation_token,
@@ -398,33 +420,36 @@ export const cancelAutomationWorkflow = async ({
 
   return runId;
 };
-```
+````
+</MetaCodeBlock>
 
 What is a cancelation_token? It's a unique token that can be set to an automation workflow, so it's cancelable by sending a `cancel` action with a matching `cancelation_token`.
 
 Add cancelation_token to `scheduleReminder`, I use the invoice's Id as a token.
 
+<MetaCodeBlock filename="src/lib/courier.ts">
 ```ts
-// src/lib/courier.ts
-
 export const scheduleReminder = async (..) => {
   // ...omitted for brevity
 
-  const { runId } = await courierClient.automations.invokeAdHocAutomation({
-    automation: {
-      // add cancelation token here
-      cancelation_token: `${invoiceId}-reminder`,
-      steps: [
-        { action: 'delay', until: delayUntilDate.toISOString() },
+const { runId } = await courierClient.automations.invokeAdHocAutomation({
+automation: {
+// add cancelation token here
+cancelation_token: `${invoiceId}-reminder`,
+steps: [
+{ action: 'delay', until: delayUntilDate.toISOString() },
+]
+}
+})}
+// ...omitted for brevity
 
-  // ... omitted for brevity
-```
+````
+</MetaCodeBlock>
 
 I will call `cancelAutomationWorkflow` when an invoice's status is updated to `PAID` in the `updateStatus` trpc endpoint.
 
+<MetaCodeBlock filename="src/server/trpc/router/invoice.ts">
 ```ts
-// src/server/trpc/router/invoice.ts
-
  updateStatus: protectedProcedure
     .input(..) // omitted for brevity
     .mutation(async ({ ctx, input }) => {
@@ -448,6 +473,7 @@ I will call `cancelAutomationWorkflow` when an invoice's status is updated to `P
       return updatedStatus;
     }),
 ```
+</MetaCodeBlock>
 
 Here is the working UI.
 
@@ -469,6 +495,7 @@ type ErrorResponse = { data: any; error: string };
 
 Now, I can handle errors by adding a `try-catch` block to all functions in `src/lib/courier.ts`.
 
+<MetaCodeBlock filename="src/lib/courier.ts">
 ```ts
 try {
   // ..function code
@@ -484,18 +511,19 @@ try {
   }
 }
 ```
+</MetaCodeBlock>
 
 Let's see a handling example on the `sendEmail` trpc endpoint.
 
+<MetaCodeBlock filename="src/server/trpc/router/invoice.ts">
 ```ts
-// src/server/trpc/router/invoice.ts
-
   const { error: sendError } = await sendInvoice(..);
   if (sendError) throw new TRPCClientError(sendError);
 
   const { error: scheduleError } = await scheduleReminder(..);
   if (scheduleError) throw new TRPCClientError(scheduleError);
 ```
+</MetaCodeBlock>
 
 ### Part 6: Go To Production
 
