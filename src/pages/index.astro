@@ -1,6 +1,5 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { prisma } from "lib/prisma";
 import { Icon } from "astro-icon";
 import clsx from "clsx";
 import ProjectCard from "components/ProjectCard.astro";
@@ -49,6 +48,9 @@ const projects = await Promise.all(
       };
     })
 );
+
+// Based on vercel recommendation 
+Astro.response.headers.set("Cache-Control", "max-age=0, s-maxage=86400");
 ---
 
 <Layout title=''>
