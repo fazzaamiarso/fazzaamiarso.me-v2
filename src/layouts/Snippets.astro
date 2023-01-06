@@ -1,6 +1,7 @@
 ---
 import type { MDXLayoutProps } from "astro";
 import Article from "components/mdx/Article.astro";
+import { WEEK_IN_SECONDS } from "utils/constants";
 import Layout from "./Layout.astro";
 
 type Props = MDXLayoutProps<{
@@ -13,6 +14,8 @@ type Props = MDXLayoutProps<{
 const {
   frontmatter: { tags, title, description },
 } = Astro.props;
+
+Astro.response.headers.set("Cache-Control", `max-age=0, s-maxage=${WEEK_IN_SECONDS}`);
 ---
 
 <Layout title={title} desc={description}>

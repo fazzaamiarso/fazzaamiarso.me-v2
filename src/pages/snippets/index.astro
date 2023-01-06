@@ -1,8 +1,11 @@
 ---
 import Layout from "layouts/Layout.astro";
 import type { SnippetsFrontmatter } from "types";
+import { WEEK_IN_SECONDS } from "utils/constants";
 
 const snippets = await Astro.glob<SnippetsFrontmatter>("./*.mdx");
+
+Astro.response.headers.set("Cache-Control", `max-age=0, s-maxage=${WEEK_IN_SECONDS}`);
 ---
 
 <Layout title='Snippets'>

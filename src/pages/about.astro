@@ -2,6 +2,9 @@
 import Layout from "layouts/Layout.astro";
 import { Icon } from "astro-icon";
 import { socialLinks } from "common";
+import { WEEK_IN_SECONDS } from "utils/constants";
+
+Astro.response.headers.set("Cache-Control", `max-age=0, s-maxage=${WEEK_IN_SECONDS}`);
 ---
 
 <Layout title='About'>
