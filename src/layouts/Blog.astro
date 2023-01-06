@@ -6,6 +6,7 @@ import { LikeWrapper } from "components/mdx/LikeButton";
 import TOC from "components/mdx/TOC.astro";
 import { generateOgImage } from "lib/generateOG";
 import type { BlogFrontmatter, ProjectFrontmatter } from "types";
+import { WEEK_IN_SECONDS } from "utils/constants";
 import Layout from "./Layout.astro";
 
 type Props = MDXLayoutProps<BlogFrontmatter | ProjectFrontmatter>;
@@ -18,6 +19,8 @@ const publishDate = new Intl.DateTimeFormat("en-US", { dateStyle: "long" }).form
 );
 const blogOgImage =
   "github" in frontmatter ? undefined : generateOgImage({ title: frontmatter.title, publishDate });
+
+Astro.response.headers.set("Cache-Control", `max-age=0, s-maxage=${WEEK_IN_SECONDS}`);
 ---
 
 <Layout title={frontmatter.title} desc={frontmatter.description} ogImage={blogOgImage}>
@@ -120,11 +123,13 @@ const blogOgImage =
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
 
-  const slug = (document.querySelector("#post-slug") as HTMLInputElement).value;
-  const viewsAndLikes = await axios.put("/api/views", { slug });
-  const views = viewsAndLikes.data.views;
-  const viewsEl = document.querySelector("#views") as HTMLElement;
-  viewsEl.innerText = `${views} views`;
+  const slug = (document.querySelector("#post-slug") as HTMLInputElement)?.value;
+  if (slug) {
+    const viewsAndLikes = await axios.put("/api/views", { slug });
+    const views = viewsAndLikes.data.views;
+    const viewsEl = document.querySelector("#views") as HTMLElement;
+    viewsEl.innerText = `${views} views`;
+  }
 </script>
 
 <style lang='scss'>

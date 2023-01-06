@@ -4,7 +4,8 @@ import { Icon } from "astro-icon";
 import clsx from "clsx";
 import ProjectCard from "components/ProjectCard.astro";
 import type { BlogFrontmatter, ProjectFrontmatter } from "types";
-import { getViewsAndLike } from "utils/content";
+import { nanoid } from "nanoid";
+import { WEEK_IN_SECONDS } from "utils/constants";
 
 const featureGradients = [
   "bg-gradient-to-tr from-pink-500 via-red-500 to-yellow-500",
@@ -13,44 +14,32 @@ const featureGradients = [
 ];
 
 const _posts = await Astro.glob<BlogFrontmatter>("./blog/*.mdx");
-const posts = await Promise.all(
-  _posts
-    .filter((p) => p.frontmatter.featured)
-    .map(async (p) => {
-      const slug = p.url ?? "";
-      const { views, likes } = await getViewsAndLike(slug);
-
-      return {
-        title: p.frontmatter.title,
-        slug,
-        views,
-        likes,
-      };
-    })
-);
+const posts = _posts
+  .filter((p) => p.frontmatter.featured)
+  .map((p) => {
+    const slug = p.url ?? "";
+    return {
+      title: p.frontmatter.title,
+      slug,
+    };
+  });
 
 const _projects = await Astro.glob<ProjectFrontmatter>("./projects/*.mdx");
-const projects = await Promise.all(
-  _projects
-    .filter((p) => p.frontmatter.featured)
-    .map(async (p) => {
-      const slug = p.url ?? "";
-      const { views, likes } = await getViewsAndLike(slug);
-
-      return {
-        slug,
-        title: p.frontmatter.title,
-        publishedAt: p.frontmatter.publishedAt,
-        description: p.frontmatter.description,
-        cover: p.frontmatter.cover,
-        views,
-        likes,
-      };
-    })
-);
+const projects = _projects
+  .filter((p) => p.frontmatter.featured)
+  .map((p) => {
+    const slug = p.url ?? "";
+    return {
+      slug,
+      title: p.frontmatter.title,
+      publishedAt: p.frontmatter.publishedAt,
+      description: p.frontmatter.description,
+      cover: p.frontmatter.cover,
+    };
+  });
 
 // Based on vercel recommendation https://vercel.com/docs/concepts/functions/serverless-functions/edge-caching
-Astro.response.headers.set("Cache-Control", "max-age=0, s-maxage=86400");
+Astro.response.headers.set("Cache-Control", `max-age=0, s-maxage=${WEEK_IN_SECONDS}`);
 ---
 
 <Layout title=''>
@@ -88,28 +77,32 @@ Astro.response.headers.set("Cache-Control", "max-age=0, s-maxage=86400");
       <ul class='grid gap-6 sm:grid-cols-2 lg:grid-cols-3'>
         {
           posts.map((p, i) => {
+            const uid = nanoid();
             return (
               <li
                 class={clsx(
                   "group relative rounded-md p-[6px] transition-transform hover:scale-[101%] ",
                   featureGradients[i]
                 )}>
-                <div class='flex h-full flex-col rounded-sm bg-white p-4 dark:bg-bgDark dark:text-white'>
+                <input type='text' hidden value={p.slug} id={"slug" + uid} />
+                <div class='flex h-full flex-col rounded-sm justify-between bg-white p-4 dark:bg-bgDark dark:text-white'>
                   <h3 class='mb-8 text-xl font-medium'>
                     <a href={p.slug} class='link-card'>
                       {p.title}
                     </a>
                   </h3>
-                  <div class='mt-auto flex items-center gap-2'>
-                    <div class='flex items-center gap-1'>
-                      <Icon name='ic:outline-remove-red-eye' class='w-5' aria-hidden='true' />
-                      <span class='text-sm'> {p.views}</span>
+                  <project-meta id={uid}>
+                    <div class='flex items-center gap-2'>
+                      <div class='flex items-center gap-1'>
+                        <Icon name='ic:outline-remove-red-eye' class='w-5' aria-hidden='true' />
+                        <span class='text-sm' id={`views-${uid}`} >0</span>
+                      </div>
+                      <div class='flex items-center gap-1'>
+                        <Icon name='mdi:cards-heart-outline' class='w-5' aria-hidden='true' />
+                        <span class='text-sm' id={`likes-${uid}`} >0</span>
+                      </div>
                     </div>
-                    <div class='flex items-center gap-1'>
-                      <Icon name='mdi:cards-heart-outline' class='w-5' aria-hidden='true' />
-                      <span class='text-sm'> {p.likes}</span>
-                    </div>
-                  </div>
+                  </project-meta>
                 </div>
               </li>
             );
@@ -139,5 +132,3 @@ Astro.response.headers.set("Cache-Control", "max-age=0, s-maxage=86400");
     </div>
   </main>
 </Layout>
-
-<style></style>
