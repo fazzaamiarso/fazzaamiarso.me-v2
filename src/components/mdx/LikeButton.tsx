@@ -1,10 +1,9 @@
 import { QueryClient, QueryClientProvider, useMutation, useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
+import axios from "axios";
 
 type Props = {
-  ip: string;
   slug: string;
-  initialLikes: number;
 };
 
 type LikeResponse = {
@@ -21,26 +20,23 @@ const translateVals = [
 ];
 const queryClient = new QueryClient();
 
-const likePost = async (data: Omit<Props, "initialLikes">) => {
-  return await fetch("/api/like", { method: "POST", body: JSON.stringify(data) });
+const likePost = async (data: Props) => {
+  return await (
+    await axios.post("/api/like", data)
+  ).data;
 };
 
-const fetchLikes = async ({ slug, ip }: Omit<Props, "initialLikes">): Promise<LikeResponse> => {
-  const savedLikes = await fetch(`/api/like?slug=${slug}&ip=${ip}`, {
-    method: "GET",
-  });
-  return await savedLikes.json();
+const fetchLikes = async (data: Props): Promise<LikeResponse> => {
+  const savedLikes = await axios.get(`/api/like`, { params: data });
+  return await savedLikes.data;
 };
 
-export const LikeButton = ({ ip, slug, initialLikes }: Props) => {
+export const LikeButton = ({ slug }: Props) => {
   const queryKey = [`like-${slug}`];
 
   const { data } = useQuery({
     queryKey,
-    queryFn: async () => await fetchLikes({ ip, slug }),
-    initialData: () => ({
-      likes: initialLikes,
-    }),
+    queryFn: async () => fetchLikes({ slug }),
   });
 
   const likeMutation = useMutation(likePost, {
@@ -69,8 +65,8 @@ export const LikeButton = ({ ip, slug, initialLikes }: Props) => {
       <button
         type='button'
         onClick={() => {
-          if (data?.likes >= 5) return;
-          likeMutation.mutate({ ip, slug });
+          if (!data || data?.likes >= 5) return;
+          likeMutation.mutate({ slug });
         }}
         className='flex items-center gap-2'>
         <div className='group  relative overflow-hidden'>
@@ -104,7 +100,7 @@ export const LikeButton = ({ ip, slug, initialLikes }: Props) => {
   );
 };
 
-export const LikeWrapper = (props: Props) => {
+export const LikeWrapper = (props: { slug: string }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <LikeButton {...props} />

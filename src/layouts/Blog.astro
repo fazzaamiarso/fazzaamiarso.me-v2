@@ -5,22 +5,13 @@ import Article from "components/mdx/Article.astro";
 import { LikeWrapper } from "components/mdx/LikeButton";
 import TOC from "components/mdx/TOC.astro";
 import { generateOgImage } from "lib/generateOG";
-import { prisma } from "lib/prisma";
 import type { BlogFrontmatter, ProjectFrontmatter } from "types";
 import Layout from "./Layout.astro";
 
 type Props = MDXLayoutProps<BlogFrontmatter | ProjectFrontmatter>;
 
 const { frontmatter, headings, url } = Astro.props;
-const ip = Astro.clientAddress;
 const slug = url ?? "";
-
-const postMeta = await prisma.post.upsert({
-  where: { slug },
-  select: { views: true, _count: { select: { likes: true } } },
-  create: { slug },
-  update: { views: { increment: 1 } },
-});
 
 const publishDate = new Intl.DateTimeFormat("en-US", { dateStyle: "long" }).format(
   new Date(frontmatter.publishedAt)
@@ -31,6 +22,7 @@ const blogOgImage =
 
 <Layout title={frontmatter.title} desc={frontmatter.description} ogImage={blogOgImage}>
   <main id='skip-content' class='space-y-12 pb-24'>
+    <input type='text' hidden name='slug' id='post-slug' value={slug} />
     <div class='bg-[hsl(257,78%,95%)] pb-12 pt-24 dark:bg-[hsl(261,32%,14%)]'>
       <div class='layout'>
         <a href='/' class='mb-4 flex items-center gap-1 text-sm dark:text-zinc-300'
@@ -43,7 +35,7 @@ const blogOgImage =
             {publishDate}
           </p>
           -
-          <p class='text-xs text-zinc-700 dark:text-zinc-300 sm:text-sm'>{postMeta.views} views</p>
+          <p class='text-xs text-zinc-700 dark:text-zinc-300 sm:text-sm' id='views'>0 views</p>
           -
           <p class='text-xs text-zinc-700 dark:text-zinc-300 sm:text-sm'>
             {Math.round(frontmatter.minutesRead ?? 0)} minutes read
@@ -106,7 +98,7 @@ const blogOgImage =
           <TOC pageHeadings={headings} />
           <div class='my-4 h-px w-full bg-black'></div>
           <div class='flex justify-between'>
-            <LikeWrapper client:load slug={slug} ip={ip} initialLikes={postMeta._count.likes} />
+            <LikeWrapper client:load slug={slug} />
             <button
               id='scroll-top'
               type='button'
@@ -121,10 +113,18 @@ const blogOgImage =
 </Layout>
 
 <script>
+  import axios from "axios";
+
   const scrollTopButton = document.querySelector("#scroll-top") as HTMLButtonElement;
   scrollTopButton?.addEventListener("click", () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
+
+  const slug = (document.querySelector("#post-slug") as HTMLInputElement).value;
+  const viewsAndLikes = await axios.put("/api/views", { slug });
+  const views = viewsAndLikes.data.views;
+  const viewsEl = document.querySelector("#views") as HTMLElement;
+  viewsEl.innerText = `${views} views`;
 </script>
 
 <style lang='scss'>
