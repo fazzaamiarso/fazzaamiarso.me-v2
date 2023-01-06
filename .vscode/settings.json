@@ -12,6 +12,6 @@
     "typescriptreact" // Enable .tsx
   ],
   "files.associations": {
-    "*.mdx": "mdx"
+    "*.mdx": "markdown"
   }
 }

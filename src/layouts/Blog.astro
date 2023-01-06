@@ -7,7 +7,6 @@ import TOC from "components/mdx/TOC.astro";
 import { generateOgImage } from "lib/generateOG";
 import { prisma } from "lib/prisma";
 import type { BlogFrontmatter, ProjectFrontmatter } from "types";
-import { WEEK_IN_SECONDS } from "utils/constants";
 import Layout from "./Layout.astro";
 
 type Props = MDXLayoutProps<BlogFrontmatter | ProjectFrontmatter>;
@@ -28,8 +27,6 @@ const publishDate = new Intl.DateTimeFormat("en-US", { dateStyle: "long" }).form
 );
 const blogOgImage =
   "github" in frontmatter ? undefined : generateOgImage({ title: frontmatter.title, publishDate });
-
-Astro.response.headers.set("Cache-Control", `max-age=0, s-maxage=${WEEK_IN_SECONDS}`);
 ---
 
 <Layout title={frontmatter.title} desc={frontmatter.description} ogImage={blogOgImage}>

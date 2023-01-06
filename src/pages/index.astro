@@ -49,7 +49,7 @@ const projects = await Promise.all(
     })
 );
 
-// Based on vercel recommendation 
+// Based on vercel recommendation https://vercel.com/docs/concepts/functions/serverless-functions/edge-caching
 Astro.response.headers.set("Cache-Control", "max-age=0, s-maxage=86400");
 ---
 

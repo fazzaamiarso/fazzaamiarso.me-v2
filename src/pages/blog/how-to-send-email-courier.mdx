@@ -118,7 +118,7 @@ const courierClient = CourierClient({
 authorizationToken: authToken,
 });
 
-````
+```
 </MetaCodeBlock>
 
 Create a `sendInvoice` function that will be responsible for sending an email. To send an email from the code, I use the `courierClient.send()` function.
@@ -153,7 +153,7 @@ export const sendInvoice = async ({
   });
   return requestId;
 };
-````
+```
 
 </MetaCodeBlock>
 
@@ -201,7 +201,7 @@ dueDate: dayjs(input.dueDate).format('D MMMM YYYY'),
 };
 }
 
-````
+```
 </MetaCodeBlock>
 
 For those who are unfamiliar with trpc, What I did is the same as handling a `POST` request. Let's break it down.
@@ -221,7 +221,7 @@ For those who are unfamiliar with trpc, What I did is the same as handling a `PO
         dueDate: z.date(),
       })
     )
-````
+```
 
 </MetaCodeBlock>
 
@@ -241,7 +241,7 @@ For those who are unfamiliar with trpc, What I did is the same as handling a `PO
       await sendInvoice(invoiceData);
     }),
 
-````
+```
 </MetaCodeBlock>
 
 #### Frontend
@@ -262,7 +262,7 @@ const InvoiceDetail: NextPage = () => {
     },
   });
 };
-````
+```
 
 </MetaCodeBlock>
 
@@ -289,7 +289,7 @@ productName: invoiceDetail.name,
 });
 };
 
-````
+```
 </MetaCodeBlock>
 
 Now I can attach the handler to the send email button.
@@ -299,7 +299,7 @@ Now I can attach the handler to the send email button.
 <Button variant='primary' onClick={sendInvoiceEmail} isLoading={sendEmailMutation.isLoading}>
   Send to Email
 </Button>
-````
+```
 
 </MetaCodeBlock>
 
@@ -310,7 +310,6 @@ Here's the working UI.
   alt='working ui'
   width='500px'
   aspectRatio='16:9'
-  format='webp'
 />
 
 ### Part 3: Send Payment Reminder
@@ -348,7 +347,7 @@ scheduledDate: Date;
 invoiceId: string;
 }
 
-````
+```
 </MetaCodeBlock>
 
 Now, I add the `scheduleReminder` function to `src/lib/courier.ts`
@@ -399,8 +398,7 @@ export const scheduleReminder = async ({
 
   return runId;
 };
-````
-
+```
 </MetaCodeBlock>
 
 To send the reminder, I will call `scheduleReminder` after a successful `sendInvoice` attempt. Let's modify the `sendEmail` trpc endpoint.
@@ -427,7 +425,7 @@ sendEmail: protectedProcedure
       });
     }
 
-````
+```
 </MetaCodeBlock>
 
 Now if I try to send an invoice by email, I should get a reminder 20 seconds later since I'm in the development environment.
@@ -456,7 +454,7 @@ export const cancelAutomationWorkflow = async ({
 
   return runId;
 };
-````
+```
 
 </MetaCodeBlock>
 
@@ -480,7 +478,7 @@ steps: [
 })}
 // ...omitted for brevity
 
-````
+```
 </MetaCodeBlock>
 
 I will call `cancelAutomationWorkflow` when an invoice's status is updated to `PAID` in the `updateStatus` trpc endpoint.
@@ -509,13 +507,13 @@ I will call `cancelAutomationWorkflow` when an invoice's status is updated to `P
 
       return updatedStatus;
     }),
-````
+```
 
 </MetaCodeBlock>
 
 Here is the working UI.
 
-<img src='https://i.imgur.com/jnLk4Tg.gif' alt='cancel log' width='500px' />
+<Image src='https://i.imgur.com/jnLk4Tg.gif' alt='cancel log' width='500px' aspectRatio='16:9' />
 
 ### Part 5: Error Handling
 
@@ -549,7 +547,7 @@ return { data: null, error: "Something went wrong!" };
 }
 }
 
-````
+```
 </MetaCodeBlock>
 
 Let's see a handling example on the `sendEmail` trpc endpoint.
@@ -561,7 +559,7 @@ Let's see a handling example on the `sendEmail` trpc endpoint.
 
   const { error: scheduleError } = await scheduleReminder(..);
   if (scheduleError) throw new TRPCClientError(scheduleError);
-````
+```
 
 </MetaCodeBlock>
 
@@ -574,7 +572,6 @@ Now that all templates are ready, I will copy all assets in the test environment
   alt='copy assets to production'
   width='500px'
   aspectRatio='16:9'
-  format='webp'
 />
 
 ## Conclusion
