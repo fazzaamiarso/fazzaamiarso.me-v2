@@ -6,8 +6,8 @@ tags:
   - css
 publishedAt: ""
 ---
-import MetaCodeBlock from "../../components/mdx/MetaCodeBlock.astro"
 
+import MetaCodeBlock from "../../components/mdx/MetaCodeBlock.astro";
 
 A trick to pre-pend line number to an HTML `code` element.
 
@@ -23,9 +23,10 @@ code {
 
 code .line::before {
   /* Style individual code line */
-  content: counter(step); 
+  content: counter(step);
   counter-increment: step;
   margin-right: 1.5rem; /* Margin between line number and actual code element */
 }
 ```
+
 </MetaCodeBlock>

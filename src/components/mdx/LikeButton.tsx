@@ -1,7 +1,6 @@
 import { QueryClient, QueryClientProvider, useMutation, useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 
-
 type Props = {
   ip: string;
   slug: string;

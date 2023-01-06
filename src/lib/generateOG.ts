@@ -15,7 +15,6 @@ const cld = new Cloudinary({
   },
 });
 
-
 const generateTitle = (title: string) => {
   return source(
     text(

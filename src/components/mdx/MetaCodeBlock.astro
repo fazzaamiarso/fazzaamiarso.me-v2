@@ -1,14 +1,14 @@
 ---
 import { Icon } from "astro-icon";
-import {nanoid} from 'nanoid'
+import { nanoid } from "nanoid";
 
 const { filename } = Astro.props;
 
-const elementId = nanoid()
+const elementId = nanoid();
 ---
 
 <code-block id={elementId}>
-  <div class='wrap ring-1 ring-zinc-700' >
+  <div class='wrap ring-1 ring-zinc-700'>
     <div
       class='flex w-full items-center border-b-[1px] border-zinc-800 px-4 py-1 text-sm text-zinc-300'>
       {filename && <span>{filename}</span>}

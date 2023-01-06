@@ -6,7 +6,8 @@ slug: "nextjs-courier-send-invoice-and-reminder"
 publishedAt: "2023-01-03"
 featured: true
 ---
-import {Image} from "@astrojs/image/components"
+
+import { Image } from "@astrojs/image/components";
 import MetaCodeBlock from "../../components/mdx/MetaCodeBlock.astro";
 
 ## Background
@@ -50,7 +51,13 @@ Now, I will create a [**brand**](https://www.courier.com/docs/getting-started/co
 
 I'm just going to add a logo (beware that the logo width is fixed to 140px) on the header and social links on the footer. The designer UI is pretty straightforward, so here is the final result.
 
-<Image src='https://i.imgur.com/sFrofll.png' alt='brand template' width='500px' aspectRatio="16:9" format="webp"/>
+<Image
+  src='https://i.imgur.com/sFrofll.png'
+  alt='brand template'
+  width='500px'
+  aspectRatio='16:9'
+  format='webp'
+/>
 
 Don't forget to publish the changes.
 
@@ -64,9 +71,21 @@ Before I code the functionality, let's create the email notification design in c
 
 On the email designer page, We will see that the created brand is already integrated. After that, let's design the template accordingly with the needed data. Here is the final result.
 
-<Image src='https://i.imgur.com/qFhHvAP.png' alt='email template final' aspectRatio="16:9" width='500px'format="webp" />
+<Image
+  src='https://i.imgur.com/qFhHvAP.png'
+  alt='email template final'
+  aspectRatio='16:9'
+  width='500px'
+  format='webp'
+/>
 
-<Image src='https://i.imgur.com/B6vKjpH.png' alt='action button' aspectRatio="16:9" width='500px' format="webp"/>
+<Image
+  src='https://i.imgur.com/B6vKjpH.png'
+  alt='action button'
+  aspectRatio='16:9'
+  width='500px'
+  format='webp'
+/>
 
 Notice the value with `{}` that becomes green, it means it's a variable that can be inserted dynamically. I also set the 'See Invoice' button (or action) with a variable.
 
@@ -74,7 +93,13 @@ Before I can use the template, I need to create a _test event_ by clicking the p
 
 Next, I publish the template so I can use it. Then, go to send tab. It will show the necessary code to send the email programmatically and the `data` will be populated with the previous _test event_ that I created.
 
-<Image src='https://i.imgur.com/PMGcVQq.png' alt='code snippet' aspectRatio="16:9" width='500px' format="webp" />
+<Image
+  src='https://i.imgur.com/PMGcVQq.png'
+  alt='code snippet'
+  aspectRatio='16:9'
+  width='500px'
+  format='webp'
+/>
 
 #### Backend
 
@@ -175,6 +200,7 @@ const invoiceData = {
 dueDate: dayjs(input.dueDate).format('D MMMM YYYY'),
 };
 }
+
 ````
 </MetaCodeBlock>
 
@@ -279,7 +305,13 @@ Now I can attach the handler to the send email button.
 
 Here's the working UI.
 
-<Image src='https://i.imgur.com/ush8wdI.gif' alt='working ui' width='500px' aspectRatio="16:9" format="webp"/>
+<Image
+  src='https://i.imgur.com/ush8wdI.gif'
+  alt='working ui'
+  width='500px'
+  aspectRatio='16:9'
+  format='webp'
+/>
 
 ### Part 3: Send Payment Reminder
 
@@ -287,7 +319,13 @@ I want to schedule a reminder that will be sent a day before an invoice's due da
 
 First, let's design the email template in Courier designer. As I already go through the process before, here is the final result.
 
-<Image src='https://i.imgur.com/4l6shqK.png' alt='payment reminder template' width='500px' aspectRatio="16:9" format="webp"/>
+<Image
+  src='https://i.imgur.com/4l6shqK.png'
+  alt='payment reminder template'
+  width='500px'
+  aspectRatio='16:9'
+  format='webp'
+/>
 
 Before adding the function, define the types for the parameter and refactor the types.
 
@@ -419,6 +457,7 @@ export const cancelAutomationWorkflow = async ({
   return runId;
 };
 ````
+
 </MetaCodeBlock>
 
 What is a cancelation_token? It's a unique token that can be set to an automation workflow, so it's cancelable by sending a `cancel` action with a matching `cancelation_token`.
@@ -470,7 +509,8 @@ I will call `cancelAutomationWorkflow` when an invoice's status is updated to `P
 
       return updatedStatus;
     }),
-```
+````
+
 </MetaCodeBlock>
 
 Here is the working UI.
@@ -498,17 +538,18 @@ Now, I can handle errors by adding a `try-catch` block to all functions in `src/
 try {
   // ..function code
 
-  // modified return example
-  return { data: runId, error: null };
+// modified return example
+return { data: runId, error: null };
 } catch (error) {
-  // make sure it's an error from Courier
-  if (error instanceof CourierHttpClientError) {
-    return { data: error.data, error: error.message };
-  } else {
-    return { data: null, error: "Something went wrong!" };
-  }
+// make sure it's an error from Courier
+if (error instanceof CourierHttpClientError) {
+return { data: error.data, error: error.message };
+} else {
+return { data: null, error: "Something went wrong!" };
 }
-```
+}
+
+````
 </MetaCodeBlock>
 
 Let's see a handling example on the `sendEmail` trpc endpoint.
@@ -520,14 +561,21 @@ Let's see a handling example on the `sendEmail` trpc endpoint.
 
   const { error: scheduleError } = await scheduleReminder(..);
   if (scheduleError) throw new TRPCClientError(scheduleError);
-```
+````
+
 </MetaCodeBlock>
 
 ### Part 6: Go To Production
 
 Now that all templates are ready, I will copy all assets in the test environment to production. Here is an example.
 
-<img src='https://i.imgur.com/Mr3bmuH.gif' alt='copy assets to production' width='500px' />
+<Image
+  src='https://i.imgur.com/Mr3bmuH.gif'
+  alt='copy assets to production'
+  width='500px'
+  aspectRatio='16:9'
+  format='webp'
+/>
 
 ## Conclusion
 

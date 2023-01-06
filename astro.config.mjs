@@ -16,7 +16,7 @@ import react from "@astrojs/react";
 import { remarkReadingTime } from "./remarkPlugins.mjs";
 
 // https://astro.build/config
-import sitemap from "@astrojs/sitemap";
+// import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
 import image from "@astrojs/image";
@@ -60,7 +60,6 @@ export default defineConfig({
       ],
     }),
     react(),
-    sitemap(),
     image({
       serviceEntryPoint: "@astrojs/image/sharp",
     }),
