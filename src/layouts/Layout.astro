@@ -29,8 +29,9 @@ const { title, desc, ogImage } = Astro.props;
       src={`${Astro.url.origin}/api/umami/script.js`}
     ></script>
     <script is:inline>
+      const currTheme = localStorage.getItem("theme");
       if (
-        currentTheme === "dark" ||
+        currTheme === "dark" ||
         (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
       ) {
         document.documentElement.classList.add("dark");
