@@ -1,7 +1,7 @@
 ---
 import clsx from "clsx";
 
-type Props = {
+export type Props = {
   pageHeadings: Array<{ depth: number; text: string; slug: string }>;
 };
 const { pageHeadings } = Astro.props;
@@ -57,6 +57,5 @@ const { pageHeadings } = Astro.props;
   };
   const headingObserver = new IntersectionObserver(setCurrent, observerOption);
   document
-    .querySelectorAll("article :is(h2,h3,h4)")
-    .forEach((heading) => headingObserver.observe(heading));
+    .querySelectorAll("article :is(h2,h3,h4)").forEach((heading) => headingObserver.observe(heading));
 </script>

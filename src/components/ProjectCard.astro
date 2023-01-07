@@ -1,9 +1,8 @@
 ---
 import { Image } from "@astrojs/image/components";
 import { Icon } from "astro-icon";
-import { nanoid } from "nanoid";
 
-type Props = {
+export type Props = {
   cover: string;
   slug: string;
   title: string;
@@ -11,11 +10,9 @@ type Props = {
 };
 
 const props = Astro.props;
-const uid = nanoid();
 ---
 
 <li class='group relative space-y-4 rounded-lg transition-all dark:text-zinc-400'>
-  <input type='text' hidden value={props.slug} id={'slug' + uid} />
   <div
     class='h-10 w-10 rounded-full p-[6px] ring-1 ring-zinc-900/25 dark:bg-zinc-600/50 dark:ring-zinc-500/50'>
     <Image
@@ -41,34 +38,38 @@ const uid = nanoid();
     </h3>
     <p class='line-clamp-3'>{props.description}</p>
   </div>
-  <project-meta id={uid}>
-    <div class='flex items-center gap-6 pt-4'>
+  <project-meta data-slug={props.slug}>
+    <div class='flex items-center gap-6'>
       <div class='flex items-center gap-1'>
         <Icon name='ic:outline-remove-red-eye' class='w-5' aria-hidden='true' />
-        <span class='text-sm' id={`views-${uid}`}>0</span>
+        <span class='text-sm' id='content-views'>0</span>
       </div>
       <div class='flex items-center gap-1'>
         <Icon name='mdi:cards-heart-outline' class='w-5' aria-hidden='true' />
-        <span class='text-sm' id={`likes-${uid}`}>0</span>
+        <span class='text-sm' id='content-likes'>0</span>
       </div>
     </div>
   </project-meta>
 </li>
 
+<style>
+  project-meta {
+    display: block;
+  }
+</style>
 <script>
   import axios from "axios";
 
-  
   class ProjectMeta extends HTMLElement {
     constructor() {
       super();
     }
-    
+
     static get observedAttributes() {
       return ["data-views", "data-likes"];
     }
     async connectedCallback() {
-      const slug = (document.querySelector("#slug" + this.id ) as HTMLInputElement).value;
+      const slug = this.dataset.slug;
       const res = await axios.get("/api/views", { params: { slug } });
       const { views, likes } = res.data;
       this.setAttribute("data-views", views);
@@ -76,12 +77,11 @@ const uid = nanoid();
     }
 
     attributeChangedCallback() {
-      (this.querySelector(`#views-${this.id}`) as HTMLElement).innerText =
+      (this.querySelector("#content-views") as HTMLElement).innerText =
         this.getAttribute("data-views") ?? "";
-      (this.querySelector(`#likes-${this.id}`) as HTMLElement).innerText =
+      (this.querySelector("#content-likes") as HTMLElement).innerText =
         this.getAttribute("data-likes") ?? "";
     }
-
   }
 
   customElements.define("project-meta", ProjectMeta);

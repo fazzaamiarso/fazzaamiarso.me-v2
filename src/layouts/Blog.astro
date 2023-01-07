@@ -9,7 +9,7 @@ import type { BlogFrontmatter, ProjectFrontmatter } from "types";
 import { WEEK_IN_SECONDS } from "utils/constants";
 import Layout from "./Layout.astro";
 
-type Props = MDXLayoutProps<BlogFrontmatter | ProjectFrontmatter>;
+export type Props = MDXLayoutProps<BlogFrontmatter | ProjectFrontmatter>;
 
 const { frontmatter, headings, url } = Astro.props;
 const slug = url ?? "";

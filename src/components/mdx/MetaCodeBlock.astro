@@ -52,9 +52,9 @@ const elementId = nanoid();
       super();
 
       const id = this.id;
-      const copybutton = document.querySelector(`#button${id}`);
-      const copyIcon = document.querySelector(`#copy-${id}`);
-      const checkIcon = document.querySelector(`#check-${id}`);
+      const copybutton = this.querySelector(`#button${id}`);
+      const copyIcon = this.querySelector(`#copy-${id}`);
+      const checkIcon = this.querySelector(`#check-${id}`);
 
       copybutton?.addEventListener("click", () => {
         copyIcon?.classList.add("hidden");
