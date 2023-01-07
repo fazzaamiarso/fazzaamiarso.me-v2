@@ -1,0 +1,33 @@
+---
+import { Cloudinary } from "@cloudinary/url-gen";
+import {  quality } from "@cloudinary/url-gen/actions/delivery";
+import { blur } from "@cloudinary/url-gen/actions/effect";
+import { Quality } from "@cloudinary/url-gen/qualifiers";
+
+export type Props = {
+  publicId: string;
+  alt: string;
+  width: string;
+};
+const { width, alt, publicId } = Astro.props;
+
+const cld = new Cloudinary({
+  cloud: {
+    cloudName: "dkiqn0gqg",
+  },
+});
+
+const blurPlaceHolder = cld.image(`blog/${publicId}`)
+  .effect(blur(1000))
+  .format("auto")
+  .delivery(quality(1))
+  .toURL();
+
+const realImg = cld.image(`blog/${publicId}`).format("auto").quality(Quality.auto()).toURL();
+---
+
+<img src={blurPlaceHolder} data-src={realImg} alt={alt} width={width} class='lazyload' />
+
+<script>
+  import "lazysizes";
+</script>

@@ -4,7 +4,9 @@ interface BaseFrontmatter {
   publishedAt: string;
   updatedAt?: string;
   minutesRead?: number;
+  draft: boolean;
 }
+
 
 export interface BlogFrontmatter extends BaseFrontmatter {
   series?: string;

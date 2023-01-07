@@ -4,7 +4,9 @@ import type { BlogFrontmatter } from "types";
 import { HOUR_IN_SECONDS } from "utils/constants";
 import { getViewsAndLike } from "utils/content";
 
-const _posts = await Astro.glob<BlogFrontmatter>("./*.mdx");
+const _posts = (await Astro.glob<BlogFrontmatter>("./*.mdx")).filter(
+  (p) => import.meta.env.DEV || !p.frontmatter?.draft
+);
 const posts = (
   await Promise.all(
     _posts.map(async (p) => {
