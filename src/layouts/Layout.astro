@@ -22,12 +22,16 @@ const { title, desc, ogImage } = Astro.props;
     <meta charset='UTF-8' />
     <meta name='viewport' content='width=device-width, initial-scale=1' />
     <SEO title={title} desc={desc} ogImage={ogImage} />
-    <script
-      async
-      defer
-      data-website-id='09ba0f32-6e20-421a-9f92-5c89f526e1ae'
-      src={`${Astro.url.origin}/api/umami/script.js`}
-    ></script>
+    {
+      import.meta.env.PROD && (
+        <script
+          async
+          defer
+          data-website-id='09ba0f32-6e20-421a-9f92-5c89f526e1ae'
+          src={`${Astro.url.origin}/api/umami/script.js`}
+        />
+      )
+    }
     <script is:inline>
       const currTheme = localStorage.getItem("theme");
       if (

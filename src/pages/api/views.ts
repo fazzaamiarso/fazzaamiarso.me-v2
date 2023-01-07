@@ -22,7 +22,6 @@ export const get: APIRoute = async ({ request }) => {
   const searchParams = new URL(request.url).searchParams;
   const slug = searchParams.get("slug") as string;
 
-  console.log(slug);
   const { views, likes } = await getViewsAndLike(slug);
 
   return new Response(JSON.stringify({ views, likes }), { status: 200 });

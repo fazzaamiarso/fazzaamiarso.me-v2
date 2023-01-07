@@ -9,11 +9,11 @@ import { TextStyle } from "@cloudinary/url-gen/qualifiers/textStyle";
 import { quality } from "@cloudinary/url-gen/actions/delivery";
 import { Quality } from "@cloudinary/url-gen/qualifiers";
 
-const cld = new Cloudinary({
-  cloud: {
-    cloudName: "dkiqn0gqg",
-  },
-});
+ const cld = new Cloudinary({
+   cloud: {
+     cloudName: "dkiqn0gqg",
+   },
+ });
 
 const generateTitle = (title: string) => {
   return source(
