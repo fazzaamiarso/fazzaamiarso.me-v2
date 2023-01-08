@@ -34,7 +34,7 @@ export const get = () => {
         <lastmod>${item.frontmatter.updatedAt ?? item.frontmatter.publishedAt}</lastmod>
      </url>`;
        })
-       .join("/n")}
+       .join("\n")}
   </urlset> 
   `,
     headers: { "Content-Type": "text/xml" },
