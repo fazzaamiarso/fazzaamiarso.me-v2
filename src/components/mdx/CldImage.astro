@@ -8,8 +8,9 @@ export type Props = {
   publicId: string;
   alt: string;
   width: string;
+  type?: "gif"
 };
-const { width, alt, publicId } = Astro.props;
+const { width, alt, publicId, type } = Astro.props;
 
 const cld = new Cloudinary({
   cloud: {
@@ -23,7 +24,7 @@ const blurPlaceHolder = cld.image(`blog/${publicId}`)
   .delivery(quality(1))
   .toURL();
 
-const realImg = cld.image(`blog/${publicId}`).format("auto").quality(Quality.auto()).toURL();
+const realImg  = cld.image(`blog/${publicId}`).format("auto").quality(type === "gif" ? 50 : Quality.auto()).toURL();
 ---
 
 <img src={blurPlaceHolder} data-src={realImg} alt={alt} width={width} class='lazyload' />

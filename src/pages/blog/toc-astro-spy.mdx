@@ -1,0 +1,190 @@
+---
+layout: "../../layouts/Blog.astro"
+title: "Add TOC with Scroll Spy in Astro"
+description: "Add Table of Content to an Astro blog with Scroll Spying in Vanilla JS"
+publishedAt: "2023-01-08"
+tags:
+    - astro
+    - javascript
+---
+import CldImage from "components/mdx/CldImage.astro";
+import Notes from "components/mdx/Notes.astro";
+import MetaCodeBlock from "components/mdx/MetaCodeBlock.astro";
+
+Sometimes, there is a table of content to help us navigate through a blog more easily. When building a custom blog with remark and rehype, a standard solution is to use the `rehype-toc` plugin. 
+
+In Astro, we can build a table of content without extra plugins. Astro already provides us with the necessary property by default. As an extra touch, we will add a scroll spy to keep track of our current heading.
+
+<Notes>
+I use the Astro [blog starter template](https://github.com/withastro/astro/tree/latest/examples/blog) as a starting point.
+</Notes>
+
+## Create the Component
+Let's create a new Astro component called `TOC.astro` and define the needed props. 
+
+<MetaCodeBlock filename="/components/TOC.astro">
+```astro
+---
+export type Props = {
+    pageHeadings : Array<{depth:number,text: string; slug: string }>
+}
+
+const { pageHeadings } = Astro.props;
+---
+<aside id="#toc">
+    <ul>{pageHeadings.map(h => {
+        return <li> <a href={`#${h.slug}`}>{h.text}</a></li>
+    })}</ul>
+</aside>
+
+```
+</MetaCodeBlock>
+
+The `pageHeadings` props will be special [`headings`](https://docs.astro.build/en/core-concepts/layouts/#markdown-layout-props) props passed from the astro layout component. Astro automatically assigns an id to all headings in markdown, which become slug in `headings` props.
+
+
+```ts
+[{
+    text : "Implement TOC",
+    depth : 1,
+    slug: "implement-toc"
+},
+{
+    text : "Create Markup",
+    depth : 2,
+    slug: "create-markup"
+}]
+```
+
+Insert the TOC into the blog layout and pass it to the special `headings` props
+
+<MetaCodeBlock filename="/layout/BlogLayout.astro">
+```astro
+---
+const {headings} = Astro.props;
+---
+<body>
+    <Header />
+        <main>
+            <article>
+            <h1>{content.title}<h1>
+            <hr />
+            <slot />
+            <TOC pageHeadings={headings} />
+            </article>
+        </main>
+    <Footer />
+</body>
+```
+</MetaCodeBlock>
+
+Let's add a little style to the TOC, so it's fixed to the right.
+
+<MetaCodeBlock filename="/components/TOC.astro">
+```astro
+<style>
+    #toc {
+        position: fixed;
+        top: 0;
+        right: 5rem;
+    }
+    ul {
+        list-style: none;
+    }
+    a {
+        text-decoration: none;
+    }
+</style>
+```
+</MetaCodeBlock>
+
+Here's the result.
+
+<CldImage publicId="toc-initial" alt="table of content initial markup" width="500px" />
+
+The TOC is working and sufficient for most use cases. But, we will enhance it with a scroll spy to highlight the active heading.
+
+## Scroll Spy with Intersection Observer
+We must let the TOC know which heading is intersecting by observing/spying on the heading with Intersection Observer.
+
+### Add an Observer Callback Function
+Firstly, insert a script tag in the TOC file. Afterward, create the observer callback function responsible for detecting and setting the active state.
+
+<MetaCodeBlock filename="/components/TOC.astro">
+```astro
+<script>
+const setCurrentHeading : IntersectionObserverCallback = (entries) => {
+    // loop to each entries (headings) in the page
+    for (let entry of entries) {
+    // equivalent to the slug returned from pageHeadings
+    const { id } = entry.target;
+    // get the TOC link's element for the current entry
+    const tocLinkEl = document.querySelector(`#toc a[href='#${id}']`);
+    if(!tocLinkEl) return;
+    }
+}
+</script>
+```
+</MetaCodeBlock>
+
+The above code loops through each entry and selects the link element. It also has a guard in case the link element doesn't exist, which is unlikely.
+
+Then, add the active styling to the intersecting entry.
+
+<MetaCodeBlock filename="/components/TOC.astro">
+```ts
+// check if the entry is intersecting
+if (entry.isIntersecting) {
+// remove active class from all links
+document.querySelectorAll("#toc a").forEach((e) => e.classList.remove("active"));
+// add active class to the currently active entry
+tocLinkEl.classList.add("active");
+}
+```
+</MetaCodeBlock>
+
+
+Here's the active class for this example.
+```css
+a.active {
+    color: red;
+    font-weight: 600;
+}
+```
+
+### Observer Option
+Let's define the option for the observer.
+
+<MetaCodeBlock filename="/components/TOC.astro">
+```ts
+const observerOptions = {
+    threshold: 1,
+    rootMargin : "0px 0px -66%"
+}
+```
+</MetaCodeBlock>
+
+Here's the explanation for the option.
+- `threshold: 1`  means we want to register the element as an entry when the element is fully visible.
+- `rootMargin: "0px 0px -66%"` means we crop the observer's viewport height by 66% at the bottom. So, our viewport have 33% of it's height. It's helpful because we want the entry to be active only when a user has scrolled enough past the heading.
+
+### Observe the Headings
+We have all the pieces needed to create an observer instance to observe the headings.
+
+<MetaCodeBlock filename="/components/TOC.astro">
+```ts
+const observer = new IntersectionObserver(setCurrentHeading, observerOptions);
+// select all headings to observe
+const elToObserve = document.querySelectorAll("article :is(h2,h3)")
+// finally, observe the elements
+elToObserve.forEach(el => observer.observe(el))
+```
+</MetaCodeBlock>
+
+What the code does is select all headings that we want to observe. Then, loop through each heading and observe them by calling `observe()`.
+
+Here's the final result.
+
+<CldImage publicId="toc-demo" alt="table of content demo" width="500px" type="gif" />
+
+You can also see how I implement it [in my blog](https://github.com/fazzaamiarso/fazzaamiarso.me-v2/blob/main/src/components/mdx/TOC.astro) with TailwindCSS and `sticky` positioning.
